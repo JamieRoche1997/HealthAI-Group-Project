@@ -4,7 +4,7 @@ const PasswordReset = ({ isOpen, onClose, onResetPassword }) => {
   const [resetEmail, setResetEmail] = useState('');
 
   const handlePasswordReset = () => {
-    onResetPassword(resetEmail);
+    onResetPassword(resetEmail); // Call the function passed via prop
   };
 
   return (

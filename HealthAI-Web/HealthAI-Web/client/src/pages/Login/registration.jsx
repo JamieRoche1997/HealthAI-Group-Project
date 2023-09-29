@@ -1,51 +1,115 @@
 import React, { useState } from "react";
-import { db } from "../../firebase";
 import { useNavigate } from "react-router-dom";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 export const Register = (props) => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [name, setName] = useState('');
-    const navigate = useNavigate();
-    const auth = getAuth();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const navigate = useNavigate();
+  const apiRegisterURL = "http://localhost:4000/api/register";
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log(name, email, password);
+  const isPasswordValid = (password) => {
+    // Password must be at least 10 characters long
+    if (password.length < 10) {
+      return false;
+    }
 
-        createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-        // Signed in 
-        const user = userCredential.user;
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // ..
+    // Password must contain at least one capital letter
+    if (!/[A-Z]/.test(password)) {
+      return false;
+    }
+
+    // Password must contain at least one number
+    if (!/\d/.test(password)) {
+      return false;
+    }
+
+    // Password must contain at least one special character
+    if (!/[!@#$%^&*]/.test(password)) {
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!isPasswordValid(password)) {
+      setPasswordError(
+        "Password must be at least 10 characters long and contain one capital letter, one number, and one special character."
+      );
+      return;
+    }
+
+    try {
+      const response = await fetch(apiRegisterURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, password }),
       });
 
-        // enter your registration logic here
-    };
+      if (response.ok) {
+        // Registration successful
+        const data = await response.json();
+        console.log("Success");
 
-    const redirectToLogin = () => {
-        navigate("/login"); // Redirect to the "/login" path
+        // Redirect to the '/login' path upon successful registration
+        navigate("/login");
+      } else {
+        // Registration failed
+        const errorMessage = await response.text();
+        console.error("Fail:", errorMessage);
       }
+    } catch (error) {
+      console.error("Registration error:", error);
+    }
+  };
 
-    return (
+  const redirectToLogin = () => {
+    navigate("/login"); // Redirect to the "/login" path
+  };
+
+  return (
     <div className="auth-form-container">
       <h2>Register</h2>
       <form className="register-form" onSubmit={handleSubmit}>
-      <label htmlFor="name">Name:</label>
-        <input value={name} onChange={(e) => setName(e.target.value)} type="name" placeholder="John Doe" id="name" name="name"/>
+        <label htmlFor="name">Name:</label>
+        <input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          type="text"
+          placeholder="John Doe"
+          id="name"
+          name="name"
+        />
         <label htmlFor="email">Email Address:</label>
-        <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="johndoe@gmail.com" id="email" name="email"/>
+        <input
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          type="email"
+          placeholder="johndoe@gmail.com"
+          id="email"
+          name="email"
+        />
         <label htmlFor="password">Password:</label>
-        <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder="*******" id="password" name="password"/>
+        <input
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          type="password"
+          placeholder="*******"
+          id="password"
+          name="password"
+        />
+        {passwordError && <p className="error-message">{passwordError}</p>}
         <button type="submit">Register</button>
       </form>
-      <button className="link-btn" onClick={redirectToLogin}>Already have an account? Login here!</button>
+      <button className="link-btn" onClick={redirectToLogin}>
+        Already have an account? Login here!
+      </button>
     </div>
   );
 };
