@@ -1,23 +1,30 @@
 import React, { useState } from "react";
 import { db } from "../../firebase";
 import { useNavigate } from "react-router-dom";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 export const Register = (props) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
     const navigate = useNavigate();
-
+    const auth = getAuth();
 
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(name, email, password);
 
-        db.collection("Users").add({
-          name: name,
-          email: email,
-          password: password,
-        });
+        createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ..
+      });
 
         // enter your registration logic here
     };
