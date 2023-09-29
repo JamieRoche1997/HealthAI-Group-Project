@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { db } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import PasswordReset from "./passwordReset"; // Import the PasswordReset component
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
@@ -40,6 +42,34 @@ export const Login = () => {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const signInWithGoogle = () => {
+    const auth = getAuth();
+    const provider = new GoogleAuthProvider();
+
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+        console.log(user);
+
+        // Redirect to the './profile' path upon successful Google login
+        navigate("/profile");
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData?.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+      });
   };
 
   const handleOpenPasswordResetModal = () => {
@@ -107,6 +137,7 @@ export const Login = () => {
       <button className="link-btn" onClick={redirectToRegister}>
         Don't have an account? Register here!
       </button>
+      <button onClick={signInWithGoogle}>Sign in with Google</button>
 
       {/* Render the PasswordResetModal as a portal */}
       <PasswordReset

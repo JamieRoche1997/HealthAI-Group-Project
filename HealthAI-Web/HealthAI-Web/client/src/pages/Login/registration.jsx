@@ -1,5 +1,7 @@
 import React, { useState } from "react";
+import { db } from "../../firebase";
 import { useNavigate } from "react-router-dom";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 export const Register = (props) => {
   const [name, setName] = useState('');
@@ -69,6 +71,32 @@ export const Register = (props) => {
     }
   };
 
+const signInWithGoogle = () => {
+  
+  const auth = getAuth();
+  const provider = new GoogleAuthProvider();
+
+  signInWithPopup(auth, provider)
+    .then((result) => {
+      // This gives you a Google Access Token. You can use it to access the Google API.
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential.accessToken;
+      // The signed-in user info.
+      const user = result.user;
+      // IdP data available using getAdditionalUserInfo(result)
+      // ...
+    }).catch((error) => {
+      // Handle Errors here.
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // The email of the user's account used.
+      const email = error.customData.email;
+      // The AuthCredential type that was used.
+      const credential = GoogleAuthProvider.credentialFromError(error);
+      // ...
+    });
+  }
+
   const redirectToLogin = () => {
     navigate("/login"); // Redirect to the "/login" path
   };
@@ -110,6 +138,7 @@ export const Register = (props) => {
       <button className="link-btn" onClick={redirectToLogin}>
         Already have an account? Login here!
       </button>
+      <button onClick={signInWithGoogle}>Sign in with Google</button>
     </div>
   );
 };
