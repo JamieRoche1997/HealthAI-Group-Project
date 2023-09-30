@@ -68,9 +68,31 @@ return res.status(500).json({ error: "Password reset failed" });
 }
 });
 
+// Define a route for user login
+app.post("/api/contact", async (req, res) => {
+  try {
+  const { name, email, phone, subject, message } = req.body;
 
+    // Add additional contact data to your database (Firestore, for example)
+    const messageData = {
+      name: name,
+      email: email,
+      phone: phone,
+      subject: subject,
+      message: message,
+    };
+
+    // Store user data in your database
+    await db.collection("Messages").doc().set(messageData);
+
+    // If registration is successful, respond with a success message or user data
+    res.status(200).json({ message: "Submission successful" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Submission failed" });
+  }
 // ... (other routes and configurations)
-
+});
 
 const port = process.env.PORT || 4000;
 

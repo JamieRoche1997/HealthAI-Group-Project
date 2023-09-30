@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { db } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import { getAuth, signInWithPopup, GoogleAuthProvider, TwitterAuthProvider, FacebookAuthProvider } from "firebase/auth";
 
@@ -9,7 +8,7 @@ export const Register = (props) => {
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const navigate = useNavigate();
-  const apiRegisterURL = "http://localhost:4000/api/register";
+  const apiRegisterURL = "https://healthai-heroku-1a596fab2241.herokuapp.com/api/register";
 
   const isPasswordValid = (password) => {
     // Password must be at least 10 characters long
@@ -56,7 +55,6 @@ export const Register = (props) => {
 
       if (response.ok) {
         // Registration successful
-        const data = await response.json();
         console.log("Success");
 
         // Redirect to the '/login' path upon successful registration
@@ -71,41 +69,12 @@ export const Register = (props) => {
     }
   };
 
-const signInWithGoogle = () => {
-  
-  const auth = getAuth();
-  const provider = new GoogleAuthProvider();
-
-  signInWithPopup(auth, provider)
-    .then((result) => {
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-      // The signed-in user info.
-      const user = result.user;
-      // IdP data available using getAdditionalUserInfo(result)
-      // ...
-    }).catch((error) => {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // The email of the user's account used.
-      const email = error.customData.email;
-      // The AuthCredential type that was used.
-      const credential = GoogleAuthProvider.credentialFromError(error);
-      // ...
-    });
-  }
-
-  const signInWithTwitter = () => {
+  const signInWithGoogle = () => {
     const auth = getAuth();
-    const provider = new TwitterAuthProvider();
+    const provider = new GoogleAuthProvider();
 
     signInWithPopup(auth, provider)
       .then((result) => {
-        // This gives you a Twitter Access Token. You can use it to access the Twitter API.
-        const credential = TwitterAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
         console.log(user);
@@ -115,13 +84,26 @@ const signInWithGoogle = () => {
       })
       .catch((error) => {
         // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData?.email;
-        // The AuthCredential type that was used.
-        const credential = TwitterAuthProvider.credentialFromError(error);
-        // ...
+        console.error(error);
+      });
+  };
+
+  const signInWithTwitter = () => {
+    const auth = getAuth();
+    const provider = new TwitterAuthProvider();
+
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // The signed-in user info.
+        const user = result.user;
+        console.log(user);
+
+        // Redirect to the './profile' path upon successful Twitter login
+        navigate("/profile");
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        console.error(error);
       });
   };
 
@@ -131,25 +113,16 @@ const signInWithGoogle = () => {
 
     signInWithPopup(auth, provider)
       .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = FacebookAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
         console.log(user);
 
-        // Redirect to the './profile' path upon successful Google login
+        // Redirect to the './profile' path upon successful Facebook login
         navigate("/profile");
       })
       .catch((error) => {
         // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData?.email;
-        // The AuthCredential type that was used.
-        const credential = FacebookAuthProvider.credentialFromError(error);
-        // ...
+        console.error(error);
       });
   };
 
@@ -194,11 +167,9 @@ const signInWithGoogle = () => {
       <button className="link-btn" onClick={redirectToLogin}>
         Already have an account? Login here!
       </button>
-      <div>
-      <button className="google-btn" onClick={signInWithGoogle}></button>
-      <button className="twitter-btn" onClick={signInWithTwitter}></button>
-      <button className="facebook-btn" onClick={signInWithFacebook}></button>
-      </div>
+      <button className="google-btn" onClick={signInWithGoogle}>Sign in with Google</button><br/>
+      <button className="twitter-btn" onClick={signInWithTwitter}>Sign in with X</button><br/>
+      <button className="facebook-btn" onClick={signInWithFacebook}>Sign in with Twitter</button><br/>
     </div>
   );
 };

@@ -84,37 +84,94 @@ button {
 }
 
 .google-btn {
+    border: none;
+    background-color: white;
     padding: 20px;
-    margin: 20px;
-    font-size: 30px;
-    width: 30px;
-    text-align: center;
-    text-decoration: none;
-    border-radius: 50%;
+    border-radius: 30px;
+    cursor: pointer;
     background: #dd4b39;
     color: white;
 }
 
 .twitter-btn {
+    border: none;
+    background-color: white;
     padding: 20px;
-    margin: 20px;
-    font-size: 30px;
-    width: 30px;
-    text-align: center;
-    text-decoration: none;
-    border-radius: 50%;
+    border-radius: 30px;
+    cursor: pointer;
     background: black;
     color: white;
 }
 
 .facebook-btn {
+  border: none;
+  background-color: white;
   padding: 20px;
-  margin: 20px;
-  font-size: 30px;
-  width: 30px;
-  text-align: center;
-  text-decoration: none;
-  border-radius: 50%;
+  border-radius: 30px;
+  cursor: pointer;
   background: #3B5998;
   color: white;
+}
+/* Updated Style for the contact information */
+.contact-info {
+  background-color: transparent;
+  padding: 20px;
+  border-radius: 30px;
+  margin-bottom: 20px;
+  color: #000; /* Text color */
+  font-weight: normal; /* Remove bold text */
+}
+
+.contact-info label {
+  font-weight: bold;
+  color: white; /* Label color */
+}
+
+.contact-info p {
+  margin: 5px 0;
+}
+
+.contact-info a {
+  text-decoration: none;
+  color: black;
+  margin-right: 10px;
+}
+
+/* Style for the form */
+.contact-form {
+  background-color: transparent;
+  padding: 20px;
+  border-radius: 30px;
+}
+
+.contact-form label {
+  font-weight: bold;
+  color: black; /* Label color */
+}
+
+.contact-info input[type="name"],
+.contact-form input[type="text"],
+.contact-form input[type="email"],
+.contact-form input[type="phone"],
+.contact-form input[type="subject"],
+.contact-form input[type="message"] {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 30px;
+}
+
+.contact-form button[type="submit"] {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.contact-form button[type="submit"]:hover {
+  background-color: #0056b3;
 }

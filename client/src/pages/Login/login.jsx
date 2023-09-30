@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { db } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import PasswordReset from "./passwordReset"; // Import the PasswordReset component
 import { getAuth, signInWithPopup, GoogleAuthProvider, TwitterAuthProvider, FacebookAuthProvider } from "firebase/auth";
@@ -10,8 +9,8 @@ export const Login = () => {
   const [loginError, setLoginError] = useState(null);
   const [isPasswordResetModalOpen, setPasswordResetModalOpen] = useState(false);
   const navigate = useNavigate();
-  const apiLoginUrl = "http://localhost:4000/api/login";
-  const apiResetURL = "http://localhost:4000/api/reset-password";
+  const apiLoginUrl = "https://healthai-heroku-1a596fab2241.herokuapp.com/api/login";
+  const apiResetURL = "https://healthai-heroku-1a596fab2241.herokuapp.com/api/reset-password";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,7 +26,6 @@ export const Login = () => {
 
       if (response.ok) {
         // Login successful
-        const data = await response.json();
         setLoginError(null); // Clear any previous login error
         console.log("Success");
 
@@ -50,9 +48,6 @@ export const Login = () => {
 
     signInWithPopup(auth, provider)
       .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
         console.log(user);
@@ -62,13 +57,7 @@ export const Login = () => {
       })
       .catch((error) => {
         // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData?.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
+        console.error(error);
       });
   };
 
@@ -78,25 +67,16 @@ export const Login = () => {
 
     signInWithPopup(auth, provider)
       .then((result) => {
-        // This gives you a Twitter Access Token. You can use it to access the Twitter API.
-        const credential = TwitterAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
         console.log(user);
 
-        // Redirect to the './profile' path upon successful Google login
+        // Redirect to the './profile' path upon successful Twitter login
         navigate("/profile");
       })
       .catch((error) => {
         // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData?.email;
-        // The AuthCredential type that was used.
-        const credential = TwitterAuthProvider.credentialFromError(error);
-        // ...
+        console.error(error);
       });
   };
 
@@ -106,25 +86,16 @@ export const Login = () => {
 
     signInWithPopup(auth, provider)
       .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = FacebookAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
         console.log(user);
 
-        // Redirect to the './profile' path upon successful Google login
+        // Redirect to the './profile' path upon successful Facebook login
         navigate("/profile");
       })
       .catch((error) => {
         // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData?.email;
-        // The AuthCredential type that was used.
-        const credential = FacebookAuthProvider.credentialFromError(error);
-        // ...
+        console.error(error);
       });
   };
 
@@ -193,11 +164,9 @@ export const Login = () => {
       <button className="link-btn" onClick={redirectToRegister}>
         Don't have an account? Register here!
       </button>
-      <div>
-      <button className="google-btn" onClick={signInWithGoogle}></button>
-      <button className="twitter-btn" onClick={signInWithTwitter}></button>
-      <button className="facebook-btn" onClick={signInWithFacebook}></button>
-      </div>
+      <button className="google-btn" onClick={signInWithGoogle}>Sign in with Google</button><br/>
+      <button className="twitter-btn" onClick={signInWithTwitter}>Sign in with X</button><br/>
+      <button className="facebook-btn" onClick={signInWithFacebook}>Sign in with Twitter</button><br/>
 
       {/* Render the PasswordResetModal as a portal */}
       <PasswordReset
