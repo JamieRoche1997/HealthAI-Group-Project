@@ -21,7 +21,7 @@ app.post("/api/register", async (req, res) => {
       };
   
       // Store user data in your database
-      await db.collection("users").doc(userCredential.user.uid).set(userData);
+      await db.collection("Users").doc(userCredential.user.uid).set(userData);
   
       // If registration is successful, respond with a success message or user data
       res.status(200).json({ message: "Registration successful", user: userCredential.user.toJSON() });
