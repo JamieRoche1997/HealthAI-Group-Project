@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "../../firebase";
 import { useNavigate } from "react-router-dom";
 import { getAuth, signInWithPopup, GoogleAuthProvider, TwitterAuthProvider, FacebookAuthProvider } from "firebase/auth";
 
@@ -178,7 +179,7 @@ export const Register = (props) => {
       </button>
       <button className="google-btn" onClick={signInWithGoogle}>Sign in with Google</button><br/>
       <button className="twitter-btn" onClick={signInWithTwitter}>Sign in with X</button><br/>
-      <button className="facebook-btn" onClick={signInWithFacebook}>Sign in with Twitter</button><br/>
+      <button className="facebook-btn" onClick={signInWithFacebook}>Sign in with Facebook</button><br/>
     </div>
   );
 };

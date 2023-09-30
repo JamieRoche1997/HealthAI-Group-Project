@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "../../firebase";
 import { useNavigate } from "react-router-dom";
 import PasswordReset from "./passwordReset"; // Import the PasswordReset component
 import { getAuth, signInWithPopup, GoogleAuthProvider, TwitterAuthProvider, FacebookAuthProvider } from "firebase/auth";
@@ -180,19 +181,19 @@ export const Login = () => {
       <button className="link-btn" onClick={handleOpenPasswordResetModal}>
         Forgot your password?
       </button>
-      <button className="link-btn" onClick={redirectToRegister}>
-        Don't have an account? Register here!
-      </button>
-      <button className="google-btn" onClick={signInWithGoogle}>Sign in with Google</button><br/>
-      <button className="twitter-btn" onClick={signInWithTwitter}>Sign in with X</button><br/>
-      <button className="facebook-btn" onClick={signInWithFacebook}>Sign in with Twitter</button><br/>
-
       {/* Render the PasswordResetModal as a portal */}
       <PasswordReset
         isOpen={isPasswordResetModalOpen}
         onClose={handleClosePasswordResetModal}
         onResetPassword={handleResetPassword} // Pass the reset function
       />
+      <button className="link-btn" onClick={redirectToRegister}>
+        Don't have an account? Register here!
+      </button>
+      <button className="google-btn" onClick={signInWithGoogle}>Sign in with Google</button><br/>
+      <button className="twitter-btn" onClick={signInWithTwitter}>Sign in with X</button><br/>
+      <button className="facebook-btn" onClick={signInWithFacebook}>Sign in with Facebook</button><br/>
+
     </div>
   );
 };
