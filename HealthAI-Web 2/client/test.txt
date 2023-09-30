@@ -1,0 +1,65 @@
+package.json: 
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server",
+    "dev": "nodemon server"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "firebase-admin": "^11.10.1"
+  },
+  "devDependencies": {
+    "express": "^4.18.2",
+    "firebase": "^10.4.0",
+    "nodemon": "^3.0.1"
+  }
+}
+
+config.js:
+const firebase = require("firebase");
+
+const firebaseConfig = {
+    apiKey: "AIzaSyA-MiE18y7f2oKTxAJEpU44R5jm_kn_Xoo",
+    authDomain: "healthai-23.firebaseapp.com",
+    databaseURL: "https://healthai-23-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "healthai-23",
+    storageBucket: "healthai-23.appspot.com",
+    messagingSenderId: "560880281833",
+    appId: "1:560880281833:web:0d23f0091d6962bf32e878",
+    measurementId: "G-MY3C2QN6QC"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  
+  const db = firebase.firestore();
+  const User = db.collection("Users");
+  module.exports = User;
+
+server.js:
+const express = require('express')
+const cors = require('cors')
+const User = require('./config')
+const app = express()
+
+app.use(express.json())
+app.use(cors())
+
+app.post("/create", async(req, res) => {
+    const data = req.body
+    await User.add(data)
+    res.send({msg: "User Added"})
+})
+
+app.get("/api", (req, res) => {
+    res.json({"Users": ["userOne", "userTwo", "userThree", "userFour"]})
+})
+
+app.listen(4000, () => { console.log("Server started on port 4000") })
