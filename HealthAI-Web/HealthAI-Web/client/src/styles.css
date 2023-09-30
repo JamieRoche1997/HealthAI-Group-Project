@@ -82,3 +82,39 @@ button {
   color: #9454a0;
   text-align: center;
 }
+
+.google-btn {
+    padding: 20px;
+    margin: 20px;
+    font-size: 30px;
+    width: 30px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 50%;
+    background: #dd4b39;
+    color: white;
+}
+
+.twitter-btn {
+    padding: 20px;
+    margin: 20px;
+    font-size: 30px;
+    width: 30px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 50%;
+    background: black;
+    color: white;
+}
+
+.facebook-btn {
+  padding: 20px;
+  margin: 20px;
+  font-size: 30px;
+  width: 30px;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 50%;
+  background: #3B5998;
+  color: white;
+}
