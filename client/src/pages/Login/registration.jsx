@@ -44,8 +44,17 @@ export const Register = (props) => {
       return;
     }
 
+    let apiUrl;
+      if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+        // Use localhost URL for development
+        apiUrl = "http://localhost:4000/api/register"; // Replace your-port with the actual port
+      } else {
+        // Use the remote API URL for production
+        apiUrl = apiRegisterURL;
+      }
+
     try {
-      const response = await fetch(apiRegisterURL, {
+      const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

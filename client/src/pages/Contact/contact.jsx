@@ -9,33 +9,43 @@ const Contact = () => {
     const [subject, setSubject] = useState("");
     const [message, setMessage] = useState("");
     const navigate = useNavigate();
-    const apiContactURL = "http://localhost:4000/api/contact";
+    const apiContactURL = "https://healthai-heroku-1a596fab2241.herokuapp.com/api/contact";
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-      
-        try {
-          const response = await fetch(apiContactURL, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ name, email, phone, subject, message }),
-          });
+      e.preventDefault();
     
-          if (response.ok) {
-            console.log("Success");
+      let apiUrl;
+      if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+        // Use localhost URL for development
+        apiUrl = "http://localhost:4000/api/contact"; // Replace your-port with the actual port
+      } else {
+        // Use the remote API URL for production
+        apiUrl = apiContactURL;
+      }
     
-            // Redirect to the '/contact' path upon successful login
-            navigate("/contact");
-          } else {
-            const errorMessage = await response.text();
-            console.log("Fail", errorMessage);
-          }
-        } catch (error) {
-          console.error(error);
+      try {
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name, email, phone, subject, message }),
+        });
+    
+        if (response.ok) {
+          console.log("Success");
+    
+          // Redirect to the '/contact' path upon successful login
+          navigate("/contact");
+        } else {
+          const errorMessage = await response.text();
+          console.log("Fail", errorMessage);
         }
-      };
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    
 
     return (
         <div className="auth-form-container">

@@ -9,14 +9,23 @@ export const Login = () => {
   const [loginError, setLoginError] = useState(null);
   const [isPasswordResetModalOpen, setPasswordResetModalOpen] = useState(false);
   const navigate = useNavigate();
-  const apiLoginUrl = "https://healthai-heroku-1a596fab2241.herokuapp.com/api/login";
+  const apiLoginURL = "https://healthai-heroku-1a596fab2241.herokuapp.com/api/login";
   const apiResetURL = "https://healthai-heroku-1a596fab2241.herokuapp.com/api/reset-password";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    let apiUrl;
+      if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+        // Use localhost URL for development
+        apiUrl = "http://localhost:4000/api/login"; // Replace your-port with the actual port
+      } else {
+        // Use the remote API URL for production
+        apiUrl = apiLoginURL;
+      }
   
     try {
-      const response = await fetch(apiLoginUrl, {
+      const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -104,8 +113,18 @@ export const Login = () => {
   };
 
   const handleResetPassword = async (resetEmail) => {
+
+    let apiUrl;
+      if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+        // Use localhost URL for development
+        apiUrl = "http://localhost:4000/api/reset-password"; // Replace your-port with the actual port
+      } else {
+        // Use the remote API URL for production
+        apiUrl = apiResetURL;
+      }
+
     try {
-      const response = await fetch(apiResetURL, {
+      const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
