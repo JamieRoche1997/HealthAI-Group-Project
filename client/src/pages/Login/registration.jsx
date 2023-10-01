@@ -8,51 +8,67 @@ export const Register = (props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [passwordRequirements, setPasswordRequirements] = useState({
+    length: false,
+    capitalLetter: false,
+    number: false,
+    specialCharacter: false,
+  });
   const navigate = useNavigate();
   const apiRegisterURL = "https://healthai-heroku-1a596fab2241.herokuapp.com/api/register";
 
   const isPasswordValid = (password) => {
-    // Password must be at least 10 characters long
-    if (password.length < 10) {
-      return false;
-    }
+    const requirements = {
+      length: password.length >= 10,
+      capitalLetter: /[A-Z]/.test(password),
+      number: /\d/.test(password),
+      specialCharacter: /[!@#$%^&*]/.test(password),
+    };
 
-    // Password must contain at least one capital letter
-    if (!/[A-Z]/.test(password)) {
-      return false;
-    }
+    return requirements;
+  };
 
-    // Password must contain at least one number
-    if (!/\d/.test(password)) {
-      return false;
-    }
+  const handlePasswordChange = (e) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
 
-    // Password must contain at least one special character
-    if (!/[!@#$%^&*]/.test(password)) {
-      return false;
-    }
+    // Check if the password meets the requirements
+    const requirementsMet = isPasswordValid(newPassword);
+    setPasswordRequirements(requirementsMet);
 
-    return true;
+    if (!requirementsMet.length) {
+      setPasswordError("Password must be at least 10 characters long.");
+    } else if (!requirementsMet.capitalLetter) {
+      setPasswordError("Password must contain at least one capital letter.");
+    } else if (!requirementsMet.number) {
+      setPasswordError("Password must contain at least one number.");
+    } else if (!requirementsMet.specialCharacter) {
+      setPasswordError("Password must contain at least one special character.");
+    } else {
+      setPasswordError('');
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!isPasswordValid(password)) {
+    const requirementsMet = isPasswordValid(password);
+
+    if (!requirementsMet.length || !requirementsMet.capitalLetter || !requirementsMet.number || !requirementsMet.specialCharacter) {
       setPasswordError(
-        "Password must be at least 10 characters long and contain one capital letter, one number, and one special character."
+        "Password must meet all requirements: at least 10 characters long, contain one capital letter, one number, and one special character."
       );
       return;
     }
 
     let apiUrl;
-      if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
-        // Use localhost URL for development
-        apiUrl = "http://localhost:4000/api/register"; // Replace your-port with the actual port
-      } else {
-        // Use the remote API URL for production
-        apiUrl = apiRegisterURL;
-      }
+    if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+      // Use localhost URL for development
+      apiUrl = "http://localhost:4000/api/register"; // Replace your-port with the actual port
+    } else {
+      // Use the remote API URL for production
+      apiUrl = apiRegisterURL;
+    }
 
     try {
       const response = await fetch(apiUrl, {
@@ -165,13 +181,21 @@ export const Register = (props) => {
         <label htmlFor="password">Password:</label>
         <input
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={handlePasswordChange}
           type="password"
           placeholder="*******"
           id="password"
           name="password"
         />
         {passwordError && <p className="error-message">{passwordError}</p>}
+        <div className="password-requirements">
+          <p>Password Requirements:<br/>
+            {passwordRequirements.length ? "✅" : "❌"} At least 10 characters long<br/>
+            {passwordRequirements.capitalLetter ? "✅" : "❌"} Contains one capital letter<br/>
+            {passwordRequirements.number ? "✅" : "❌"} Contains one number<br/>
+            {passwordRequirements.specialCharacter ? "✅" : "❌"} Contains one special character<br/>
+            </p>
+        </div>
         <button type="submit">Register</button>
       </form>
       <button className="link-btn" onClick={redirectToLogin}>
