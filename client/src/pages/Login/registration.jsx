@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import "../../firebase";
 import { useNavigate } from "react-router-dom";
-import { getAuth, signInWithPopup, GoogleAuthProvider, TwitterAuthProvider, FacebookAuthProvider } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { db } from "../../firebase"; // Import the Firestore instance
 
-export const Register = (props) => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordError, setPasswordError] = useState('');
+export const Register = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState(""); // Add confirmPassword state
+  const [passwordError, setPasswordError] = useState("");
   const [passwordRequirements, setPasswordRequirements] = useState({
     length: false,
     capitalLetter: false,
@@ -15,7 +17,6 @@ export const Register = (props) => {
     specialCharacter: false,
   });
   const navigate = useNavigate();
-  const apiRegisterURL = "https://healthai-heroku-1a596fab2241.herokuapp.com/api/register";
 
   const isPasswordValid = (password) => {
     const requirements = {
@@ -45,7 +46,7 @@ export const Register = (props) => {
     } else if (!requirementsMet.specialCharacter) {
       setPasswordError("Password must contain at least one special character.");
     } else {
-      setPasswordError('');
+      setPasswordError("");
     }
   };
 
@@ -61,95 +62,33 @@ export const Register = (props) => {
       return;
     }
 
-    let apiUrl;
-    if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
-      // Use localhost URL for development
-      apiUrl = "http://localhost:4000/api/register"; // Replace your-port with the actual port
-    } else {
-      // Use the remote API URL for production
-      apiUrl = apiRegisterURL;
+    if (password !== confirmPassword) {
+      setPasswordError("Passwords do not match.");
+      return;
     }
+
+    const auth = getAuth();
 
     try {
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email, password }),
+      // Create a user with the provided email and password
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+      // The user is created successfully, you can add additional user data to Firestore or other databases here
+      const user = userCredential.user;
+
+      // Add user data to Firestore
+      const userDocRef = db.collection("Users").doc(user.uid);
+      await userDocRef.set({
+        name: name,
+        email: email,
       });
 
-      if (response.ok) {
-        // Registration successful
-        console.log("Success");
-
-        // Redirect to the '/login' path upon successful registration
-        navigate("/profile");
-      } else {
-        // Registration failed
-        const errorMessage = await response.text();
-        console.error("Fail:", errorMessage);
-      }
+      // Redirect to the '/profile' path upon successful registration
+      navigate("/profile");
     } catch (error) {
       console.error("Registration error:", error);
+      setPasswordError("Registration failed. Please try again.");
     }
-  };
-
-  const signInWithGoogle = () => {
-    const auth = getAuth();
-    const provider = new GoogleAuthProvider();
-
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        // The signed-in user info.
-        const user = result.user;
-        console.log(user);
-
-        // Redirect to the './profile' path upon successful Google login
-        navigate("/profile");
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        console.error(error);
-      });
-  };
-
-  const signInWithTwitter = () => {
-    const auth = getAuth();
-    const provider = new TwitterAuthProvider();
-
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        // The signed-in user info.
-        const user = result.user;
-        console.log(user);
-
-        // Redirect to the './profile' path upon successful Twitter login
-        navigate("/profile");
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        console.error(error);
-      });
-  };
-
-  const signInWithFacebook = () => {
-    const auth = getAuth();
-    const provider = new FacebookAuthProvider();
-
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        // The signed-in user info.
-        const user = result.user;
-        console.log(user);
-
-        // Redirect to the './profile' path upon successful Facebook login
-        navigate("/profile");
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        console.error(error);
-      });
   };
 
   const redirectToLogin = () => {
@@ -187,23 +126,30 @@ export const Register = (props) => {
           id="password"
           name="password"
         />
+        <label htmlFor="confirmPassword">Confirm Password:</label>
+        <input
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          type="password"
+          placeholder="*******"
+          id="confirmPassword"
+          name="confirmPassword"
+        />
         {passwordError && <p className="error-message">{passwordError}</p>}
         <div className="password-requirements">
-          <p>Password Requirements:<br/>
-            {passwordRequirements.length ? "✅" : "❌"} At least 10 characters long<br/>
-            {passwordRequirements.capitalLetter ? "✅" : "❌"} Contains one capital letter<br/>
-            {passwordRequirements.number ? "✅" : "❌"} Contains one number<br/>
-            {passwordRequirements.specialCharacter ? "✅" : "❌"} Contains one special character<br/>
-            </p>
+          <p>
+            Password Requirements:<br />
+            {passwordRequirements.length ? "✅" : "❌"} At least 10 characters long<br />
+            {passwordRequirements.capitalLetter ? "✅" : "❌"} Contains one capital letter<br />
+            {passwordRequirements.number ? "✅" : "❌"} Contains one number<br />
+            {passwordRequirements.specialCharacter ? "✅" : "❌"} Contains one special character<br />
+          </p>
         </div>
         <button type="submit">Register</button>
       </form>
       <button className="link-btn" onClick={redirectToLogin}>
         Already have an account? Login here!
       </button>
-      <button className="google-btn" onClick={signInWithGoogle}>Sign in with Google</button><br/>
-      <button className="twitter-btn" onClick={signInWithTwitter}>Sign in with X</button><br/>
-      <button className="facebook-btn" onClick={signInWithFacebook}>Sign in with Facebook</button><br/>
     </div>
   );
 };

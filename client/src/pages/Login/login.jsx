@@ -2,53 +2,41 @@ import React, { useState } from "react";
 import "../../firebase";
 import { useNavigate } from "react-router-dom";
 import PasswordReset from "./passwordReset"; // Import the PasswordReset component
-import { getAuth, signInWithPopup, GoogleAuthProvider, TwitterAuthProvider, FacebookAuthProvider } from "firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+  GoogleAuthProvider,
+  TwitterAuthProvider,
+  FacebookAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState(null);
-  const [isPasswordResetModalOpen, setPasswordResetModalOpen] = useState(false);
   const navigate = useNavigate();
-  const apiLoginURL = "https://healthai-heroku-1a596fab2241.herokuapp.com/api/login";
-  const apiResetURL = "https://healthai-heroku-1a596fab2241.herokuapp.com/api/reset-password";
+  const [isPasswordResetModalOpen, setPasswordResetModalOpen] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    let apiUrl;
-      if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
-        // Use localhost URL for development
-        apiUrl = "http://localhost:4000/api/login"; // Replace your-port with the actual port
-      } else {
-        // Use the remote API URL for production
-        apiUrl = apiLoginURL;
-      }
-  
     try {
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      const auth = getAuth();
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
 
-      if (response.ok) {
-        // Login successful
-        setLoginError(null); // Clear any previous login error
-        console.log("Success");
+      // Login successful
+      setLoginError(null);
+      console.log("Success");
 
-        // Redirect to the '/profile' path upon successful login
-        navigate("/profile");
-      } else {
-        // Login failed
-        const errorMessage = await response.text();
-        setLoginError(errorMessage); // Set the login error message
-        console.log("Fail");
-      }
+      // Redirect to the '/profile' path upon successful login
+      navigate("/profile");
     } catch (error) {
-      console.error(error);
+      const errorMessage = error.message;
+      setLoginError(errorMessage);
+      console.error("Fail");
     }
   };
 
@@ -58,15 +46,11 @@ export const Login = () => {
 
     signInWithPopup(auth, provider)
       .then((result) => {
-        // The signed-in user info.
         const user = result.user;
         console.log(user);
-
-        // Redirect to the './profile' path upon successful Google login
         navigate("/profile");
       })
       .catch((error) => {
-        // Handle Errors here.
         console.error(error);
       });
   };
@@ -77,15 +61,11 @@ export const Login = () => {
 
     signInWithPopup(auth, provider)
       .then((result) => {
-        // The signed-in user info.
         const user = result.user;
         console.log(user);
-
-        // Redirect to the './profile' path upon successful Twitter login
         navigate("/profile");
       })
       .catch((error) => {
-        // Handle Errors here.
         console.error(error);
       });
   };
@@ -96,15 +76,11 @@ export const Login = () => {
 
     signInWithPopup(auth, provider)
       .then((result) => {
-        // The signed-in user info.
         const user = result.user;
         console.log(user);
-
-        // Redirect to the './profile' path upon successful Facebook login
         navigate("/profile");
       })
       .catch((error) => {
-        // Handle Errors here.
         console.error(error);
       });
   };
@@ -114,32 +90,15 @@ export const Login = () => {
   };
 
   const handleResetPassword = async (resetEmail) => {
-
-    let apiUrl;
-      if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
-        // Use localhost URL for development
-        apiUrl = "http://localhost:4000/api/reset-password"; // Replace your-port with the actual port
-      } else {
-        // Use the remote API URL for production
-        apiUrl = apiResetURL;
-      }
+    const auth = getAuth();
 
     try {
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: resetEmail }),
-      });
+      // Send a password reset email
+      await sendPasswordResetEmail(auth, resetEmail);
 
-      if (response.ok) {
-        console.log("Password reset email sent!");
-        handleClosePasswordResetModal();
-      } else {
-        const errorMessage = await response.text();
-        console.error("Password reset error:", errorMessage);
-      }
+      // Password reset email sent
+      console.log("Password reset email sent!");
+      handleClosePasswordResetModal();
     } catch (error) {
       console.error("Password reset error:", error);
     }
@@ -181,11 +140,12 @@ export const Login = () => {
       <button className="link-btn" onClick={handleOpenPasswordResetModal}>
         Forgot your password?
       </button>
+
       {/* Render the PasswordResetModal as a portal */}
       <PasswordReset
         isOpen={isPasswordResetModalOpen}
         onClose={handleClosePasswordResetModal}
-        onResetPassword={handleResetPassword} // Pass the reset function
+        onResetPassword={handleResetPassword}
       />
       <button className="link-btn" onClick={redirectToRegister}>
         Don't have an account? Register here!
@@ -193,7 +153,6 @@ export const Login = () => {
       <button className="google-btn" onClick={signInWithGoogle}>Sign in with Google</button><br/>
       <button className="twitter-btn" onClick={signInWithTwitter}>Sign in with X</button><br/>
       <button className="facebook-btn" onClick={signInWithFacebook}>Sign in with Facebook</button><br/>
-
     </div>
   );
 };
