@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useAuthentication } from '../../Components/authObserver';
 import { db } from '../../firebase';
 
-const Profile = () => {
+const Dashboard = () => {
   const { user } = useAuthentication();
-  const [userName, setUserName] = useState('');
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [provider, setProvider] = useState(null);
 
   useEffect(() => {
     if (user && user.uid) {
-      // Query the Firestore database for the user's name based on their uid
+      // Query the Firestore database for the user's provider based on their uid
       const query = db.collection('Users').doc(user.uid);
 
       query
@@ -17,8 +16,11 @@ const Profile = () => {
         .then((doc) => {
           if (doc.exists) {
             const userData = doc.data();
-            const name = userData.name;
-            setUserName(name);
+            if (userData.provider) {
+              setProvider(userData.provider);
+            } else {
+              console.log('Provider not found in Firestore');
+            }
           } else {
             console.log('User not found in Firestore');
           }
@@ -26,21 +28,15 @@ const Profile = () => {
         .catch((error) => {
           console.error('Error getting user data from Firestore:', error);
         });
-
-      setLoggedIn(true);
     }
   }, [user]);
 
   return (
     <div>
-      <h1>Profile</h1>
-      {loggedIn ? (
-        <p>Welcome, {userName}!</p>
-      ) : (
-        <p>Please log in to access your profile.</p>
-      )}
+      <h1>Dashboard</h1>
+      {provider && <p>You have signed up with {provider}</p>}
     </div>
   );
 };
 
-export default Profile;
+export default Dashboard;

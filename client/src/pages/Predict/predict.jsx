@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useAuthentication } from '../../Components/authObserver';
 import { db } from '../../firebase';
 
-const Reports = () => {
+const Predict = () => {
   const { user } = useAuthentication();
 
   useEffect(() => {
@@ -28,10 +28,10 @@ const Reports = () => {
     return (
         <div>
             <h1>
-                Reports
+                Predict
             </h1>
         </div>
     )
 };
  
-export default Reports;
+export default Predict;

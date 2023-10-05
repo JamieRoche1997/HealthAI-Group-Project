@@ -1,0 +1,98 @@
+.authHeader-Header {
+    position: fixed;
+    top: 0; /* Stick it to the top */
+    max-height: 70px;
+    width: 100vw;
+    grid-template-areas: "logo nav";
+    text-align: center;
+  
+    /* Cosmetics */
+    background-color: white;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  }
+  
+  .Logo {
+    grid-area: logo;
+    height: 70px;
+  }
+  
+  .authHeader-Nav {
+    display: grid;
+    grid-area: nav;
+    grid-template-columns: repeat(7, auto);
+    align-items: center;
+    justify-items: center;
+    text-align: center;
+  }
+  .authHeader-Nav button {
+    color: #6e2579;
+    font-size: 20px;
+    font-weight: 500;
+    transition: 0.5s;
+    text-decoration: none;
+    background-color: transparent;
+  }
+  .authHeader-Nav button:hover {
+    transform: scale(1.1);
+    background-color: transparent;
+  }
+  
+  .authHeader-NavAnimation-enter {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  .authHeader-NavAnimation-enter-active {
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 350ms, transform 350ms;
+  }
+  .authHeader-NavAnimation-exit {
+    opacity: 1;
+  }
+  .authHeader-NavAnimation-exit-active {
+    opacity: 0;
+    transform: scale(0.5);
+    transition: opacity 350ms, transform 350ms;
+  }
+  .authHeader-Footer {
+    font-family: sans-serif;
+    text-align: center;
+    /* max-height: 70px; */
+    /* width: 100vw; */
+  }
+  .authHeader-Navfooter {
+    display: grid;
+    grid-area: Navfooter;
+    grid-template-columns: repeat(6, auto);
+    align-items: center;
+    justify-items: center;
+  }
+  .authHeader-Navfooter a {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+    transition: 0.5s;
+    text-decoration: none;
+  }
+  .authHeader-Navfooter a:hover {
+    transform: scale(1.1);
+  }
+  .authHeader-Navfooter button {
+    padding: 10px;
+    outline: none;
+    border: none;
+    font-size: 10px;
+    color: #fff;
+    font-weight: 600;
+    background-color: #f57328;
+    box-shadow: 0px 5px 0px 0px rgba(255, 0, 0, 0.25);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 70ms;
+  }
+  
+  .authHeader-Navfooter button:active {
+    transform: translateY(3px);
+    box-shadow: 0px 2px 0px 0px rgba(255, 0, 0, 0.25);
+  }
+  

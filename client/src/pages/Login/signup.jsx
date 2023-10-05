@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import "../../firebase";
 import { useNavigate } from "react-router-dom";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, AuthErrorCodes } from "firebase/auth";
 import { db } from "../../firebase"; // Import the Firestore instance
 
-export const Register = () => {
+export const SignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const provider = "email";
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState(""); // Add confirmPassword state
   const [passwordError, setPasswordError] = useState("");
@@ -37,59 +38,62 @@ export const Register = () => {
     const requirementsMet = isPasswordValid(newPassword);
     setPasswordRequirements(requirementsMet);
 
-    if (!requirementsMet.length) {
-      setPasswordError("Password must be at least 10 characters long.");
-    } else if (!requirementsMet.capitalLetter) {
-      setPasswordError("Password must contain at least one capital letter.");
-    } else if (!requirementsMet.number) {
-      setPasswordError("Password must contain at least one number.");
-    } else if (!requirementsMet.specialCharacter) {
-      setPasswordError("Password must contain at least one special character.");
-    } else {
-      setPasswordError("");
-    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const requirementsMet = isPasswordValid(password);
-
+  
     if (!requirementsMet.length || !requirementsMet.capitalLetter || !requirementsMet.number || !requirementsMet.specialCharacter) {
       setPasswordError(
         "Password must meet all requirements: at least 10 characters long, contain one capital letter, one number, and one special character."
       );
       return;
     }
-
+  
     if (password !== confirmPassword) {
       setPasswordError("Passwords do not match.");
       return;
     }
-
+  
     const auth = getAuth();
-
+  
     try {
       // Create a user with the provided email and password
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-
+  
       // The user is created successfully, you can add additional user data to Firestore or other databases here
       const user = userCredential.user;
-
-      // Add user data to Firestore
+  
+      // Add user data to Firestore, including uid
       const userDocRef = db.collection("Users").doc(user.uid);
       await userDocRef.set({
+        uid: user.uid, // Add the uid to Firestore
         name: name,
         email: email,
+        provider: provider,
       });
-
-      // Redirect to the '/profile' path upon successful registration
+  
+      // Redirect to the '/profile' path upon successful sign up
       navigate("/profile");
     } catch (error) {
-      console.error("Registration error:", error);
-      setPasswordError("Registration failed. Please try again.");
+      console.error("Sign up error:", error);
+  
+      // Handle specific Firebase error codes
+      switch (error.code) {
+        case AuthErrorCodes.EMAIL_EXISTS:
+          setPasswordError("Email already exists. Please use a different email.");
+          break;
+        case AuthErrorCodes.NETWORK_REQUEST_FAILED:
+          setPasswordError("Network error. Please check your internet connection and try again.");
+          break;
+        default:
+          setPasswordError("Sign up failed. Please try again.");
+      }
     }
   };
+  
 
   const redirectToLogin = () => {
     navigate("/login"); // Redirect to the "/login" path
@@ -97,7 +101,7 @@ export const Register = () => {
 
   return (
     <div className="auth-form-container">
-      <h2>Register</h2>
+      <h2>Sign Up</h2>
       <form className="register-form" onSubmit={handleSubmit}>
         <label htmlFor="name">Name:</label>
         <input
@@ -145,7 +149,7 @@ export const Register = () => {
             {passwordRequirements.specialCharacter ? "✅" : "❌"} Contains one special character<br />
           </p>
         </div>
-        <button type="submit">Register</button>
+        <button type="submit">Sign Up</button>
       </form>
       <button className="link-btn" onClick={redirectToLogin}>
         Already have an account? Login here!
