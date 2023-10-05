@@ -39,11 +39,16 @@ export default function Header() {
     navigate("/contact"); // Redirect to the "/contact" path
   };
 
+  const redirectToRating = () => {
+    navigate("/rating"); // Redirect to the "/rating" path
+  }
+
   // Define button data
   const buttons = [
     { label: "HealthAI", onClick: redirectToHome },
     { label: "About Us", onClick: redirectToAbout },
     { label: "Contact", onClick: redirectToContact },
+    { label: "Rating", onClick: redirectToRating },
   ];
 
   return (

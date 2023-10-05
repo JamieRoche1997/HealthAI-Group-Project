@@ -1,0 +1,18 @@
+/* Define styles for the star icons */
+.star {
+    cursor: pointer;
+    font-size: 24px; /* Adjust the size as needed */
+    color: #ccc; /* Default star color */
+    transition: color 0.2s; /* Smooth color transition */
+  }
+  
+  /* Highlight the stars when selected */
+  .star.highlighted {
+    color: yellow; /* Highlighted star color */
+  }
+
+  /* Hide radio buttons */
+.star input[type="radio"] {
+    display: none;
+  }
+  

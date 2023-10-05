@@ -9,7 +9,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (user && user.uid) {
       // Query the Firestore database for the user's provider based on their uid
-      const query = db.collection('Users').doc(user.uid);
+      const query = db.collection('Staff').doc(user.uid);
 
       query
         .get()
@@ -34,7 +34,7 @@ const Dashboard = () => {
   return (
     <div>
       <h1>Dashboard</h1>
-      {provider && <p>You have signed up with {provider}</p>}
+      {provider && <p>You have signed up with {provider}.</p>}
     </div>
   );
 };

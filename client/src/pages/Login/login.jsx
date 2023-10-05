@@ -65,7 +65,7 @@ export const Login = () => {
         // Store user data in Firestore
         storeUserData(user, provider.providerId);
 
-        navigate("/profile");
+        navigate("/register-info");
       })
       .catch((error) => {
         handleAuthError(error);
@@ -83,7 +83,7 @@ export const Login = () => {
         // Store user data in Firestore
         storeUserData(user, provider.providerId);
 
-        navigate("/profile");
+        navigate("/register-info");
       })
       .catch((error) => {
         handleAuthError(error);
@@ -101,7 +101,7 @@ export const Login = () => {
         // Store user data in Firestore
         storeUserData(user, provider.providerId);
 
-        navigate("/profile");
+        navigate("/register-info");
       })
       .catch((error) => {
         handleAuthError(error);
@@ -109,7 +109,7 @@ export const Login = () => {
   };
 
   const storeUserData = async (user, provider) => {
-    const userRef = db.collection("Users").doc(user.uid);
+    const userRef = db.collection("Staff").doc(user.uid);
 
     // Check if the user already exists in the database
     const userSnapshot = await userRef.get();
@@ -121,6 +121,7 @@ export const Login = () => {
         name: user.displayName || "",
         email: user.email || "",
         provider: provider,
+        timestamp: new Date(),
       });
     } else {
       // If the user already exists, update the provider

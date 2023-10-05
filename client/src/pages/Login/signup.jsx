@@ -67,16 +67,17 @@ export const SignUp = () => {
       const user = userCredential.user;
   
       // Add user data to Firestore, including uid
-      const userDocRef = db.collection("Users").doc(user.uid);
+      const userDocRef = db.collection("Staff").doc(user.uid);
       await userDocRef.set({
         uid: user.uid, // Add the uid to Firestore
         name: name,
         email: email,
         provider: provider,
+        timestamp: new Date(),
       });
   
       // Redirect to the '/profile' path upon successful sign up
-      navigate("/profile");
+      navigate("/register-info");
     } catch (error) {
       console.error("Sign up error:", error);
   

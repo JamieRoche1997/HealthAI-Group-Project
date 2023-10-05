@@ -4,6 +4,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import Home from "./pages/Home/home";
 import About from "./pages/About/about";
 import Contact from "./pages/Contact/contact";
+import Rating from "./pages/Rating/rating"
 import Patients from "./pages/Patients/patients";
 import Profile from "./pages/Profile/profile";
 import Reports from "./pages/Reports/reports";
@@ -14,13 +15,15 @@ import Header from "./Components/Header/header.jsx";
 import AuthHeader from "./Components/Header/authHeader"
 import { Login } from "./pages/Login/login.jsx";
 import { SignUp } from "./pages/Login/signup.jsx";
+import RegisterInfo from "./pages/Login/register-info";
 import AuthObserver from "./Components/authObserver";
+import PricingPage from "./pages/Payment/PricingPage"
 
 function App() {
   const location = useLocation();
 
   // Define paths where you want to show the header
-  const showHeaderPaths = ["/", "/about", "/contact", "/login", "signup"];
+  const showHeaderPaths = ["/", "/about", "/contact", "/login", "/signup", "/rating"];
   const showAuthHeaderPaths = ["/profile", "/reports", "/patients", "/dashboard", "/predict", "/llm"]
 
   // Check if the current location should show the header
@@ -38,8 +41,11 @@ function App() {
               <Route exact path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
+              <Route path="/register-info" element={<RegisterInfo />} />
+              <Route path="/pricing-page" element={<PricingPage />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/rating" element={<Rating />} />
               <Route path="/patients" element={<Patients />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/reports" element={<Reports />} />

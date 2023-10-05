@@ -8,7 +8,7 @@ const LLM = () => {
   useEffect(() => {
     if (user && user.email) {
       // Query the Firestore database for the user's name based on their email
-      const query = db.collection('Users').where('email', '==', user.email);
+      const query = db.collection('Staff').where('email', '==', user.email);
 
       query
         .get()

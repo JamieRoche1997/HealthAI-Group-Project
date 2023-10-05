@@ -8,15 +8,15 @@ body {
 .App {
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* issue */
   align-items: center;
   background-image: linear-gradient(79deg, #9454a0, #b287c8 48%, #f7924e);
 }
 
 .App .Content {
-  max-width: 800px;
+  max-width: 800px; /* issue */
   padding: 20px;
-  text-align: center;
+  text-align: center; 
   color: white;
   margin: auto;
   flex-grow: 1; /* Allow the Content to grow and take up available space */
@@ -175,3 +175,4 @@ button {
 .contact-form button[type="submit"]:hover {
   background-color: #0056b3;
 }
+
