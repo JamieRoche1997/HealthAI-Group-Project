@@ -56,57 +56,82 @@ export const Login = () => {
 
   const signInWithGoogle = () => {
     const provider = new GoogleAuthProvider();
-
+  
     signInWithPopup(auth, provider)
-      .then((result) => {
+      .then(async (result) => {
         const user = result.user;
         console.log(user);
-
-        // Store user data in Firestore
-        storeUserData(user, provider.providerId);
-
-        navigate("/register-info");
+  
+        // Check if the user's home address exists in Firestore
+        const userRef = db.collection("Staff").doc(user.uid);
+        const userSnapshot = await userRef.get();
+  
+        if (userSnapshot.exists && userSnapshot.data().addressLine1) {
+          // Home address exists, navigate to /profile
+          navigate("/profile");
+        } else {
+          // Home address does not exist, navigate to /register-info
+          await storeUserData(user, provider.providerId);
+          navigate("/register-info");
+        }
       })
       .catch((error) => {
         handleAuthError(error);
       });
   };
-
+  
   const signInWithTwitter = () => {
     const provider = new TwitterAuthProvider();
-
+  
     signInWithPopup(auth, provider)
-      .then((result) => {
+      .then(async (result) => {
         const user = result.user;
         console.log(user);
-
-        // Store user data in Firestore
-        storeUserData(user, provider.providerId);
-
-        navigate("/register-info");
+  
+        // Check if the user's home address exists in Firestore
+        const userRef = db.collection("Staff").doc(user.uid);
+        const userSnapshot = await userRef.get();
+  
+        if (userSnapshot.exists && userSnapshot.data().addressLine1) {
+          // Home address exists, navigate to /profile
+          navigate("/profile");
+        } else {
+          // Home address does not exist, navigate to /register-info
+          await storeUserData(user, provider.providerId);
+          navigate("/register-info");
+        }
       })
       .catch((error) => {
         handleAuthError(error);
       });
   };
-
+  
   const signInWithFacebook = () => {
     const provider = new FacebookAuthProvider();
-
+  
     signInWithPopup(auth, provider)
-      .then((result) => {
+      .then(async (result) => {
         const user = result.user;
         console.log(user);
-
-        // Store user data in Firestore
-        storeUserData(user, provider.providerId);
-
-        navigate("/register-info");
+  
+        // Check if the user's home address exists in Firestore
+        const userRef = db.collection("Staff").doc(user.uid);
+        const userSnapshot = await userRef.get();
+  
+        if (userSnapshot.exists && userSnapshot.data().addressLine1) {
+          // Home address exists, navigate to /profile
+          navigate("/profile");
+        } else {
+          // Home address does not exist, navigate to /register-info
+          await storeUserData(user, provider.providerId);
+          navigate("/register-info");
+        }
       })
       .catch((error) => {
         handleAuthError(error);
       });
   };
+  
 
   const storeUserData = async (user, provider) => {
     const userRef = db.collection("Staff").doc(user.uid);
@@ -206,6 +231,7 @@ export const Login = () => {
           placeholder="johndoe@gmail.com"
           id="email"
           name="email"
+          required
         />
         <label htmlFor="password">Password:</label>
         <input
@@ -215,6 +241,7 @@ export const Login = () => {
           placeholder="*******"
           id="password"
           name="password"
+          required
         />
         <button type="submit">Login</button>
       </form>

@@ -70,6 +70,7 @@ const RegisterInfo = () => {
           placeholder="123 Main St"
           id="addressLine1"
           name="addressLine1"
+          required
         /><br/>
         <label htmlFor="addressLine2">Address Line 2:</label><br/>
         <input
@@ -79,6 +80,7 @@ const RegisterInfo = () => {
           placeholder="Apt 4B"
           id="addressLine2"
           name="addressLine2"
+          required
         /><br/>
         <label htmlFor="town">Town:</label><br/>
         <input
@@ -88,6 +90,7 @@ const RegisterInfo = () => {
           placeholder="Town"
           id="town"
           name="town"
+          required
         /><br/>
         <label htmlFor="city">City:</label><br/>
         <input
@@ -97,6 +100,7 @@ const RegisterInfo = () => {
           placeholder="City"
           id="city"
           name="city"
+          required
         /><br/>
         <label htmlFor="country">Country:</label><br/>
         <input
@@ -106,6 +110,7 @@ const RegisterInfo = () => {
           placeholder="Country"
           id="country"
           name="country"
+          required
         /><br/>
         <label htmlFor="postcode">Postcode:</label><br/>
         <input
@@ -124,6 +129,7 @@ const RegisterInfo = () => {
           placeholder="+1234567890"
           id="phoneNumber"
           name="phoneNumber"
+          required
         /><br/>
         <label htmlFor="licenseNumber">Medical License Number:</label><br/>
         <input
@@ -142,6 +148,7 @@ const RegisterInfo = () => {
           placeholder="123 Main St"
           id="workplace"
           name="workplace"
+          required
         /><br/>
         <label htmlFor="workaddressLine1">Work Address Line 1:</label><br/>
         <input
@@ -151,6 +158,7 @@ const RegisterInfo = () => {
           placeholder="123 Main St"
           id="workaddressLine1"
           name="workaddressLine1"
+          required
         /><br/>
         <label htmlFor="workaddressLine2">Work Address Line 2:</label><br/>
         <input
@@ -160,6 +168,7 @@ const RegisterInfo = () => {
           placeholder="Apt 4B"
           id="workaddressLine2"
           name="workaddressLine2"
+          required
         /><br/>
         <label htmlFor="worktown">Work Town:</label><br/>
         <input
@@ -169,6 +178,7 @@ const RegisterInfo = () => {
           placeholder="Town"
           id="worktown"
           name="worktown"
+          required
         /><br/>
         <label htmlFor="workcity">Work City:</label><br/>
         <input
@@ -178,6 +188,7 @@ const RegisterInfo = () => {
           placeholder="City"
           id="workcity"
           name="workcity"
+          required
         /><br/>
         <label htmlFor="workcountry">Work Country:</label><br/>
         <input
@@ -187,6 +198,7 @@ const RegisterInfo = () => {
           placeholder="Country"
           id="workcountry"
           name="workcountry"
+          required
         /><br/>
         <label htmlFor="workpostcode">Work Postcode:</label><br/>
         <input
@@ -196,6 +208,7 @@ const RegisterInfo = () => {
           placeholder="12345"
           id="workpostcode"
           name="workpostcode"
+          required
         /><br/>
         <button type="submit">Next</button>
       </form>

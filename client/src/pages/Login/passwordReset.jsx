@@ -14,6 +14,7 @@ const PasswordReset = ({ isOpen, onClose, onResetPassword }) => {
         <input
           type="email"
           placeholder="Enter your email"
+          required
           value={resetEmail}
           onChange={(e) => setResetEmail(e.target.value)}
         />

@@ -112,6 +112,7 @@ export const SignUp = () => {
           placeholder="John Doe"
           id="name"
           name="name"
+          required
         />
         <label htmlFor="email">Email Address:</label>
         <input
@@ -121,6 +122,7 @@ export const SignUp = () => {
           placeholder="johndoe@gmail.com"
           id="email"
           name="email"
+          required
         />
         <label htmlFor="password">Password:</label>
         <input
@@ -130,6 +132,7 @@ export const SignUp = () => {
           placeholder="*******"
           id="password"
           name="password"
+          required
         />
         <label htmlFor="confirmPassword">Confirm Password:</label>
         <input
@@ -139,6 +142,7 @@ export const SignUp = () => {
           placeholder="*******"
           id="confirmPassword"
           name="confirmPassword"
+          required
         />
         {passwordError && <p className="error-message">{passwordError}</p>}
         <div className="password-requirements">

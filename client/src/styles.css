@@ -8,13 +8,12 @@ body {
 .App {
   min-height: 100vh;
   display: flex;
-  flex-direction: column; /* issue */
   align-items: center;
   background-image: linear-gradient(79deg, #9454a0, #b287c8 48%, #f7924e);
 }
 
-.App .Content {
-  max-width: 800px; /* issue */
+ .Content {
+  max-width: 1000px; /* issue */
   padding: 20px;
   text-align: center; 
   color: white;
@@ -27,6 +26,7 @@ body {
 .auth-form-container, .login-form, .register-form, .home-form-container {
   display: flex;
   flex-direction: column;
+  max-width: 800px;
 }
 
 @media screen and (min-width: 600px){
@@ -38,7 +38,7 @@ body {
   }
 }
 
-.home-form-container{
+.home-form-container, .auth-form-container{
   text-align: center;
   align-items: center;
 }
@@ -50,6 +50,7 @@ label {
 }
 
 input {
+  width: 250px; 
   margin: 0.5rem 0;
   padding: 1rem;
   border: none;
@@ -72,7 +73,7 @@ button {
 }
 
 .home-btn {
-  width: 150px; 
+  width: 250px; 
   height: 50px;
   border: none;
   background-color: white;
@@ -84,6 +85,8 @@ button {
 }
 
 .google-btn {
+    width: 250px; 
+    height: 50px;
     border: none;
     background-color: white;
     padding: 20px;
@@ -94,6 +97,8 @@ button {
 }
 
 .twitter-btn {
+    width: 250px; 
+    height: 50px;
     border: none;
     background-color: white;
     padding: 20px;
@@ -104,6 +109,8 @@ button {
 }
 
 .facebook-btn {
+  width: 250px; 
+  height: 50px;
   border: none;
   background-color: white;
   padding: 20px;
