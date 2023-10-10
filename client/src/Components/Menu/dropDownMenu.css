@@ -1,0 +1,21 @@
+/* DropdownMenu.css */
+.dropdown-menu {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+  }
+  
+  /* Style for individual buttons */
+  .dropdown-item {
+    margin-bottom: 8px; 
+    color: #6e2579;
+    font-size: 20px;
+    font-weight: 500;
+    transition: 0.5s;
+    text-decoration: none;
+    background-color: transparent;
+  }
+  
+.dropdown-item:hover {
+    transform: scale(1.1);
+    background-color: transparent;
+  }

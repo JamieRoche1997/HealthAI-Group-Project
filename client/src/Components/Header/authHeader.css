@@ -96,3 +96,28 @@
     box-shadow: 0px 2px 0px 0px rgba(255, 0, 0, 0.25);
   }
   
+  .user-dropdown-container {
+    position: absolute;
+    top: 70px; /* Adjust this value as needed to position the dropdown under the user icon */
+    right: -300px; /* Initially hide the dropdown to the right */
+    width: 175px; /* Adjust the width as needed */
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    transition: right 0.3s ease-in-out;
+    z-index: 999; /* Ensure it's above other elements */
+    overflow-y: auto; /* Add scroll if content exceeds the height */
+    border-radius: 30px;
+  }
+  
+  /* Style for user dropdown items */
+  .user-dropdown-item {
+    padding: 15px;
+    font-size: 18px;
+    text-align: right;
+    border-bottom: 1px solid #ddd;
+  }
+
+/* Show the user dropdown when 'isUserMenuOpen' is true */
+.user-dropdown-container.active {
+  right: 0;
+}

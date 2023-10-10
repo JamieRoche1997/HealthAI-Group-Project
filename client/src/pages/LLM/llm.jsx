@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useAuthentication } from '../../Components/authObserver';
 import { db } from '../../firebase';
 
 const LLM = () => {
   const { user } = useAuthentication();
   const [input, setInput] = useState('');
-  const [response, setResponse] = useState('');
   const [subscriptionStatus, setSubscriptionStatus] = useState('loading');
 
   useEffect(() => {
@@ -22,9 +20,11 @@ const LLM = () => {
             // Assuming the document structure includes an 'activeSubscription' field and a 'priceID' field
             const activeSubscription = doc.data().activeSubscription;
             const priceID = doc.data().priceID;
+            console.log(activeSubscription);
+            console.log(priceID)
 
             // Check if the user has an active subscription with the required price IDs
-            if (activeSubscription === true && (priceID === 'price_1NxvKuF4O3GGcqFnjiaCWlHp' || priceID === 'price_1NxvKuF4O3GGcqFnHupONSSa')) {
+            if (activeSubscription === true && (priceID === 'price_1NxvKcF4O3GGcqFnjiaCWlHp' || priceID === 'price_1NxvKuF4O3GGcqFnHupONSSa')) {
               setSubscriptionStatus('active');
             } else {
               setSubscriptionStatus('upgrade');
@@ -41,36 +41,8 @@ const LLM = () => {
     }
   }, [user]);
 
-  const makeApiRequestWithRetry = async () => {
-    const maxRetries = 3; // Maximum number of retries
-    let retries = 0;
-    let retryDelay = 1000; // Initial retry delay in milliseconds
-
-    while (retries < maxRetries) {
-      try {
-        const response = await axios.post('http://localhost:4000/api/ask-gpt3', { input });
-        setResponse(response.data.answer);
-        return; // Request successful, exit the loop
-      } catch (error) {
-        if (error.response && error.response.status === 429) {
-          // 429 Too Many Requests error, retry after a delay
-          await new Promise((resolve) => setTimeout(resolve, retryDelay));
-          retries++;
-          retryDelay *= 2; // Exponential backoff
-        } else {
-          console.error('Error:', error);
-          break; // Handle other errors differently
-        }
-      }
-    }
-
-    // Handle the case when retries are exhausted
-    console.error('Too many retries. Please try again later.');
-  };
-
   const handleSubmit = () => {
     if (subscriptionStatus === 'active') {
-      makeApiRequestWithRetry();
     } else {
       alert('Upgrade to a Premium subscription to access this feature.');
     }
@@ -89,7 +61,6 @@ const LLM = () => {
             onChange={(e) => setInput(e.target.value)}
           />
           <button onClick={handleSubmit}>Ask</button>
-          {response && <p>Bot: {response}</p>}
         </div>
       );
       break;

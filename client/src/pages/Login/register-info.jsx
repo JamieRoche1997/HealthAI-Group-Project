@@ -208,7 +208,6 @@ const RegisterInfo = () => {
           placeholder="12345"
           id="workpostcode"
           name="workpostcode"
-          required
         /><br/>
         <button type="submit">Next</button>
       </form>

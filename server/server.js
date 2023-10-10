@@ -8,6 +8,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+// Backend Server URL - https://healthai-heroku-1a596fab2241.herokuapp.com/
+
 const port = process.env.PORT || 4000;
 
 app.use(bodyParser.json());

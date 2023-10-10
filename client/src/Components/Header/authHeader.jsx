@@ -1,32 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./authHeader.css";
 import { CSSTransition } from "react-transition-group";
 import { useNavigate } from "react-router-dom";
 import logo from "../../Images/logo.png";
-import DropdownMenu from "../Menu/dropDownMenu"; // Import the DropdownMenu component
-import { getAuth, signOut } from "firebase/auth"; // Import Firebase authentication functions
+import DropdownMenu from "../Menu/dropDownMenu";
+import { getAuth, signOut } from "firebase/auth";
+import { FiUser } from "react-icons/fi";
 
 export default function AuthHeader() {
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 700px)");
-    mediaQuery.addListener(handleMediaQueryChange);
-    handleMediaQueryChange(mediaQuery);
-
-    return () => {
-      mediaQuery.removeListener(handleMediaQueryChange);
-    };
-  }, []);
-
-  const handleMediaQueryChange = (mediaQuery) => {
-    if (mediaQuery.matches) {
-      setIsSmallScreen(true);
-    } else {
-      setIsSmallScreen(false);
-    }
-  };
+  const dropdownRef = useRef(null);
 
   const redirectToDashboard = () => {
     navigate("/dashboard");
@@ -48,7 +32,11 @@ export default function AuthHeader() {
     navigate("/llm");
   };
 
-const handleLogout = () => {
+  const redirectToProfile = () => {
+    navigate("/profile");
+  }
+
+  const handleLogout = () => {
     const auth = getAuth();
 
     // Sign out the user
@@ -56,12 +44,12 @@ const handleLogout = () => {
       .then(() => {
         // Redirect to the login page or any other desired page after logout
         navigate("/login");
+        setIsUserMenuOpen(false); // Close the user menu on logout
       })
       .catch((error) => {
         console.error("Logout error:", error);
       });
-};
-
+  };
 
   // Define button data
   const buttons = [
@@ -70,28 +58,59 @@ const handleLogout = () => {
     { label: "Patients", onClick: redirectToPatients },
     { label: "Predict", onClick: redirectToPredict },
     { label: "LLM", onClick: redirectToLLM },
-    { label: "Logout", onClick: handleLogout },
   ];
+
+  const buttonsCountRef = useRef(buttons.length);
+
+  useEffect(() => {
+    // Calculate the height of the dropdown based on the number of buttons
+    if (dropdownRef.current) {
+      const buttonHeight = 50; // Adjust this value based on your button styling
+      const dropdownHeight = buttonsCountRef.current * buttonHeight - 75;
+      dropdownRef.current.style.height = `${dropdownHeight}px`;
+    }
+  }, [isUserMenuOpen]);
+
+  const handleUserIconClick = () => {
+    setIsUserMenuOpen(!isUserMenuOpen);
+  };
 
   return (
     <header className="authHeader-Header">
       <CSSTransition
-        in={!isSmallScreen}
+        in={true}
         timeout={350}
         classNames="authHeader-NavAnimation"
         unmountOnExit
       >
         <nav className="authHeader-Nav">
           <img src={logo} alt={"Logo"} width={50} height={50} />
-          {buttons.map((button, index) => (
+          {buttons.slice(0, 5).map((button, index) => (
             <button key={index} onClick={button.onClick}>
               {button.label}
             </button>
           ))}
+          <button onClick={handleUserIconClick}>
+            <FiUser size={24} /> {/* User icon */}
+          </button>
         </nav>
       </CSSTransition>
 
-      {isSmallScreen && <DropdownMenu buttons={buttons} />}
+      {/* Render the user dropdown */}
+      {isUserMenuOpen && (
+        <div
+          ref={dropdownRef}
+          className={`user-dropdown-container ${isUserMenuOpen ? "active" : ""}`}
+        >
+          <DropdownMenu
+            buttons={[
+              { label: "Profile", onClick: redirectToProfile },
+              { label: "Logout", onClick: handleLogout }
+            ]}
+            closeMenu={() => setIsUserMenuOpen(false)} // Pass closeMenu here
+          />
+        </div>
+      )}
     </header>
   );
 }

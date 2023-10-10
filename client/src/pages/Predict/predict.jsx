@@ -19,8 +19,6 @@ const Predict = () => {
             // Assuming the document structure includes an 'activeSubscription' field and a 'price' field
             const activeSubscription = doc.data().activeSubscription;
             const priceID = doc.data().priceID;
-            console.log(activeSubscription);
-            console.log(priceID);
 
             // Check if the user has an active subscription with the required price ID
             if (activeSubscription === true && priceID === 'price_1NxvKuF4O3GGcqFnHupONSSa') {
