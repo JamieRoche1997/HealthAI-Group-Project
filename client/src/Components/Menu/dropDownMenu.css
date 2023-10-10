@@ -2,6 +2,9 @@
 .dropdown-menu {
     display: flex;
     flex-direction: column; /* Stack items vertically */
+    @media (max-width: 700px) {
+      flex-direction: row;
+  }
   }
   
   /* Style for individual buttons */
@@ -13,6 +16,7 @@
     transition: 0.5s;
     text-decoration: none;
     background-color: transparent;
+    
   }
   
 .dropdown-item:hover {

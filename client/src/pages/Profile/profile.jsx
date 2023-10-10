@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuthentication } from '../../Components/authObserver';
 import { db } from '../../firebase';
+import axios from 'axios';
 
 const Profile = () => {
   const { user } = useAuthentication();
@@ -8,6 +9,7 @@ const Profile = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [updatedUserData, setUpdatedUserData] = useState({});
+  const [isLoadingManage, setIsLoadingManage] = useState(false);
 
   useEffect(() => {
     if (user && user.uid) {
@@ -57,6 +59,55 @@ const Profile = () => {
         });
     }
   };
+
+  const retrieveCustomerPortalSession = () => {
+    if (user && user.uid) {
+      // Set loading state to true
+      setIsLoadingManage(true);
+  
+      // Query the Firestore database for the user's data based on their uid
+      const query = db.collection('Staff').doc(user.uid);
+  
+      query
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            const userData = doc.data();
+            if (userData.activeSubscription) {
+              // User has an active subscription, create a customer portal session
+              axios
+                .post('https://healthai-heroku-1a596fab2241.herokuapp.com/api/retrieve-customer-portal-session', {
+                  user: user, // Send the user object
+                })
+                .then((response) => {
+                  const { customerPortalSessionUrl } = response.data;
+                  window.location.href = customerPortalSessionUrl;
+                  console.log(customerPortalSessionUrl);
+                })
+                .catch((error) => {
+                  console.error('Error retrieving customer portal session:', error);
+                })
+                .finally(() => {
+                  // Set loading state back to false when the request is completed
+                  setIsLoadingManage(false);
+                });
+            } else {
+              // User does not have an active subscription, redirect to pricing page
+              window.location.href = '/pricing-page'; // Change this URL to your pricing page path
+            }
+          } else {
+            console.log('User not found in Firestore');
+          }
+        })
+        .catch((error) => {
+          console.error('Error getting user data from Firestore:', error);
+        });
+    } else {
+      console.error('User not authenticated');
+    }
+  };
+  
+  
 
   return (
     <div>
@@ -198,9 +249,6 @@ const Profile = () => {
                 onChange={handleInputChange}
               /><br/><br/>
 
-              {/* Add other input fields for the remaining user information */}
-              {/* For example, "workaddressLine1," "workaddressLine2," etc. */}
-
               <button onClick={saveUserData}>Save</button>
             </div>
           ) : (
@@ -228,7 +276,11 @@ const Profile = () => {
                   <p>Work Country: {userData?.workcountry}</p>
                   <p>Work Postcode: {userData?.workpostcode || 'N/A'}</p>
                   <p>Medical License Number: {userData.licenseNumber || 'N/A'}</p><br/>
-                  {/* Display the rest of the user information here */}
+
+                <h2>Payment Details:</h2>
+                <button onClick={retrieveCustomerPortalSession} disabled={isLoadingManage}>
+                  {isLoadingManage ? 'Loading...' : 'Manage'}
+                </button><br/><br/>
                 </>
               )}
               <button onClick={() => setIsEditMode(true)}>Edit</button>

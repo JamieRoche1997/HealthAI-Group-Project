@@ -121,3 +121,11 @@
 .user-dropdown-container.active {
   right: 0;
 }
+
+@media (max-width: 767px) {
+  .Nav {
+      display: flex;
+      justify-content: space-around; /* Space navigation items evenly */
+      align-items: center; /* Vertically center navigation items */
+  }
+}

@@ -140,12 +140,14 @@ const Rating = () => {
         <button type="submit">Submit</button>
       </form>
 
-      {/* Display reviews */}
-    <div className="reviews-container">
-        <br />
-        <h2>Reviews:</h2>
-        <ul>
-            {reviews.map((review, index) => (
+    {/* Display reviews */}
+  <div className="reviews-container">
+    <br />
+    <h2>Reviews:</h2>
+    <ul>
+        {reviews
+            .sort((a, b) => b.timestamp.toMillis() - a.timestamp.toMillis()) // Sort in descending order
+            .map((review, index) => (
             <li key={index}>
                 <div>
                 <strong>{review.name}</strong>:
@@ -171,8 +173,9 @@ const Rating = () => {
                 <br />
             </li>
             ))}
-        </ul>
-    </div>
+    </ul>
+  </div>
+
 </div>
   );
 };

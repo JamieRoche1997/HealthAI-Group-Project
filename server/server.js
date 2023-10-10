@@ -65,23 +65,62 @@ app.post('/webhooks/stripe', async (req, res) => {
   const event = req.body;
 
   try {
-    if (event.type === 'checkout.session.completed') {
+    if (
+      event.type === 'checkout.session.completed' ||
+      event.type === 'customer.subscription.updated' ||
+      event.type === 'customer.subscription.deleted'
+    ) {
       const session = event.data.object;
       const clientReferenceId = session.client_reference_id;
-      const subscriptionId = session.subscription;
 
-      // Retrieve the price ID associated with the subscription
-      const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-      const priceId = subscription.items.data[0].price.id;
+      if (event.type === 'checkout.session.completed') {
+        // Retrieve the price ID associated with the subscription
+        const subscription = await stripe.subscriptions.retrieve(session.subscription);
+        const priceId = subscription.items.data[0].price.id;
+        const customerId = subscription.customer;
 
-      // Update the user's collection in Firestore
-      const userRef = firestore.collection('Staff').doc(clientReferenceId);
-      await userRef.update({
-        activeSubscription: true,
-        priceID: priceId,
-      });
+        // Update the user's collection in Firestore
+        const userRef = firestore.collection('Staff').doc(clientReferenceId);
+        await userRef.update({
+          subscription: session.subscription, // Save the subscription ID
+          customer: customerId, // Save the customer ID
+          activeSubscription: true,
+          priceID: priceId,
+        });
 
-      console.log(`Payment completed for user with UID: ${clientReferenceId}`);
+        console.log(`Payment completed for user with UID: ${clientReferenceId}`);
+      } else if (event.type === 'customer.subscription.updated' || event.type === 'customer.subscription.deleted') {
+        // Retrieve the UID from the Firestore database
+        const userRef = firestore.collection('Staff').where('customer', '==', session.customer);
+        const querySnapshot = await userRef.get();
+
+        if (!querySnapshot.empty) {
+          querySnapshot.forEach((doc) => {
+            const userData = doc.data();
+            const userRef = firestore.collection('Staff').doc(userData.uid);
+
+            if (event.type === 'customer.subscription.updated') {
+              // Subscription updated event, update the priceID
+              const priceId = session.items.data[0].price.id;
+              userRef.update({
+                priceID: priceId,
+              });
+
+              console.log(`Subscription updated for user with UID: ${userData.uid}`);
+            } else if (event.type === 'customer.subscription.deleted') {
+              // Subscription canceled event, set activeSubscription to false and priceID to null
+               userRef.update({
+                activeSubscription: false,
+                priceID: "",
+              });
+
+              console.log(`Subscription canceled for user with UID: ${userData.uid}`);
+            }
+          });
+        } else {
+          console.error('User not found in Firestore.');
+        }
+      }
     }
 
     res.status(200).end();
@@ -90,6 +129,45 @@ app.post('/webhooks/stripe', async (req, res) => {
     res.status(500).end();
   }
 });
+
+
+
+
+app.post('/api/retrieve-customer-portal-session', async (req, res) => {
+  try {
+    const { user } = req.body; // Assuming you send user information from the frontend
+
+    if (!user || !user.uid) {
+      return res.status(400).json({ error: 'User information is required' });
+    }
+
+    // Query Firestore to retrieve the user's data
+    const userDoc = await firestore.collection('Staff').doc(user.uid).get();
+    if (!userDoc.exists) {
+      return res.status(404).json({ error: 'User not found in Firestore' });
+    }
+
+    const userData = userDoc.data();
+
+    if (!userData.customer) {
+      return res.status(400).json({ error: 'Customer ID not found in user data' });
+    }
+
+    // Create a customer portal session using the customerId from Firestore
+    const session = await stripe.billingPortal.sessions.create({
+      customer: userData.customer, // Use the customerId from Firestore
+      return_url: 'https://healthai-23.web.app/profile',
+    });
+
+    res.json({ customerPortalSessionUrl: session.url });
+  } catch (error) {
+    console.error('Error retrieving customer portal session:', error);
+    res.status(500).json({ error: 'An error occurred' });
+  }
+});
+
+
+
 
 app.listen(port, () => {
   console.log("Server started on port", port);
