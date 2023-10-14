@@ -26,36 +26,28 @@ const firestore = admin.firestore();
 
 const OPENAI_API_KEY = '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';
 
-app.post('/api/ask-gpt3', async (req, res) => {
-  const { input } = req.body;
-
-  try {
-    const response = await axios.post(
-      'https://api.openai.com/v1/chat/completions',
-      {
-        prompt: input,
-        max_tokens: 50, // Adjust the number of tokens as needed
-        messages: [{"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": "Who won the world series in 2020?"},
-        {"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."},
-        {"role": "user", "content": "Where was it played?"}],
-        model: "gpt-3.5-turbo",
-        temperature: 0,
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + OPENAI_API_KEY,
-        },
+    app.post('/api/ask-gpt3', async (req, res) => {
+      const { input } = req.body;
+      try {
+        const response = await axios.post(
+          'https://api.openai.com/v1/chat/completions',
+          {
+            messages:[{ role: "user", content: input}],
+            max_tokens: 50, // Adjust the number of tokens as needed
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${OPENAI_API_KEY}`,
+            },
+          }
+        );
+        res.json({ answer: response.data.choices[0].text });
+      } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'An error occurred' });
       }
-    );
-
-    res.json({ answer: response.data.choices[0].text });
-  } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ error: 'An error occurred' });
-  }
-});
+    });
 
 app.post('/webhooks/stripe', async (req, res) => {
   const event = req.body;
