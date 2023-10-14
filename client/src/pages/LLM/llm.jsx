@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios'; // Import Axios
 import { useAuthentication } from '../../Components/authObserver';
 import { db } from '../../firebase';
@@ -8,7 +8,8 @@ const LLM = () => {
   const [input, setInput] = useState('');
   const [subscriptionStatus, setSubscriptionStatus] = useState('loading');
   const [isLoadingUpgrade, setIsLoadingUpgrade] = useState(false);
-  const [chatbotResponse, setChatbotResponse] = useState('');
+  const [conversation, setConversation] = useState([]);
+  const inputRef = useRef(null);
 
   useEffect(() => {
     if (user && user.uid) {
@@ -76,15 +77,33 @@ const LLM = () => {
   };
 
   const handleChatCompletion = async () => {
+    if (!input) return;
+
     try {
-      const response = await axios.post('https://healthai-heroku-1a596fab2241.herokuapp.com/api/ask-gpt3', { input: input });
-      const chatbotResponse = response.data.answer;
-      setChatbotResponse(chatbotResponse);
+      const response = await axios.post('https://healthai-heroku-1a596fab2241.herokuapp.com/api/ask-gpt3', { input });
+      const assistantResponse = response.data.answer;
+
+      // Update the conversation with user and assistant messages
+      const updatedConversation = [
+        ...conversation,
+        { role: 'User', content: input },
+        { role: 'Chatbot', content: assistantResponse },
+      ];
+
+      setConversation(updatedConversation);
+      setInput(''); // Clear the input field after submission
     } catch (error) {
       console.error('Error:', error);
-      setChatbotResponse('An error occurred while communicating with the chatbot.');
+      // Update the conversation if needed
     }
-  };
+  }
+
+  const handleEnterKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      handleChatCompletion();
+    }
+  }
 
   let content;
 
@@ -93,13 +112,21 @@ const LLM = () => {
       content = (
         <div>
           <h1>HealthAI Chatbot</h1>
+          <div>
+            {conversation.map((message, index) => (
+              <div key={index} className={message.role}>
+                {message.role}: {message.content} 
+              </div>
+            ))}
+          </div>
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-          />
+            onKeyPress={handleEnterKeyPress} // Call the function on Enter key press
+            ref={inputRef} // Assign the input ref
+          /><br/>
           <button onClick={handleChatCompletion}>Ask</button>
-          <div>Chatbot Response: {chatbotResponse}</div>
         </div>
       );
       break;

@@ -27,20 +27,26 @@ const firestore = admin.firestore();
 const OPENAI_API_KEY = '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';
 
     
+// Previous conversation history, if any
+const conversationHistory = [];
+
 app.post('/api/ask-gpt3', async (req, res) => {
   const { input } = req.body;
+
+  // Add user message to the conversation
+  conversationHistory.push({ role: 'user', content: input });
 
   try {
     const response = await axios.post(
       'https://api.openai.com/v1/chat/completions',
       {
-        max_tokens: 50, // Adjust the number of tokens as needed
+        max_tokens: 50,
         messages: [
           { role: 'system', content: 'You are a helpful assistant.' },
-          { role: 'user', content: input },
+          ...conversationHistory, // Include the entire conversation history
         ],
-        model: 'gpt-3.5-turbo',
-        temperature: 0.7, // Adjust temperature for response randomness
+        model: 'ft:gpt-3.5-turbo-0613:personal::89fUliBi',
+        temperature: 0.7,
       },
       {
         headers: {
@@ -56,11 +62,13 @@ app.post('/api/ask-gpt3', async (req, res) => {
     console.log('OpenAI Response:', assistantResponse);
 
     res.json({ answer: assistantResponse });
+
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'An error occurred' });
   }
 });
+
 
 
 app.post('/webhooks/stripe', async (req, res) => {
@@ -132,9 +140,6 @@ app.post('/webhooks/stripe', async (req, res) => {
   }
 });
 
-
-
-
 app.post('/api/retrieve-customer-portal-session', async (req, res) => {
   try {
     const { user } = req.body; // Assuming you send user information from the frontend
@@ -167,9 +172,6 @@ app.post('/api/retrieve-customer-portal-session', async (req, res) => {
     res.status(500).json({ error: 'An error occurred' });
   }
 });
-
-
-
 
 app.listen(port, () => {
   console.log("Server started on port", port);
