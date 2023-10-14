@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios'; // Import Axios
 import { useAuthentication } from '../../Components/authObserver';
 import { db } from '../../firebase';
-import axios from 'axios';
-import openai from 'openai';
 
 const LLM = () => {
   const { user } = useAuthentication();
@@ -13,28 +12,20 @@ const LLM = () => {
 
   useEffect(() => {
     if (user && user.uid) {
-      // Query the Firestore database for the user's subscription status
-
       const query = db.collection('Staff').doc(user.uid);
 
-      query
-        .get()
+      query.get()
         .then((doc) => {
           if (doc.exists) {
-            // Assuming the document structure includes an 'activeSubscription' field and a 'priceID' field
             const activeSubscription = doc.data().activeSubscription;
             const priceID = doc.data().priceID;
-            console.log(activeSubscription);
-            console.log(priceID)
 
-            // Check if the user has an active subscription with the required price IDs
-            if (activeSubscription === true && (priceID === 'price_1NxvKcF4O3GGcqFnjiaCWlHp' || priceID === 'price_1NxvKuF4O3GGcqFnHupONSSa')) {
+            if (activeSubscription && (priceID === 'price_1NxvKcF4O3GGcqFnjiaCWlHp' || priceID === 'price_1NxvKuF4O3GGcqFnHupONSSa')) {
               setSubscriptionStatus('active');
             } else {
               setSubscriptionStatus('upgrade');
             }
           } else {
-            console.log('User not found in Firestore');
             setSubscriptionStatus('notfound');
           }
         })
@@ -47,38 +38,30 @@ const LLM = () => {
 
   const retrieveCustomerPortalSession = () => {
     if (user && user.uid) {
-      // Set loading state to true
       setIsLoadingUpgrade(true);
-  
-      // Query the Firestore database for the user's data based on their uid
       const query = db.collection('Staff').doc(user.uid);
-  
-      query
-        .get()
+
+      query.get()
         .then((doc) => {
           if (doc.exists) {
             const userData = doc.data();
             if (userData.activeSubscription) {
-              // User has an active subscription, create a customer portal session
               axios
                 .post('https://healthai-heroku-1a596fab2241.herokuapp.com/api/retrieve-customer-portal-session', {
-                  user: user, // Send the user object
+                  user: user,
                 })
                 .then((response) => {
                   const { customerPortalSessionUrl } = response.data;
                   window.location.href = customerPortalSessionUrl;
-                  console.log(customerPortalSessionUrl);
                 })
                 .catch((error) => {
                   console.error('Error retrieving customer portal session:', error);
                 })
                 .finally(() => {
-                  // Set loading state back to false when the request is completed
                   setIsLoadingUpgrade(false);
                 });
             } else {
-              // User does not have an active subscription, redirect to pricing page
-              window.location.href = '/pricing-page'; // Change this URL to your pricing page path
+              window.location.href = '/pricing-page';
             }
           } else {
             console.log('User not found in Firestore');
@@ -92,33 +75,13 @@ const LLM = () => {
     }
   };
 
-  const askChatGPT = (input) => {
-    return axios.post('https://healthai-heroku-1a596fab2241.herokuapp.com/api/ask-gpt3', {
-      input: input,
-    })
-    .then((response) => {
-      console.log(response);
-      return response.data.answer;
-    })
-    .catch((error) => {
-      console.error('Error asking ChatGPT:', error);
-      throw error;
-    });
-  };
-  
-  const handleChatbot = async () => {
+  const handleChatCompletion = async () => {
     try {
-      if (input) {
-        // Send user input to the ChatGPT model
-        const response = await askChatGPT(input);
-        console.log(input);
-        setChatbotResponse(response);
-      } else {
-        // Handle empty input
-        setChatbotResponse("Please provide a valid input.");
-      }
+      const response = await axios.post('https://healthai-heroku-1a596fab2241.herokuapp.com/api/ask-gpt3', { input: input });
+      const chatbotResponse = response.data.answer;
+      setChatbotResponse(chatbotResponse);
     } catch (error) {
-      console.error('Error handling chatbot:', error);
+      console.error('Error:', error);
       setChatbotResponse('An error occurred while communicating with the chatbot.');
     }
   };
@@ -135,8 +98,8 @@ const LLM = () => {
             value={input}
             onChange={(e) => setInput(e.target.value)}
           />
-          <button onClick={handleChatbot}>Ask</button>
-          {chatbotResponse && <div>Chatbot Response: {chatbotResponse}</div>}
+          <button onClick={handleChatCompletion}>Ask</button>
+          <div>Chatbot Response: {chatbotResponse}</div>
         </div>
       );
       break;
@@ -146,7 +109,7 @@ const LLM = () => {
           <h1>Upgrade to Standard</h1>
           <p>You need a Standard subscription to access this feature.</p>
           <button onClick={retrieveCustomerPortalSession} disabled={isLoadingUpgrade}>
-                  {isLoadingUpgrade ? 'Loading...' : 'Upgrade'}
+            {isLoadingUpgrade ? 'Loading...' : 'Upgrade'}
           </button><br/><br/>
         </div>
       );
