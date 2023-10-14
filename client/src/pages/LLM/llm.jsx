@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useAuthentication } from '../../Components/authObserver';
 import { db } from '../../firebase';
 import axios from 'axios';
-
+import openai from 'openai';
 
 const LLM = () => {
   const { user } = useAuthentication();
   const [input, setInput] = useState('');
   const [subscriptionStatus, setSubscriptionStatus] = useState('loading');
   const [isLoadingUpgrade, setIsLoadingUpgrade] = useState(false);
+  const [chatbotResponse, setChatbotResponse] = useState('');
 
   useEffect(() => {
     if (user && user.uid) {
@@ -91,10 +92,34 @@ const LLM = () => {
     }
   };
 
-  const handleSubmit = () => {
-    if (subscriptionStatus === 'active') {
-    } else {
-      alert('Upgrade to a Premium subscription to access this feature.');
+  const askChatGPT = (input) => {
+    return axios.post('https://healthai-heroku-1a596fab2241.herokuapp.com/api/ask-gpt3', {
+      input: input,
+    })
+    .then((response) => {
+      console.log(response);
+      return response.data.answer;
+    })
+    .catch((error) => {
+      console.error('Error asking ChatGPT:', error);
+      throw error;
+    });
+  };
+  
+  const handleChatbot = async () => {
+    try {
+      if (input) {
+        // Send user input to the ChatGPT model
+        const response = await askChatGPT(input);
+        console.log(input);
+        setChatbotResponse(response);
+      } else {
+        // Handle empty input
+        setChatbotResponse("Please provide a valid input.");
+      }
+    } catch (error) {
+      console.error('Error handling chatbot:', error);
+      setChatbotResponse('An error occurred while communicating with the chatbot.');
     }
   };
 
@@ -110,7 +135,8 @@ const LLM = () => {
             value={input}
             onChange={(e) => setInput(e.target.value)}
           />
-          <button onClick={handleSubmit}>Ask</button>
+          <button onClick={handleChatbot}>Ask</button>
+          {chatbotResponse && <div>Chatbot Response: {chatbotResponse}</div>}
         </div>
       );
       break;

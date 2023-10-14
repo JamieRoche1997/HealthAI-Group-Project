@@ -26,30 +26,26 @@ const firestore = admin.firestore();
 
 const OPENAI_API_KEY = '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';
 
-// Implement server-side rate limiting middleware
-const rateLimit = require("express-rate-limit");
-const limiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minute
-  max: 5, // Limit each IP to 5 requests per minute
-  message: "Too many requests from this IP, please try again later."
-});
-
-app.use("/api/ask-gpt3", limiter);
-
 app.post('/api/ask-gpt3', async (req, res) => {
   const { input } = req.body;
 
   try {
     const response = await axios.post(
-      'https://api.openai.com/v1/engines/davinci/completions',
+      'https://api.openai.com/v1/chat/completions',
       {
         prompt: input,
         max_tokens: 50, // Adjust the number of tokens as needed
+        messages: [{"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Who won the world series in 2020?"},
+        {"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."},
+        {"role": "user", "content": "Where was it played?"}],
+        model: "gpt-3.5-turbo",
+        temperature: 0,
       },
       {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${OPENAI_API_KEY}`,
+          Authorization: 'Bearer ' + OPENAI_API_KEY,
         },
       }
     );
