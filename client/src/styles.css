@@ -3,77 +3,87 @@ body {
   margin: 0;
   padding: 0;
   background-color: #fff;
-}
-
-.App {
+  }
+  
+  
+  .App {
   min-height: 100vh;
   display: flex;
   align-items: center;
   background-image: linear-gradient(79deg, #9454a0, #b287c8 48%, #f7924e);
-}
-
- .Content {
+  }
+  
+  
+  .Content {
   max-width: 1000px; /* issue */
   padding: 20px;
-  text-align: center; 
+  text-align: center;
   color: white;
   margin: auto;
   flex-grow: 1; /* Allow the Content to grow and take up available space */
   margin-top: 70px;
   margin-bottom: 70px;
-}
-
-.auth-form-container, .login-form, .register-form, .home-form-container {
+  }
+  
+  
+  .auth-form-container, .login-form, .register-form, .home-form-container {
   display: flex;
   flex-direction: column;
   max-width: 800px;
-}
-
-@media screen and (min-width: 600px){
-  .auth-form-container, .home-form-container {
-    padding: 5rem;
-    border: 1px solid white;
-    border-radius: 30px;
-    margin: 0.5rem;
   }
-}
-
-.home-form-container, .auth-form-container{
+  
+  
+  @media screen and (min-width: 600px){
+  .auth-form-container, .home-form-container {
+  padding: 5rem;
+  border: 1px solid white;
+  border-radius: 30px;
+  margin: 0.5rem;
+  }
+  }
+  
+  
+  .home-form-container, .auth-form-container{
   text-align: center;
   align-items: center;
-}
-
-label {
+  }
+  
+  
+  label {
   text-align: left;
   padding: 0.25rem 0;
   color: white;
-}
-
-input {
-  width: 250px; 
+  }
+  
+  
+  input {
+  width: 250px;
   margin: 0.5rem 0;
   padding: 1rem;
   border: none;
   border-radius: 30px;
-}
-
-button {
+  }
+  
+  
+  button {
   border: none;
   background-color: white;
   padding: 20px;
   border-radius: 30px;
   cursor: pointer;
   color: #9454a0;
-}
-
-.link-btn {
+  }
+  
+  
+  .link-btn {
   background: none;
   color: white;
   text-decoration: underline;
-}
-
-.home-btn {
-  width: 250px; 
+  }
+  
+  
+  .home-btn {
+  width: 250px;
   height: 50px;
   border: none;
   background-color: white;
@@ -82,34 +92,37 @@ button {
   cursor: pointer;
   color: #9454a0;
   text-align: center;
-}
-
-.google-btn {
-    width: 250px; 
-    height: 50px;
-    border: none;
-    background-color: white;
-    padding: 20px;
-    border-radius: 30px;
-    cursor: pointer;
-    background: #dd4b39;
-    color: white;
-}
-
-.twitter-btn {
-    width: 250px; 
-    height: 50px;
-    border: none;
-    background-color: white;
-    padding: 20px;
-    border-radius: 30px;
-    cursor: pointer;
-    background: black;
-    color: white;
-}
-
-.facebook-btn {
-  width: 250px; 
+  }
+  
+  
+  .google-btn {
+  width: 250px;
+  height: 50px;
+  border: none;
+  background-color: white;
+  padding: 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  background: #dd4b39;
+  color: white;
+  }
+  
+  
+  .twitter-btn {
+  width: 250px;
+  height: 50px;
+  border: none;
+  background-color: white;
+  padding: 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  background: black;
+  color: white;
+  }
+  
+  
+  .facebook-btn {
+  width: 250px;
   height: 50px;
   border: none;
   background-color: white;
@@ -118,58 +131,65 @@ button {
   cursor: pointer;
   background: #3B5998;
   color: white;
-}
-/* Updated Style for the contact information */
-.contact-info {
+  }
+  /* Updated Style for the contact information */
+  .contact-info {
   background-color: transparent;
   padding: 20px;
   border-radius: 30px;
   margin-bottom: 20px;
   color: #000; /* Text color */
   font-weight: normal; /* Remove bold text */
-}
-
-.contact-info label {
+  }
+  
+  
+  .contact-info label {
   font-weight: bold;
   color: white; /* Label color */
-}
-
-.contact-info p {
+  }
+  
+  
+  .contact-info p {
   margin: 5px 0;
-}
-
-.contact-info a {
+  }
+  
+  
+  .contact-info a {
   text-decoration: none;
   color: black;
   margin-right: 10px;
-}
-
-/* Style for the form */
-.contact-form {
+  }
+  
+  
+  /* Style for the form */
+  .contact-form {
   background-color: transparent;
   padding: 20px;
   border-radius: 30px;
-}
-
-.contact-form label {
+  }
+  
+  
+  .contact-form label {
   font-weight: bold;
   color: black; /* Label color */
-}
-
-.contact-info input[type="name"],
-.contact-form input[type="text"],
-.contact-form input[type="email"],
-.contact-form input[type="phone"],
-.contact-form input[type="subject"],
-.contact-form input[type="message"] {
+  }
+  
+  
+  .contact-info input[type="name"],
+  .contact-form input[type="text"],
+  .contact-form input[type="email"],
+  .contact-form input[type="phone"],
+  .contact-form input[type="subject"],
+  .contact-form input[type="message"] {
   width: 100%;
   padding: 10px;
   margin: 5px 0;
   border: 1px solid #ccc;
   border-radius: 30px;
-}
-
-.contact-form button[type="submit"] {
+  }
+  
+  
+  .contact-form button[type="submit"] {
   background-color: #007bff;
   color: #fff;
   border: none;
@@ -177,9 +197,62 @@ button {
   border-radius: 30px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-}
-
-.contact-form button[type="submit"]:hover {
-  background-color: #0056b3;
-}
-
+  }
+  
+  
+  /* Style for the chat container */
+  .chat-container {
+  max-width: 500px;
+  margin: 0 auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  
+  /* Style for individual chat messages */
+  .chat-message {
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 5px;
+  word-wrap: break-word;
+  }
+  
+  
+  /* Style for user messages */
+  .user {
+  background-color: #ba6fc7;
+  color: #fff;
+  align-self: flex-start;
+  text-align: right;
+  }
+  
+  
+  /* Style for chatbot messages */
+  .chatbot {
+  background-color: #f39d63;
+  color: #333;
+  align-self: flex-end;
+  text-align: left;
+  }
+  
+  
+  .input-container {
+  display: flex;
+  align-items: center;
+  }
+  
+  
+  .input-field {
+  flex-grow: 1;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px;
+  font-size: 16px;
+  resize: none; /* Prevent user from manually resizing the textarea */
+  max-width: 100%;
+  max-height: 100px; /* Adjust the maximum height as needed */
+  overflow: hidden;
+  }
+  
