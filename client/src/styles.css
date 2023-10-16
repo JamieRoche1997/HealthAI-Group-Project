@@ -314,7 +314,7 @@ body {
 
 /* Style for input fields in the filter modal */
 .filter-modal input {
-  width: 80%;
+  width: 40%;
   padding: 10px;
   margin-bottom: 10px;
   border: 1px solid #ccc;

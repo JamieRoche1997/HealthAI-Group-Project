@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useAuthentication } from '../../Components/authObserver';
 import { db } from '../../firebase';
 
@@ -9,6 +9,10 @@ const Patients = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCriteria, setFilterCriteria] = useState({ age: '', gender: [], risk: [] });
   const [isFilterModalOpen, setFilterModalOpen] = useState(false);
+  const [isNewPatientModalOpen, setNewPatientModalOpen] = useState(false);
+  const [newPatient, setNewPatient] = useState({ name: '', age: '', gender: '', risk: '' });
+
+  const newPatientModalRef = useRef(null);
 
   useEffect(() => {
     if (user && user.email) {
@@ -111,6 +115,36 @@ const Patients = () => {
     return 0;
   }
 
+  const addNewPatient = () => {
+    setNewPatientModalOpen(true);
+  };
+
+  const saveNewPatient = () => {
+    if (user) {
+      const patientRef = db.collection('Patient');
+      const newPatientData = {
+        name: newPatient.name,
+        age: newPatient.age,
+        gender: newPatient.gender,
+        risk: newPatient.risk,
+        doctor: user.displayName,
+      };
+
+      patientRef
+        .add(newPatientData)
+        .then((docRef) => {
+          console.log('New patient added with ID: ', docRef.id);
+          const updatedPatients = [...originalPatients, { id: docRef.id, ...newPatientData }];
+          setPatients(updatedPatients);
+          setNewPatientModalOpen(false);
+          setNewPatient({ name: '', age: '', gender: '', risk: '' });
+        })
+        .catch((error) => {
+          console.error('Error adding new patient: ', error);
+        });
+    }
+  };
+
   return (
     <div>
       <h1>Patients</h1>
@@ -121,25 +155,8 @@ const Patients = () => {
         onChange={handleSearch}
       />
       <button onClick={() => setFilterModalOpen(true)}>Filter</button>
-      <button onClick={() => setPatients(originalPatients)}>Clear Filters</button>
-      <div className="patient-list">
-        {patients
-          .filter((patient) =>
-            patient.name.toLowerCase().includes(searchTerm.toLowerCase())
-          )
-          .sort(compareNames) // Sort patients by name
-          .map((patient) => (
-            <div key={patient.id} className="patient-card">
-              <a href={`/patient/${patient.id}`}>
-                <h3>{patient.name}</h3>
-                <p>Age: {patient.age}</p>
-                <p>Gender: {patient.gender}</p>
-                <p>Risk: {patient.risk}</p>
-              </a>
-              <br />
-            </div>
-          ))}
-      </div>
+      <button onClick={addNewPatient}>Add Patient</button>
+
       {isFilterModalOpen && (
         <div className="filter-modal-overlay">
           <div className="filter-modal">
@@ -185,8 +202,8 @@ const Patients = () => {
                   setFilterCriteria({ ...filterCriteria, age: e.target.value })
                 }
               />
-            )}
-            <label>Gender:</label>
+            )}<br/>
+            <label>Gender:</label><br/>
             <select
               value={filterCriteria.gender}
               onChange={(e) =>
@@ -196,8 +213,8 @@ const Patients = () => {
               <option value="">Select gender</option>
               <option value="male">Male</option>
               <option value="female">Female</option>
-            </select>
-            <label>Risk:</label>
+            </select><br/>
+            <label>Risk:</label><br/>
             <select
               value={filterCriteria.risk}
               onChange={(e) =>
@@ -208,12 +225,71 @@ const Patients = () => {
               <option value="Low">Low</option>
               <option value="Medium">Medium</option>
               <option value="High">High</option>
-            </select>
+            </select><br/>
             <button onClick={applyFilters}>Apply Filters</button>
+            <button onClick={() => setPatients(originalPatients)}>Clear Filters</button>
             <button onClick={() => setFilterModalOpen(false)}>Close</button>
           </div>
         </div>
       )}
+      
+      {isNewPatientModalOpen && (
+        <div className="filter-modal-overlay">
+          <div ref={newPatientModalRef} className="filter-modal">
+            <h2>Add New Patient</h2>
+            <input
+              type="text"
+              placeholder="Name"
+              value={newPatient.name}
+              onChange={(e) => setNewPatient({ ...newPatient, name: e.target.value })}
+            />
+            <input
+              type="text"
+              placeholder="Age"
+              value={newPatient.age}
+              onChange={(e) => setNewPatient({ ...newPatient, age: e.target.value })}
+            />
+            <select
+              value={newPatient.gender}
+              onChange={(e) => setNewPatient({ ...newPatient, gender: e.target.value })}
+            >
+              <option value="">Select gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+            <select
+              value={newPatient.risk}
+              onChange={(e) => setNewPatient({ ...newPatient, risk: e.target.value })}
+            >
+              <option value="">Select risk</option>
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+            <button onClick={saveNewPatient}>Save Patient</button>
+            <button onClick={() => setNewPatientModalOpen(false)}>Close</button>
+          </div>
+        </div>
+      )}
+
+      <div className="patient-list">
+        {patients
+          .filter((patient) =>
+            patient.name.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+          .sort(compareNames)
+          .map((patient) => (
+            <div key={patient.id} className="patient-card">
+              <a href={`/patient/${patient.id}`}>
+                <h3>{patient.name}</h3>
+                <p>Age: {patient.age}</p>
+                <p>Gender: {patient.gender}</p>
+                <p>Risk: {patient.risk}</p>
+              </a>
+              <br />
+            </div>
+          ))}
+      </div>
     </div>
   );
 };
