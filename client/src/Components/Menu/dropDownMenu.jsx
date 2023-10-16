@@ -1,7 +1,7 @@
 import React from "react";
 import "./dropDownMenu.css"; // Import your CSS file
 
-const DropdownMenu = ({ buttons, closeMenu}) => {
+const DropdownMenu = ({ buttons, closeMenu }) => {
   return (
     <div className="dropdown-menu">
       {buttons.map((button, index) => (

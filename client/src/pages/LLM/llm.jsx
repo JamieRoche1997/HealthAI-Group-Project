@@ -5,190 +5,190 @@ import { db } from '../../firebase';
 
 
 const LLM = () => {
-const { user } = useAuthentication();
-const [input, setInput] = useState('');
-const [subscriptionStatus, setSubscriptionStatus] = useState('loading');
-const [isLoadingUpgrade, setIsLoadingUpgrade] = useState(false);
-const [conversation, setConversation] = useState([]);
-const inputRef = useRef(null);
+  const { user } = useAuthentication();
+  const [input, setInput] = useState('');
+  const [subscriptionStatus, setSubscriptionStatus] = useState('loading');
+  const [isLoadingUpgrade, setIsLoadingUpgrade] = useState(false);
+  const [conversation, setConversation] = useState([]);
+  const inputRef = useRef(null);
 
 
-const updateInputSize = () => {
-if (inputRef.current) {
-inputRef.current.style.height = 'auto';
-inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
-}
-};
+  const updateInputSize = () => {
+    if (inputRef.current) {
+      inputRef.current.style.height = 'auto';
+      inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
+    }
+  };
 
 
-useEffect(() => {
-if (user && user.uid) {
-const query = db.collection('Staff').doc(user.uid);
+  useEffect(() => {
+    if (user && user.uid) {
+      const query = db.collection('Staff').doc(user.uid);
 
 
-query.get()
-.then((doc) => {
-if (doc.exists) {
-const activeSubscription = doc.data().activeSubscription;
-const priceID = doc.data().priceID;
+      query.get()
+        .then((doc) => {
+          if (doc.exists) {
+            const activeSubscription = doc.data().activeSubscription;
+            const priceID = doc.data().priceID;
 
 
-if (activeSubscription && (priceID === 'price_1NxvKcF4O3GGcqFnjiaCWlHp' || priceID === 'price_1NxvKuF4O3GGcqFnHupONSSa')) {
-setSubscriptionStatus('active');
-} else {
-setSubscriptionStatus('upgrade');
-}
-} else {
-setSubscriptionStatus('notfound');
-}
-})
-.catch((error) => {
-console.error('Error getting user data from Firestore:', error);
-setSubscriptionStatus('error');
-});
-}
-}, [user]);
+            if (activeSubscription && (priceID === 'price_1NxvKcF4O3GGcqFnjiaCWlHp' || priceID === 'price_1NxvKuF4O3GGcqFnHupONSSa')) {
+              setSubscriptionStatus('active');
+            } else {
+              setSubscriptionStatus('upgrade');
+            }
+          } else {
+            setSubscriptionStatus('notfound');
+          }
+        })
+        .catch((error) => {
+          console.error('Error getting user data from Firestore:', error);
+          setSubscriptionStatus('error');
+        });
+    }
+  }, [user]);
 
 
-const retrieveCustomerPortalSession = () => {
-if (user && user.uid) {
-setIsLoadingUpgrade(true);
-const query = db.collection('Staff').doc(user.uid);
+  const retrieveCustomerPortalSession = () => {
+    if (user && user.uid) {
+      setIsLoadingUpgrade(true);
+      const query = db.collection('Staff').doc(user.uid);
 
 
-query.get()
-.then((doc) => {
-if (doc.exists) {
-const userData = doc.data();
-if (userData.activeSubscription) {
-axios
-.post('https://healthai-heroku-1a596fab2241.herokuapp.com/api/retrieve-customer-portal-session', {
-user: user,
-})
-.then((response) => {
-const { customerPortalSessionUrl } = response.data;
-window.location.href = customerPortalSessionUrl;
-})
-.catch((error) => {
-console.error('Error retrieving customer portal session:', error);
-})
-.finally(() => {
-setIsLoadingUpgrade(false);
-});
-} else {
-window.location.href = '/pricing-page';
-}
-} else {
-console.log('User not found in Firestore');
-}
-})
-.catch((error) => {
-console.error('Error getting user data from Firestore:', error);
-});
-} else {
-console.error('User not authenticated');
-}
-};
+      query.get()
+        .then((doc) => {
+          if (doc.exists) {
+            const userData = doc.data();
+            if (userData.activeSubscription) {
+              axios
+                .post('https://healthai-heroku-1a596fab2241.herokuapp.com/api/retrieve-customer-portal-session', {
+                  user: user,
+                })
+                .then((response) => {
+                  const { customerPortalSessionUrl } = response.data;
+                  window.location.href = customerPortalSessionUrl;
+                })
+                .catch((error) => {
+                  console.error('Error retrieving customer portal session:', error);
+                })
+                .finally(() => {
+                  setIsLoadingUpgrade(false);
+                });
+            } else {
+              window.location.href = '/pricing-page';
+            }
+          } else {
+            console.log('User not found in Firestore');
+          }
+        })
+        .catch((error) => {
+          console.error('Error getting user data from Firestore:', error);
+        });
+    } else {
+      console.error('User not authenticated');
+    }
+  };
 
 
-const handleChatCompletion = async () => {
-if (!input) return;
+  const handleChatCompletion = async () => {
+    if (!input) return;
 
 
-try {
-const response = await axios.post('https://healthai-heroku-1a596fab2241.herokuapp.com/api/ask-gpt3', { input });
-const assistantResponse = response.data.answer;
+    try {
+      const response = await axios.post('https://healthai-heroku-1a596fab2241.herokuapp.com/api/ask-gpt3', { input });
+      const assistantResponse = response.data.answer;
 
 
-// Update the conversation with user and assistant messages
-const updatedConversation = [
-...conversation,
-{ role: 'User', content: input },
-{ role: 'Chatbot', content: assistantResponse },
-];
+      // Update the conversation with user and assistant messages
+      const updatedConversation = [
+        ...conversation,
+        { role: 'User', content: input },
+        { role: 'Chatbot', content: assistantResponse },
+      ];
 
 
-setConversation(updatedConversation);
-setInput(''); // Clear the input field after submission
-updateInputSize(); // Resize the input field
+      setConversation(updatedConversation);
+      setInput(''); // Clear the input field after submission
+      updateInputSize(); // Resize the input field
 
 
-// Reset the input field's width
-if (inputRef.current) {
-inputRef.current.style.width = '100%';
-}
-} catch (error) {
-console.error('Error:', error);
-// Update the conversation if needed
-}
-};
+      // Reset the input field's width
+      if (inputRef.current) {
+        inputRef.current.style.width = '100%';
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      // Update the conversation if needed
+    }
+  };
 
 
-const handleEnterKeyPress = (event) => {
-if (event.key === 'Enter') {
-event.preventDefault();
-handleChatCompletion();
-}
-};
+  const handleEnterKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      handleChatCompletion();
+    }
+  };
 
 
-let content;
+  let content;
 
 
-switch (subscriptionStatus) {
-case 'active':
-content = (
-<div>
-<h1>HealthAI Chatbot</h1>
-<div className="chat-messages">
-{conversation.map((message, index) => (
-<div key={index} className={`chat-message ${message.role.toLowerCase()}`}>
-{message.content}
-</div>
-))}
-</div>
-<div className="input-container">
-<textarea
-value={input}
-onChange={(e) => {
-setInput(e.target.value);
-updateInputSize();
-}}
-onKeyPress={handleEnterKeyPress}
-ref={inputRef}
-className="input-field"
-placeholder="Type your message here..."
-/>
-<button onClick={handleChatCompletion} className="ask-button">
-Ask
-</button>
-</div>
-</div>
-);
-break;
-case 'upgrade':
-content = (
-<div>
-<h1>Upgrade to Standard</h1>
-<p>You need a Standard subscription to access this feature.</p>
-<button onClick={retrieveCustomerPortalSession} disabled={isLoadingUpgrade}>
-{isLoadingUpgrade ? 'Loading...' : 'Upgrade'}
-</button>
-</div>
-);
-break;
-case 'notfound':
-content = <p>User not found in Firestore.</p>;
-break;
-case 'error':
-content = <p>Error getting user data from Firestore.</p>;
-break;
-default:
-content = <p>Loading...</p>;
-}
+  switch (subscriptionStatus) {
+    case 'active':
+      content = (
+        <div>
+          <h1>HealthAI Chatbot</h1>
+          <div className="chat-messages">
+            {conversation.map((message, index) => (
+              <div key={index} className={`chat-message ${message.role.toLowerCase()}`}>
+                {message.content}
+              </div>
+            ))}
+          </div>
+          <div className="input-container">
+            <textarea
+              value={input}
+              onChange={(e) => {
+                setInput(e.target.value);
+                updateInputSize();
+              }}
+              onKeyPress={handleEnterKeyPress}
+              ref={inputRef}
+              className="input-field"
+              placeholder="Type your message here..."
+            />
+            <button onClick={handleChatCompletion} className="ask-button">
+              Ask
+            </button>
+          </div>
+        </div>
+      );
+      break;
+    case 'upgrade':
+      content = (
+        <div>
+          <h1>Upgrade to Standard</h1>
+          <p>You need a Standard subscription to access this feature.</p>
+          <button onClick={retrieveCustomerPortalSession} disabled={isLoadingUpgrade}>
+            {isLoadingUpgrade ? 'Loading...' : 'Upgrade'}
+          </button>
+        </div>
+      );
+      break;
+    case 'notfound':
+      content = <p>User not found in Firestore.</p>;
+      break;
+    case 'error':
+      content = <p>Error getting user data from Firestore.</p>;
+      break;
+    default:
+      content = <p>Loading...</p>;
+  }
 
 
-return <div className="chat-container">{content}</div>;
+  return <div className="chat-container">{content}</div>;
 };
 
 

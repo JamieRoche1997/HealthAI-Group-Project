@@ -205,7 +205,7 @@ body {
   max-width: 500px;
   margin: 0 auto;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 30px;
   padding: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
@@ -215,14 +215,14 @@ body {
   .chat-message {
   margin: 5px 0;
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 30px;
   word-wrap: break-word;
   }
   
   
   /* Style for user messages */
   .user {
-  background-color: #ba6fc7;
+  background-color: #218aff;
   color: #fff;
   align-self: flex-start;
   text-align: right;
@@ -231,7 +231,7 @@ body {
   
   /* Style for chatbot messages */
   .chatbot {
-  background-color: #f39d63;
+  background-color: #ffffff;
   color: #333;
   align-self: flex-end;
   text-align: left;
@@ -245,14 +245,113 @@ body {
   
   
   .input-field {
-  flex-grow: 1;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 5px;
-  font-size: 16px;
-  resize: none; /* Prevent user from manually resizing the textarea */
-  max-width: 100%;
-  max-height: 100px; /* Adjust the maximum height as needed */
-  overflow: hidden;
+    flex-grow: 1;
+    border: 1px solid #ccc;
+    border-radius: 30px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center; /* Horizontal alignment */
+    display: flex; /* Use flexbox for centering */
+    align-items: center; /* Vertical alignment */
+    padding: 5px;
+    font-family: sans-serif;
+    font-size: 16px;
+    resize: none; /* Prevent user from manually resizing the textarea */
+    max-width: 100%;
+    overflow: hidden;
   }
   
+
+  .patient-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Display three cards per row */
+    gap: 20px; /* Add spacing between cards */
+  }
+  
+  .patient-card {
+    background-color: white; /* Set the background color to white */
+    border: 1px solid #ccc; /* Add a border to the card */
+    border-radius: 30px; /* Set the border radius for rounded corners */
+    padding: 20px; /* Add some padding inside the card */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow for depth */
+    transition: transform 0.2s ease-in-out; /* Add a smooth transform effect on hover */
+  }
+  
+  .patient-card:hover {
+    transform: scale(1.05); /* Scale up the card slightly on hover for a hover effect */
+  }
+
+  /* Style for the filter modal overlay */
+.filter-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* Ensure the overlay is on top of other content */
+}
+
+/* Style for the filter modal */
+.filter-modal {
+  background: #9454a0;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+}
+
+/* Style for the filter modal title */
+.filter-modal h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* Style for input fields in the filter modal */
+.filter-modal input {
+  width: 80%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 30px;
+}
+
+.filter-modal button {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 500;
+  transition: 0.5s;
+  text-decoration: none;
+  background-color: transparent;
+}
+.filter-modal button:hover {
+  transform: scale(1.1);
+  background-color: transparent;
+}
+
+/* Style for the close button */
+.filter-modal .close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.filter-modal select {
+  width: 40%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 30px;
+  text-align: center;
+  background-color: #fff; /* Set background color to white */
+  color: #000; /* Set text color to black */
+  cursor: pointer;
+}

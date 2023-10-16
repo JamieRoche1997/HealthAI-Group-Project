@@ -9,7 +9,7 @@ const Contact = () => {
   const [phone, setPhone] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
-  const [isSubmitted, setIsSubmitted] = useState(false); 
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -56,62 +56,62 @@ const Contact = () => {
       <h2>Contact Us</h2>
       <div className="contact-info">
         <label>Address:</label>
-        <p><strong>Rossa Ave, <br/>Bishopstown, Cork, <br/>T12 P928</strong></p><br/>
+        <p><strong>Rossa Ave, <br />Bishopstown, Cork, <br />T12 P928</strong></p><br />
         <label>Email:</label>
-        <p><strong>contact@healthai-23.web.app</strong></p><br/>
+        <p><strong>contact@healthai-23.web.app</strong></p><br />
         <label>Phone:</label>
-        <p><strong>+353 86 220 8215</strong></p><br/>
+        <p><strong>+353 86 220 8215</strong></p><br />
         <label>Social Media:</label>
         <p>
-          <a href="x.com/healthai<"><strong>X</strong></a><br/>
-          <a href="youtube.com/healthai"><strong>YouTube</strong></a><br/>
+          <a href="x.com/healthai<"><strong>X</strong></a><br />
+          <a href="youtube.com/healthai"><strong>YouTube</strong></a><br />
           <a href="instagram.com/healthai<"><strong>Instgram</strong></a>
         </p>
       </div>
       <form className="login-form" onSubmit={handleSubmit}>
-      <div>
-        <h2>Write to us!</h2>
-            <label htmlFor="name">Full Name:</label><br/>
-            <input
+        <div>
+          <h2>Write to us!</h2>
+          <label htmlFor="name">Full Name:</label><br />
+          <input
             value={name}
             onChange={(e) => setName(e.target.value)}
             type="text"
             placeholder="John Doe"
             id="name"
             name="name"
-            /><br/><br/>
-            <label htmlFor="email">Email Address:</label><br/>
-            <input
+          /><br /><br />
+          <label htmlFor="email">Email Address:</label><br />
+          <input
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             type="email"
             placeholder="johndoe@gmail.com"
             id="email"
             name="email"
-            /><br/><br/>
+          /><br /><br />
         </div>
         <div>
-            <label htmlFor="phone">Phone Number:</label><br/>
-            <input
+          <label htmlFor="phone">Phone Number:</label><br />
+          <input
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             type="phone"
             placeholder="+353 86 123 456"
             id="phone"
             name="phone"
-            /><br/><br/>
-            <label htmlFor="subject">Subject:</label><br/>
-            <input
+          /><br /><br />
+          <label htmlFor="subject">Subject:</label><br />
+          <input
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
             type="subject"
             placeholder="Schedule Appointment"
             id="subject"
             name="subject"
-            /><br/><br/>
+          /><br /><br />
         </div>
         <div>
-          <label htmlFor="message">Message:</label><br/>
+          <label htmlFor="message">Message:</label><br />
           <br />
           <textarea
             value={message}
@@ -128,7 +128,7 @@ const Contact = () => {
         <button type="submit">Submit</button>
       </form>
       {/* Display confirmation message */}
-      <br/>
+      <br />
       {renderConfirmation()}
     </div>
   );

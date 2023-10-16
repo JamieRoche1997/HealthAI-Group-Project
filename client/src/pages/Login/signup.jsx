@@ -42,30 +42,30 @@ export const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const requirementsMet = isPasswordValid(password);
-  
+
     if (!requirementsMet.length || !requirementsMet.capitalLetter || !requirementsMet.number || !requirementsMet.specialCharacter) {
       setPasswordError(
         "Password must meet all requirements: at least 10 characters long, contain one capital letter, one number, and one special character."
       );
       return;
     }
-  
+
     if (password !== confirmPassword) {
       setPasswordError("Passwords do not match.");
       return;
     }
-  
+
     const auth = getAuth();
-  
+
     try {
       // Create a user with the provided email and password
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-  
+
       // The user is created successfully, you can add additional user data to Firestore or other databases here
       const user = userCredential.user;
-  
+
       // Add user data to Firestore, including uid
       const userDocRef = db.collection("Staff").doc(user.uid);
       await userDocRef.set({
@@ -75,12 +75,12 @@ export const SignUp = () => {
         provider: provider,
         timestamp: new Date(),
       });
-  
+
       // Redirect to the '/profile' path upon successful sign up
       navigate("/register-info");
     } catch (error) {
       console.error("Sign up error:", error);
-  
+
       // Handle specific Firebase error codes
       switch (error.code) {
         case AuthErrorCodes.EMAIL_EXISTS:
@@ -94,7 +94,7 @@ export const SignUp = () => {
       }
     }
   };
-  
+
 
   const redirectToLogin = () => {
     navigate("/login"); // Redirect to the "/login" path

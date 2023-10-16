@@ -44,10 +44,10 @@ const Predict = () => {
     if (user && user.uid) {
       // Set loading state to true
       setIsLoadingUpgrade(true);
-  
+
       // Query the Firestore database for the user's data based on their uid
       const query = db.collection('Staff').doc(user.uid);
-  
+
       query
         .get()
         .then((doc) => {
@@ -104,8 +104,8 @@ const Predict = () => {
           <h1>Upgrade to Premium</h1>
           <p>You need a Premium subscription to access this page.</p>
           <button onClick={retrieveCustomerPortalSession} disabled={isLoadingUpgrade}>
-                  {isLoadingUpgrade ? 'Loading...' : 'Upgrade'}
-          </button><br/><br/>
+            {isLoadingUpgrade ? 'Loading...' : 'Upgrade'}
+          </button><br /><br />
         </div>
       );
       break;

@@ -35,22 +35,22 @@ const Rating = () => {
         name,
         email,
         subject,
-        rating, 
-        review, 
+        rating,
+        review,
         timestamp: new Date(),
       });
 
       console.log("Success");
 
-       // Clear the form fields and reset the rating
-       setName("");
-       setEmail("");
-       setSubject("");
-       setRating(0);
-       setReview("");
- 
-       // Refresh the displayed reviews
-       fetchReviews();
+      // Clear the form fields and reset the rating
+      setName("");
+      setEmail("");
+      setSubject("");
+      setRating(0);
+      setReview("");
+
+      // Refresh the displayed reviews
+      fetchReviews();
 
     } catch (error) {
       console.error("Error saving contact information:", error);
@@ -96,9 +96,9 @@ const Rating = () => {
             placeholder="John Doe"
             id="name"
             name="name"
-          /><br/>
+          /><br />
           <br />
-          <label htmlFor="email">Email Address:</label><br/>
+          <label htmlFor="email">Email Address:</label><br />
           <input
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -107,9 +107,9 @@ const Rating = () => {
             id="email"
             name="email"
           />
-        </div><br/>
+        </div><br />
         <div>
-          <label htmlFor="subject">Subject:</label><br/>
+          <label htmlFor="subject">Subject:</label><br />
           <input
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
@@ -118,14 +118,14 @@ const Rating = () => {
             id="subject"
             name="subject"
           />
-        </div><br/>
+        </div><br />
         {/* Render rating stars */}
         <div>
-          <label>Rating:</label><br/>
+          <label>Rating:</label><br />
           <div className="rating-stars">{renderRatingStars()}</div>
         </div>
         {/* Add review input field */}
-        <div><br/>
+        <div><br />
           <label htmlFor="review">Review:</label>
           <br />
           <textarea
@@ -136,47 +136,47 @@ const Rating = () => {
             rows="6"
             cols="40"
           ></textarea>
-        </div><br/>
+        </div><br />
         <button type="submit">Submit</button>
       </form>
 
-    {/* Display reviews */}
-  <div className="reviews-container">
-    <br />
-    <h2>Reviews:</h2>
-    <ul>
-        {reviews
+      {/* Display reviews */}
+      <div className="reviews-container">
+        <br />
+        <h2>Reviews:</h2>
+        <ul>
+          {reviews
             .sort((a, b) => b.timestamp.toMillis() - a.timestamp.toMillis()) // Sort in descending order
             .map((review, index) => (
-            <li key={index}>
+              <li key={index}>
                 <div>
-                <strong>{review.name}</strong>:
+                  <strong>{review.name}</strong>:
                 <br />
-                <span className="highlighted-stars">
+                  <span className="highlighted-stars">
                     {Array.from({ length: review.rating }, (_, i) => (
-                    <i key={i} className="fas fa-star"></i>
+                      <i key={i} className="fas fa-star"></i>
                     ))}
-                </span>
-                <br />
-                {new Date(review.timestamp.toDate()).toLocaleString("en-US", {
+                  </span>
+                  <br />
+                  {new Date(review.timestamp.toDate()).toLocaleString("en-US", {
                     year: "numeric",
                     month: "short",
                     day: "numeric",
                     hour: "numeric",
                     minute: "numeric",
-                })}
+                  })}
                 </div>
                 <div>
-                    {review.subject} - <br/>
-                    <i>"{review.review}"</i>
+                  {review.subject} - <br />
+                  <i>"{review.review}"</i>
                 </div>
                 <br />
-            </li>
+              </li>
             ))}
-    </ul>
-  </div>
+        </ul>
+      </div>
 
-</div>
+    </div>
   );
 };
 

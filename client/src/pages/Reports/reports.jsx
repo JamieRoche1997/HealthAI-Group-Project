@@ -25,13 +25,13 @@ const Reports = () => {
     }
   }, [user]);
 
-    return (
-        <div>
-            <h1>
-                Reports
+  return (
+    <div>
+      <h1>
+        Reports
             </h1>
-        </div>
-    )
+    </div>
+  )
 };
- 
+
 export default Reports;

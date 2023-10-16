@@ -23,8 +23,8 @@ const Logout = () => {
       <button onClick={handleSignOut}>Sign Out</button>
     </div>
   ) : (
-    <p>You are not signed in.</p>
-  );
+      <p>You are not signed in.</p>
+    );
 };
 
 export default Logout;

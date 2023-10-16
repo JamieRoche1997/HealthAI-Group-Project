@@ -56,16 +56,16 @@ export const Login = () => {
 
   const signInWithGoogle = () => {
     const provider = new GoogleAuthProvider();
-  
+
     signInWithPopup(auth, provider)
       .then(async (result) => {
         const user = result.user;
         console.log(user);
-  
+
         // Check if the user's home address exists in Firestore
         const userRef = db.collection("Staff").doc(user.uid);
         const userSnapshot = await userRef.get();
-  
+
         if (userSnapshot.exists && userSnapshot.data().addressLine1) {
           // Home address exists, navigate to /profile
           navigate("/profile");
@@ -79,19 +79,19 @@ export const Login = () => {
         handleAuthError(error);
       });
   };
-  
+
   const signInWithTwitter = () => {
     const provider = new TwitterAuthProvider();
-  
+
     signInWithPopup(auth, provider)
       .then(async (result) => {
         const user = result.user;
         console.log(user);
-  
+
         // Check if the user's home address exists in Firestore
         const userRef = db.collection("Staff").doc(user.uid);
         const userSnapshot = await userRef.get();
-  
+
         if (userSnapshot.exists && userSnapshot.data().addressLine1) {
           // Home address exists, navigate to /profile
           navigate("/profile");
@@ -105,19 +105,19 @@ export const Login = () => {
         handleAuthError(error);
       });
   };
-  
+
   const signInWithFacebook = () => {
     const provider = new FacebookAuthProvider();
-  
+
     signInWithPopup(auth, provider)
       .then(async (result) => {
         const user = result.user;
         console.log(user);
-  
+
         // Check if the user's home address exists in Firestore
         const userRef = db.collection("Staff").doc(user.uid);
         const userSnapshot = await userRef.get();
-  
+
         if (userSnapshot.exists && userSnapshot.data().addressLine1) {
           // Home address exists, navigate to /profile
           navigate("/profile");
@@ -131,7 +131,7 @@ export const Login = () => {
         handleAuthError(error);
       });
   };
-  
+
 
   const storeUserData = async (user, provider) => {
     const userRef = db.collection("Staff").doc(user.uid);

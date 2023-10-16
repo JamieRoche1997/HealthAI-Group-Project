@@ -26,7 +26,7 @@ const firestore = admin.firestore();
 
 const OPENAI_API_KEY = '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';
 
-    
+
 // Previous conversation history, if any
 const conversationHistory = [];
 
@@ -119,7 +119,7 @@ app.post('/webhooks/stripe', async (req, res) => {
               console.log(`Subscription updated for user with UID: ${userData.uid}`);
             } else if (event.type === 'customer.subscription.deleted') {
               // Subscription canceled event, set activeSubscription to false and priceID to null
-               userRef.update({
+              userRef.update({
                 activeSubscription: false,
                 priceID: "",
               });

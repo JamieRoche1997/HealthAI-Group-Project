@@ -18,7 +18,7 @@ const RegisterInfo = () => {
   const [worktown, setWorkTown] = useState("");
   const [workcity, setWorkCity] = useState("");
   const [workcountry, setWorkCountry] = useState("");
-  const [workpostcode, setWorkPostcode] = useState("");  const navigate = useNavigate();
+  const [workpostcode, setWorkPostcode] = useState(""); const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -62,7 +62,7 @@ const RegisterInfo = () => {
     <div className="auth-form-container">
       <h2>Additional Information</h2>
       <form className="additional-info-form" onSubmit={handleSubmit}>
-        <label htmlFor="addressLine1">Address Line 1:</label><br/>
+        <label htmlFor="addressLine1">Address Line 1:</label><br />
         <input
           value={addressLine1}
           onChange={(e) => setAddressLine1(e.target.value)}
@@ -71,8 +71,8 @@ const RegisterInfo = () => {
           id="addressLine1"
           name="addressLine1"
           required
-        /><br/>
-        <label htmlFor="addressLine2">Address Line 2:</label><br/>
+        /><br />
+        <label htmlFor="addressLine2">Address Line 2:</label><br />
         <input
           value={addressLine2}
           onChange={(e) => setAddressLine2(e.target.value)}
@@ -81,8 +81,8 @@ const RegisterInfo = () => {
           id="addressLine2"
           name="addressLine2"
           required
-        /><br/>
-        <label htmlFor="town">Town:</label><br/>
+        /><br />
+        <label htmlFor="town">Town:</label><br />
         <input
           value={town}
           onChange={(e) => setTown(e.target.value)}
@@ -91,8 +91,8 @@ const RegisterInfo = () => {
           id="town"
           name="town"
           required
-        /><br/>
-        <label htmlFor="city">City:</label><br/>
+        /><br />
+        <label htmlFor="city">City:</label><br />
         <input
           value={city}
           onChange={(e) => setCity(e.target.value)}
@@ -101,8 +101,8 @@ const RegisterInfo = () => {
           id="city"
           name="city"
           required
-        /><br/>
-        <label htmlFor="country">Country:</label><br/>
+        /><br />
+        <label htmlFor="country">Country:</label><br />
         <input
           value={country}
           onChange={(e) => setCountry(e.target.value)}
@@ -111,8 +111,8 @@ const RegisterInfo = () => {
           id="country"
           name="country"
           required
-        /><br/>
-        <label htmlFor="postcode">Postcode:</label><br/>
+        /><br />
+        <label htmlFor="postcode">Postcode:</label><br />
         <input
           value={postcode}
           onChange={(e) => setPostcode(e.target.value)}
@@ -120,8 +120,8 @@ const RegisterInfo = () => {
           placeholder="12345"
           id="postcode"
           name="postcode"
-        /><br/>
-        <label htmlFor="phoneNumber">Phone Number:</label><br/>
+        /><br />
+        <label htmlFor="phoneNumber">Phone Number:</label><br />
         <input
           value={phoneNumber}
           onChange={(e) => setPhoneNumber(e.target.value)}
@@ -130,8 +130,8 @@ const RegisterInfo = () => {
           id="phoneNumber"
           name="phoneNumber"
           required
-        /><br/>
-        <label htmlFor="licenseNumber">Medical License Number:</label><br/>
+        /><br />
+        <label htmlFor="licenseNumber">Medical License Number:</label><br />
         <input
           value={licenseNumber}
           onChange={(e) => setLicenseNumber(e.target.value)}
@@ -139,8 +139,8 @@ const RegisterInfo = () => {
           placeholder="Medical License Number"
           id="licenseNumber"
           name="licenseNumber"
-        /><br/>
-        <label htmlFor="workplace">Work Place:</label><br/>
+        /><br />
+        <label htmlFor="workplace">Work Place:</label><br />
         <input
           value={workplace}
           onChange={(e) => setWorkplace(e.target.value)}
@@ -149,8 +149,8 @@ const RegisterInfo = () => {
           id="workplace"
           name="workplace"
           required
-        /><br/>
-        <label htmlFor="workaddressLine1">Work Address Line 1:</label><br/>
+        /><br />
+        <label htmlFor="workaddressLine1">Work Address Line 1:</label><br />
         <input
           value={workaddressLine1}
           onChange={(e) => setWorkAddressLine1(e.target.value)}
@@ -159,8 +159,8 @@ const RegisterInfo = () => {
           id="workaddressLine1"
           name="workaddressLine1"
           required
-        /><br/>
-        <label htmlFor="workaddressLine2">Work Address Line 2:</label><br/>
+        /><br />
+        <label htmlFor="workaddressLine2">Work Address Line 2:</label><br />
         <input
           value={workaddressLine2}
           onChange={(e) => setWorkAddressLine2(e.target.value)}
@@ -169,8 +169,8 @@ const RegisterInfo = () => {
           id="workaddressLine2"
           name="workaddressLine2"
           required
-        /><br/>
-        <label htmlFor="worktown">Work Town:</label><br/>
+        /><br />
+        <label htmlFor="worktown">Work Town:</label><br />
         <input
           value={worktown}
           onChange={(e) => setWorkTown(e.target.value)}
@@ -179,8 +179,8 @@ const RegisterInfo = () => {
           id="worktown"
           name="worktown"
           required
-        /><br/>
-        <label htmlFor="workcity">Work City:</label><br/>
+        /><br />
+        <label htmlFor="workcity">Work City:</label><br />
         <input
           value={workcity}
           onChange={(e) => setWorkCity(e.target.value)}
@@ -189,8 +189,8 @@ const RegisterInfo = () => {
           id="workcity"
           name="workcity"
           required
-        /><br/>
-        <label htmlFor="workcountry">Work Country:</label><br/>
+        /><br />
+        <label htmlFor="workcountry">Work Country:</label><br />
         <input
           value={workcountry}
           onChange={(e) => setWorkCountry(e.target.value)}
@@ -199,8 +199,8 @@ const RegisterInfo = () => {
           id="workcountry"
           name="workcountry"
           required
-        /><br/>
-        <label htmlFor="workpostcode">Work Postcode:</label><br/>
+        /><br />
+        <label htmlFor="workpostcode">Work Postcode:</label><br />
         <input
           value={workpostcode}
           onChange={(e) => setWorkPostcode(e.target.value)}
@@ -208,7 +208,7 @@ const RegisterInfo = () => {
           placeholder="12345"
           id="workpostcode"
           name="workpostcode"
-        /><br/>
+        /><br />
         <button type="submit">Next</button>
       </form>
     </div>
