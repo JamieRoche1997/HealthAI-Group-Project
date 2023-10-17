@@ -355,3 +355,40 @@ body {
   color: #000; /* Set text color to black */
   cursor: pointer;
 }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px auto;
+  max-width: 600px; /* Adjust the max-width as needed */
+}
+
+table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+  font-weight: bold;
+}
+
+table tr:last-child td {
+  border-bottom: none;
+}
+
+table input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 30px;
+}
+
+table button {
+  border: none;
+  background-color: white;
+  padding: 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  color: #9454a0;
+  font-weight: bold;
+  margin: 20px auto;
+}

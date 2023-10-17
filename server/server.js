@@ -78,7 +78,8 @@ app.post('/webhooks/stripe', async (req, res) => {
     if (
       event.type === 'checkout.session.completed' ||
       event.type === 'customer.subscription.updated' ||
-      event.type === 'customer.subscription.deleted'
+      event.type === 'customer.subscription.deleted' ||
+      event.type === 'charge.succeeded'
     ) {
       const session = event.data.object;
       const clientReferenceId = session.client_reference_id;
@@ -125,6 +126,11 @@ app.post('/webhooks/stripe', async (req, res) => {
               });
 
               console.log(`Subscription canceled for user with UID: ${userData.uid}`);
+            } else if (event.type === 'charge.succeeded') {
+              const last4 = session.items.data[0].last4
+              userRef.update({
+                last4: last4,
+              });
             }
           });
         } else {

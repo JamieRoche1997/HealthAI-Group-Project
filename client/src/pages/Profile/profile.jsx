@@ -117,137 +117,198 @@ const Profile = () => {
           {isEditMode ? (
             <div>
               <h2>Personal Details:</h2>
-              <label>Name: </label><br />
-              <input
-                type="text"
-                name="name"
-                value={updatedUserData.name || ''}
-                onChange={handleInputChange}
-              /><br /><br />
-
-              <label>Email: </label><br />
-              <input
-                type="text"
-                name="email"
-                value={updatedUserData.email || ''}
-                onChange={handleInputChange}
-              /><br /><br />
-
-              <label>Phone Number: </label><br />
-              <input
-                type="text"
-                name="phoneNumber"
-                value={updatedUserData.phoneNumber || ''}
-                onChange={handleInputChange}
-              /><br /><br />
+              <table>
+                <tbody>
+                  <tr>
+                    <td>Name:</td>
+                    <td>
+                      <input
+                        type="text"
+                        name="name"
+                        value={updatedUserData.name || ''}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Email:</td>
+                    <td>
+                      <input
+                        type="text"
+                        name="email"
+                        value={updatedUserData.email || ''}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Phone Number:</td>
+                    <td>
+                      <input
+                        type="text"
+                        name="phoneNumber"
+                        value={updatedUserData.phoneNumber || ''}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
 
               <h2>Home Details:</h2>
-
-              <label>Address Line 1: </label><br />
-              <input
-                type="text"
-                name="addressLine1"
-                value={updatedUserData.addressLine1 || ''}
-                onChange={handleInputChange}
-              /><br /><br />
-
-              <label>Address Line 2: </label><br />
-              <input
-                type="text"
-                name="addressLine2"
-                value={updatedUserData.addressLine2 || ''}
-                onChange={handleInputChange}
-              /><br /><br />
-
-              <label>Town: </label><br />
-              <input
-                type="text"
-                name="town"
-                value={updatedUserData.town || ''}
-                onChange={handleInputChange}
-              /><br /><br />
-
-              <label>City: </label><br />
-              <input
-                type="text"
-                name="city"
-                value={updatedUserData.city || ''}
-                onChange={handleInputChange}
-              /><br /><br />
-
-              <label>Country: </label><br />
-              <input
-                type="text"
-                name="country"
-                value={updatedUserData.country || ''}
-                onChange={handleInputChange}
-              /><br /><br />
-
-              <label>Postcode: </label><br />
-              <input
-                type="text"
-                name="postcode"
-                value={updatedUserData.postcode || ''}
-                onChange={handleInputChange}
-              /><br /><br />
+              <table>
+                <tbody>
+                  <tr>
+                    <td>Address Line 1:</td>
+                    <td>
+                      <input
+                        type="text"
+                        name="addressLine1"
+                        value={updatedUserData.addressLine1 || ''}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Address Line 2:</td>
+                    <td>
+                      <input
+                        type="text"
+                        name="addressLine2"
+                        value={updatedUserData.addressLine2 || ''}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Town:</td>
+                    <td>
+                      <input
+                        type="text"
+                        name="town"
+                        value={updatedUserData.town || ''}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>City:</td>
+                    <td>
+                      <input
+                        type="text"
+                        name="city"
+                        value={updatedUserData.city || ''}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Country:</td>
+                    <td>
+                      <input
+                        type="text"
+                        name="country"
+                        value={updatedUserData.country || ''}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Postcode:</td>
+                    <td>
+                      <input
+                        type="text"
+                        name="postcode"
+                        value={updatedUserData.postcode || ''}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
 
               <h2>Work Details:</h2>
-
-              <label>Work Address Line 1: </label><br />
-              <input
-                type="text"
-                name="workaddressLine1"
-                value={updatedUserData.workaddressLine1 || ''}
-                onChange={handleInputChange}
-              /><br /><br />
-
-              <label>Work Address Line 2: </label><br />
-              <input
-                type="text"
-                name="workaddressLine2"
-                value={updatedUserData.workaddressLine2 || ''}
-                onChange={handleInputChange}
-              /><br /><br />
-
-              <label>Work Town: </label><br />
-              <input
-                type="text"
-                name="worktown"
-                value={updatedUserData.worktown || ''}
-                onChange={handleInputChange}
-              /><br /><br />
-
-              <label>Work City: </label><br />
-              <input
-                type="text"
-                name="workcity"
-                value={updatedUserData.workcity || ''}
-                onChange={handleInputChange}
-              /><br /><br />
-
-              <label>Work Country: </label><br />
-              <input
-                type="text"
-                name="workcountry"
-                value={updatedUserData.workcountry || ''}
-                onChange={handleInputChange}
-              /><br /><br />
-
-              <label>Work Postcode: </label><br />
-              <input
-                type="text"
-                name="workpostcode"
-                value={updatedUserData.workpostcode || ''}
-                onChange={handleInputChange}
-              /><br /><br />
-
-              <label>Medical License Number: </label><br />
-              <input
-                type="text"
-                name="licenseNumber"
-                value={updatedUserData.licenseNumber || ''}
-                onChange={handleInputChange}
-              /><br /><br />
+              <table>
+                <tbody>
+                  <tr>
+                    <td>Work Address Line 1:</td>
+                    <td>
+                      <input
+                        type="text"
+                        name="workaddressLine1"
+                        value={updatedUserData.workaddressLine1 || ''}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Work Address Line 2:</td>
+                    <td>
+                      <input
+                        type="text"
+                        name="workaddressLine2"
+                        value={updatedUserData.workaddressLine2 || ''}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Work Town:</td>
+                    <td>
+                      <input
+                        type="text"
+                        name="worktown"
+                        value={updatedUserData.worktown || ''}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Work City:</td>
+                    <td>
+                      <input
+                        type="text"
+                        name="workcity"
+                        value={updatedUserData.workcity || ''}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Work Country:</td>
+                    <td>
+                      <input
+                        type="text"
+                        name="workcountry"
+                        value={updatedUserData.workcountry || ''}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Work Postcode:</td>
+                    <td>
+                      <input
+                        type="text"
+                        name="workpostcode"
+                        value={updatedUserData.workpostcode || ''}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Medical License Number:</td>
+                    <td>
+                      <input
+                        type="text"
+                        name="licenseNumber"
+                        value={updatedUserData.licenseNumber || ''}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table><br /><br />
 
               <button onClick={saveUserData}>Save</button>
             </div>
@@ -257,25 +318,84 @@ const Profile = () => {
                 {userData && (
                   <>
                     <h2>Personal Details:</h2>
-                    <p>Email: {userData.email}</p>
-                    <p>Phone Number: {userData.phoneNumber}</p><br />
+                    <table>
+                      <tbody>
+                        <tr>
+                          <td>Email:</td>
+                          <td>{userData.email}</td>
+                        </tr>
+                        <tr>
+                          <td>Phone Number:</td>
+                          <td>{userData.phoneNumber}</td>
+                        </tr>
+                      </tbody>
+                    </table><br/>
 
                     <h2>Home Details:</h2>
-                    <p>Address Line 1: {userData.addressLine1}</p>
-                    <p>Address Line 2: {userData.addressLine2}</p>
-                    <p>Town: {userData.town}</p>
-                    <p>City: {userData.city}</p>
-                    <p>Country: {userData.country}</p>
-                    <p>Postcode: {userData.postcode || 'N/A'}</p><br />
+                    <table>
+                      <tbody>
+                        <tr>
+                          <td>Address Line 1:</td>
+                          <td>{userData.addressLine1}</td>
+                        </tr>
+                        <tr>
+                          <td>Address Line 2:</td>
+                          <td>{userData.addressLine2}</td>
+                        </tr>
+                        <tr>
+                          <td>Town:</td>
+                          <td>{userData.town}</td>
+                        </tr>
+                        <tr>
+                          <td>City:</td>
+                          <td>{userData.city}</td>
+                        </tr>
+                        <tr>
+                          <td>Country:</td>
+                          <td>{userData.country}</td>
+                        </tr>
+                        <tr>
+                          <td>Postcode:</td>
+                          <td>{userData.postcode || 'N/A'}</td>
+                        </tr>
+                      </tbody>
+                    </table><br/>
 
                     <h2>Work Details:</h2>
-                    <p>Work Address Line 1: {userData?.workaddressLine1}</p>
-                    <p>Work Address Line 2: {userData?.workaddressLine2}</p>
-                    <p>Work Town: {userData?.worktown}</p>
-                    <p>Work City: {userData?.workcity}</p>
-                    <p>Work Country: {userData?.workcountry}</p>
-                    <p>Work Postcode: {userData?.workpostcode || 'N/A'}</p>
-                    <p>Medical License Number: {userData.licenseNumber || 'N/A'}</p><br />
+                    <table>
+                      <tbody>
+                        <tr>
+                          <td>Work Address Line 1:</td>
+                          <td>{userData.workaddressLine1}</td>
+                        </tr>
+                        <tr>
+                          <td>Work Address Line 2:</td>
+                          <td>{userData.workaddressLine2}</td>
+                        </tr>
+                        <tr>
+                          <td>Work Town:</td>
+                          <td>{userData.worktown}</td>
+                        </tr>
+                        <tr>
+                          <td>Work City:</td>
+                          <td>{userData.workcity}</td>
+                        </tr>
+                        <tr>
+                          <td>Work Country:</td>
+                          <td>{userData.workcountry}</td>
+                        </tr>
+                        <tr>
+                          <td>Work Postcode:</td>
+                          <td>{userData.workpostcode || 'N/A'}</td>
+                        </tr>
+                        <tr>
+                          <td>Medical License Number:</td>
+                          <td>{userData.licenseNumber || 'N/A'}</td>
+                        </tr>
+                      </tbody>
+                    </table><br/>
+
+                    <button onClick={() => setIsEditMode(true)}>Edit</button>
 
                     <h2>Payment Details:</h2>
                     <button onClick={retrieveCustomerPortalSession} disabled={isLoadingManage}>
@@ -283,7 +403,6 @@ const Profile = () => {
                     </button><br /><br />
                   </>
                 )}
-                <button onClick={() => setIsEditMode(true)}>Edit</button>
               </div>
             )}
         </div>
