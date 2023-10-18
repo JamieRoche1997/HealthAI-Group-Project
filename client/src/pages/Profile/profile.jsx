@@ -107,7 +107,16 @@ const Profile = () => {
     }
   };
 
-
+  const getSubscriptionTier = (priceID) => {
+    if (priceID === 'price_1NxvFjF4O3GGcqFnN1qyrvoO') {
+      return 'Health AI Free';
+    } else if (priceID === 'price_1NxvKcF4O3GGcqFnjiaCWlHp') {
+      return 'Health AI Standard';
+    } else if (priceID === 'price_1NxvKuF4O3GGcqFnHupONSSa') {
+      return 'Health AI Premium';
+    }
+    return 'Unknown';
+  };
 
   return (
     <div>
@@ -329,7 +338,7 @@ const Profile = () => {
                           <td>{userData.phoneNumber}</td>
                         </tr>
                       </tbody>
-                    </table><br/>
+                    </table><br />
 
                     <h2>Home Details:</h2>
                     <table>
@@ -359,7 +368,7 @@ const Profile = () => {
                           <td>{userData.postcode || 'N/A'}</td>
                         </tr>
                       </tbody>
-                    </table><br/>
+                    </table><br />
 
                     <h2>Work Details:</h2>
                     <table>
@@ -393,11 +402,31 @@ const Profile = () => {
                           <td>{userData.licenseNumber || 'N/A'}</td>
                         </tr>
                       </tbody>
-                    </table><br/>
+                    </table><br />
 
                     <button onClick={() => setIsEditMode(true)}>Edit</button>
 
                     <h2>Payment Details:</h2>
+                    <table>
+                      <tbody>
+                        <tr>
+                          <td>Card Last 4:</td>
+                          <td>{userData.last4 || 'NA'}</td>
+                        </tr>
+                        <tr>
+                          <td>Card Expiry:</td>
+                          <td>{userData.cardexpiry || 'NA'}</td>
+                        </tr>
+                        <tr>
+                          <td>Card Brand:</td>
+                          <td>{userData.cardbrand ? userData.cardbrand.toUpperCase() : 'NA'}</td>
+                        </tr>
+                        <tr>
+                          <td>Subscription Tier:</td>
+                          <td>{getSubscriptionTier(userData.priceID)}</td>
+                        </tr>
+                      </tbody>
+                    </table>
                     <button onClick={retrieveCustomerPortalSession} disabled={isLoadingManage}>
                       {isLoadingManage ? 'Loading...' : 'Manage'}
                     </button><br /><br />

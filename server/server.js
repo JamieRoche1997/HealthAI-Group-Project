@@ -70,10 +70,8 @@ app.post('/api/ask-gpt3', async (req, res) => {
 });
 
 
-
 app.post('/webhooks/stripe', async (req, res) => {
   const event = req.body;
-
   try {
     if (
       event.type === 'checkout.session.completed' ||
@@ -83,13 +81,11 @@ app.post('/webhooks/stripe', async (req, res) => {
     ) {
       const session = event.data.object;
       const clientReferenceId = session.client_reference_id;
-
       if (event.type === 'checkout.session.completed') {
         // Retrieve the price ID associated with the subscription
         const subscription = await stripe.subscriptions.retrieve(session.subscription);
         const priceId = subscription.items.data[0].price.id;
         const customerId = subscription.customer;
-
         // Update the user's collection in Firestore
         const userRef = firestore.collection('Staff').doc(clientReferenceId);
         await userRef.update({
@@ -98,11 +94,12 @@ app.post('/webhooks/stripe', async (req, res) => {
           activeSubscription: true,
           priceID: priceId,
         });
-
-        console.log(`Payment completed for user with UID: ${clientReferenceId}`);
-      } else if (event.type === 'customer.subscription.updated' || event.type === 'customer.subscription.deleted') {
+        console.log(`Subscription created for user with UID: ${clientReferenceId}`);
+      }
+      if (event.type === 'customer.subscription.updated' || event.type === 'customer.subscription.deleted') {
         // Retrieve the UID from the Firestore database
-        const userRef = firestore.collection('Staff').where('customer', '==', session.customer);
+        const userRef = firestore.collection('Staff').where('subscription', '==', session.id);
+
         const querySnapshot = await userRef.get();
 
         if (!querySnapshot.empty) {
@@ -116,29 +113,52 @@ app.post('/webhooks/stripe', async (req, res) => {
               userRef.update({
                 priceID: priceId,
               });
-
               console.log(`Subscription updated for user with UID: ${userData.uid}`);
             } else if (event.type === 'customer.subscription.deleted') {
               // Subscription canceled event, set activeSubscription to false and priceID to null
               userRef.update({
                 activeSubscription: false,
-                priceID: "",
+                priceID: null,
               });
-
               console.log(`Subscription canceled for user with UID: ${userData.uid}`);
-            } else if (event.type === 'charge.succeeded') {
-              const last4 = session.items.data[0].last4
-              userRef.update({
-                last4: last4,
-              });
             }
           });
         } else {
           console.error('User not found in Firestore.');
         }
       }
-    }
+      if (event.type === 'charge.succeeded') {
+        const userRef = firestore.collection('Staff').where('email', '==', session.receipt_email);
 
+        const querySnapshot = await userRef.get();
+
+        if (!querySnapshot.empty) {
+          querySnapshot.forEach((doc) => {
+            const userData = doc.data();
+            const userRef = firestore.collection('Staff').doc(userData.uid);
+            // Retrieve the last 4 digits of the card from the payment method details
+            const paymentMethodDetails = event.data.object.payment_method_details;
+
+            if (paymentMethodDetails && paymentMethodDetails.card) {
+              const last4 = paymentMethodDetails.card.last4;
+              const expiry = paymentMethodDetails.card.exp_month + "/" + paymentMethodDetails.card.exp_year;
+              const brand = paymentMethodDetails.card.brand;
+
+              // Update the user's collection in Firestore with the last 4 digits
+              userRef.update({
+                last4: last4,
+                cardexpiry: expiry,
+                cardbrand: brand,
+              });
+
+              console.log(`Last 4 digits updated successfully for user with UID: ${clientReferenceId}`);
+            } else {
+              console.error('No payment method details found in the event.');
+            }
+          })
+        }
+      }
+    }
     res.status(200).end();
   } catch (err) {
     console.error('Error handling Stripe webhook:', err);
