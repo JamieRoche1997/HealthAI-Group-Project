@@ -65,7 +65,7 @@ const Contact = () => {
         <p>
           <a href="x.com/healthai<"><strong>X</strong></a><br />
           <a href="youtube.com/healthai"><strong>YouTube</strong></a><br />
-          <a href="instagram.com/healthai<"><strong>Instgram</strong></a>
+          <a href="instagram.com/healthai<"><strong>Instagram</strong></a>
         </p>
       </div>
       <form className="login-form" onSubmit={handleSubmit}>
@@ -79,6 +79,7 @@ const Contact = () => {
             placeholder="John Doe"
             id="name"
             name="name"
+            required 
           /><br /><br />
           <label htmlFor="email">Email Address:</label><br />
           <input
@@ -88,6 +89,7 @@ const Contact = () => {
             placeholder="johndoe@gmail.com"
             id="email"
             name="email"
+            required 
           /><br /><br />
         </div>
         <div>
@@ -95,19 +97,21 @@ const Contact = () => {
           <input
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            type="phone"
+            type="tel"
             placeholder="+353 86 123 456"
             id="phone"
             name="phone"
+            required 
           /><br /><br />
           <label htmlFor="subject">Subject:</label><br />
           <input
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
-            type="subject"
+            type="text"
             placeholder="Schedule Appointment"
             id="subject"
             name="subject"
+            required 
           /><br /><br />
         </div>
         <div>
@@ -121,6 +125,7 @@ const Contact = () => {
             placeholder="Leave a comment..."
             rows="6"
             cols="40"
+            required 
           ></textarea>
           <br />
         </div>

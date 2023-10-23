@@ -20,6 +20,7 @@ export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState(null);
+  const [passwordResetMessage, setPasswordResetMessage] = useState(null); 
   const [isPasswordResetModalOpen, setPasswordResetModalOpen] = useState(false);
   const navigate = useNavigate();
   const auth = getAuth();
@@ -204,6 +205,7 @@ export const Login = () => {
       await sendPasswordResetEmail(auth, resetEmail);
 
       // Password reset email sent
+      setPasswordResetMessage("Password reset email sent if email is registered!");
       console.log("Password reset email sent!");
       handleClosePasswordResetModal();
     } catch (error) {
@@ -249,7 +251,7 @@ export const Login = () => {
       <button className="link-btn" onClick={handleOpenPasswordResetModal}>
         Forgot your password?
       </button>
-
+      {passwordResetMessage && <p className="success-message">{passwordResetMessage}</p>}
       {/* Render the PasswordResetModal as a portal */}
       <PasswordReset
         isOpen={isPasswordResetModalOpen}

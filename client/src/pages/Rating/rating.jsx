@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../../firebase";
-import { db } from "../../firebase"; // Import the Firestore instance
-import "./rating.css"; // Import your CSS file for styling
+import { db } from "../../firebase";
+import "./rating.css";
 
 const Rating = () => {
   const [name, setName] = useState("");
@@ -9,9 +9,8 @@ const Rating = () => {
   const [subject, setSubject] = useState("");
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
-  const [reviews, setReviews] = useState([]); // To store retrieved reviews
+  const [reviews, setReviews] = useState([]);
 
-  // Function to fetch reviews from Firestore
   const fetchReviews = async () => {
     try {
       const reviewsCollection = await db.collection("Rating").get();
@@ -23,7 +22,7 @@ const Rating = () => {
   };
 
   useEffect(() => {
-    fetchReviews(); // Fetch reviews when the component mounts
+    fetchReviews();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -51,18 +50,15 @@ const Rating = () => {
 
       // Refresh the displayed reviews
       fetchReviews();
-
     } catch (error) {
       console.error("Error saving contact information:", error);
     }
   };
 
-  // Function to handle rating change
   const handleRatingChange = (selectedRating) => {
     setRating(selectedRating);
   };
 
-  // Function to render star icons with highlighting
   const renderRatingStars = () => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
@@ -96,6 +92,7 @@ const Rating = () => {
             placeholder="John Doe"
             id="name"
             name="name"
+            required // Make name field required
           /><br />
           <br />
           <label htmlFor="email">Email Address:</label><br />
@@ -106,6 +103,7 @@ const Rating = () => {
             placeholder="johndoe@gmail.com"
             id="email"
             name="email"
+            required // Make email field required
           />
         </div><br />
         <div>
@@ -113,21 +111,19 @@ const Rating = () => {
           <input
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
-            type="subject"
+            type="text"
             placeholder="Schedule Appointment"
             id="subject"
             name="subject"
+            required // Make subject field required
           />
         </div><br />
-        {/* Render rating stars */}
-        <div>
+        <div><br />
           <label>Rating:</label><br />
           <div className="rating-stars">{renderRatingStars()}</div>
         </div>
-        {/* Add review input field */}
         <div><br />
-          <label htmlFor="review">Review:</label>
-          <br />
+          <label htmlFor="review">Review:</label><br />
           <textarea
             value={review}
             onChange={(e) => setReview(e.target.value)}
@@ -135,18 +131,18 @@ const Rating = () => {
             name="review"
             rows="6"
             cols="40"
+            required // Make review field required
           ></textarea>
         </div><br />
         <button type="submit">Submit</button>
       </form>
 
-      {/* Display reviews */}
       <div className="reviews-container">
         <br />
         <h2>Reviews:</h2>
         <ul>
           {reviews
-            .sort((a, b) => b.timestamp.toMillis() - a.timestamp.toMillis()) // Sort in descending order
+            .sort((a, b) => b.timestamp.toMillis() - a.timestamp.toMillis())
             .map((review, index) => (
               <li key={index}>
                 <div>
