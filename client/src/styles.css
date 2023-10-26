@@ -392,3 +392,14 @@ table button {
   font-weight: bold;
   margin: 20px auto;
 }
+
+input[type="range"] {
+  width: 90%;
+  padding: 0; /* Remove padding */
+  border: 1px solid #ccc; /* Add a border to make the thumb and value indicator visible */
+}
+
+span {
+  margin-left: 6px;
+  margin-bottom: 20px;
+}

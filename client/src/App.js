@@ -7,6 +7,7 @@ import Contact from "./pages/Contact/contact";
 import Rating from "./pages/Rating/rating"
 import Patients from "./pages/Patients/patients";
 import PatientDetail from './pages/Patients/patientDetail';
+import CreatePatient from './pages/Patients/createPatient';
 import Profile from "./pages/Profile/profile";
 import Reports from "./pages/Reports/reports";
 import Dashboard from "./pages/Dashboard/dashboard";
@@ -25,7 +26,7 @@ function App() {
 
   // Define paths where you want to show the header
   const showHeaderPaths = ["/", "/about", "/contact", "/login", "/signup", "/rating"];
-  const showAuthHeaderPaths = ["/profile", "/reports", "/patients", "/patient", "/dashboard", "/predict", "/llm"]
+  const showAuthHeaderPaths = ["/profile", "/reports", "/patients", "/patient", "/create-patient", "/dashboard", "/predict", "/llm"]
 
   // Check if the current location should show the header
   const shouldShowHeader = showHeaderPaths.includes(location.pathname);
@@ -48,6 +49,7 @@ function App() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/rating" element={<Rating />} />
               <Route path="/patients" element={<Patients />} />
+              <Route path="/create-patient" element={<CreatePatient />} />
               <Route path="/patient/:patientId" element={<PatientDetail />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/reports" element={<Reports />} />

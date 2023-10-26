@@ -7,11 +7,13 @@ const Predict = () => {
   const { user } = useAuthentication();
   const [subscriptionStatus, setSubscriptionStatus] = useState('loading');
   const [isLoadingUpgrade, setIsLoadingUpgrade] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [patients, setPatients] = useState([]);
+  const [selectedPatient, setSelectedPatient] = useState(null);
 
   useEffect(() => {
     if (user && user.uid) {
       // Query the Firestore database for the user's subscription status
-
       const query = db.collection('Staff').doc(user.uid);
 
       query
@@ -36,6 +38,27 @@ const Predict = () => {
         .catch((error) => {
           console.error('Error getting user data from Firestore:', error);
           setSubscriptionStatus('error');
+        });
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (user && user.uid) {
+      // Retrieve the list of patients for the logged-in user
+      const patientsRef = db.collection('Patient').where('doctor', '==', user.displayName);
+
+      patientsRef
+        .get()
+        .then((querySnapshot) => {
+          const patientData = [];
+          querySnapshot.forEach((doc) => {
+            const patient = doc.data();
+            patientData.push({ ...patient, id: doc.id });
+          });
+          setPatients(patientData);
+        })
+        .catch((error) => {
+          console.error('Error getting patient data from Firestore:', error);
         });
     }
   }, [user]);
@@ -87,6 +110,27 @@ const Predict = () => {
     }
   };
 
+  const openPredictionModal = (patient) => {
+    setSelectedPatient(patient);
+  };
+
+  const closePatientPredictions = () => {
+    setSelectedPatient(null);
+  };
+
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  function compareNames(patient1, patient2) {
+    const name1 = patient1.name.toLowerCase();
+    const name2 = patient2.name.toLowerCase();
+
+    if (name1 < name2) return -1;
+    if (name1 > name2) return 1;
+    return 0;
+  }
+
   let content;
 
   switch (subscriptionStatus) {
@@ -94,7 +138,30 @@ const Predict = () => {
       content = (
         <div>
           <h1>Predict</h1>
-          {/* Add the content of the /predict page here */}
+          <input
+              type="text"
+              placeholder="Search patients..."
+              value={searchTerm}
+              onChange={handleSearch}
+            />
+          <div className="patient-list">
+            {patients
+              .filter((patient) =>
+                patient.name.toLowerCase().includes(searchTerm.toLowerCase())
+              )
+              .sort(compareNames)
+              .map((patient) => (
+                <div key={patient.id} className="patient-card">
+                  <button onClick={() => openPredictionModal(patient)}>
+                    <h3>{patient.name}</h3>
+                    <p>Age: {patient.age}</p>
+                    <p>Gender: {patient.gender}</p>
+                    <p>Risk: {patient.risk}</p>
+                  </button>
+                  <br />
+                </div>
+              ))}
+          </div>
         </div>
       );
       break;
@@ -105,7 +172,7 @@ const Predict = () => {
           <p>You need a Premium subscription to access this page.</p>
           <button onClick={retrieveCustomerPortalSession} disabled={isLoadingUpgrade}>
             {isLoadingUpgrade ? 'Loading...' : 'Upgrade'}
-          </button><br /><br />
+          </button>
         </div>
       );
       break;
@@ -119,7 +186,22 @@ const Predict = () => {
       content = <p>Loading...</p>;
   }
 
-  return <div>{content}</div>;
+  return (
+    <div>
+      {content}
+      {selectedPatient && (
+        <div className="filter-modal-overlay">
+          <div className="filter-modal">
+            <h3>Prediction for {selectedPatient.name}</h3>
+            <button>Lung Cancer Prediction</button><br/>
+            <button>Heart Disease Prediction</button><br/>
+            <button>Colon Cancer Prediction</button><br/>
+            <button onClick={closePatientPredictions}>Close</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default Predict;

@@ -7,6 +7,26 @@ const PatientDetail = () => {
   const [patient, setPatient] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
 
+  const numericFields = [
+    'Air_Pollution',
+    'Alcohol_Consumption',
+    'Dust_Exposure',
+    'Genetic_Risk',
+    'Balanced_Diet',
+    'Obesity',
+    'Smoker',
+    'Passive_Smoker',
+    'Chest_Pain',
+    'Coughing_Blood',
+    'Fatigue',
+    'Weight_Loss',
+    'Shortness_Breath',
+    'Wheezing',
+    'Swallow_Difficulty',
+    'Blubbing_Nails',
+    'Snore',
+  ];
+
   useEffect(() => {
     const patientRef = db.collection('Patient').doc(patientId);
 
@@ -31,21 +51,17 @@ const PatientDetail = () => {
 
   const handleSaveClick = () => {
     setIsEditing(false);
-  
+
     if (patient) {
       const patientRef = db.collection('Patient').doc(patientId);
-  
-      // Prepare the updated patient data
-      const updatedPatientData = {
-        name: patient.name,
-        age: patient.age,
-        gender: patient.gender,
-        risk: patient.risk,
-      };
-  
+
+      for (const field of numericFields) {
+        patient[field] = parseInt(patient[field]);
+      }
+
       // Update the patient data in Firestore
       patientRef
-        .update(updatedPatientData)
+        .update(patient)
         .then(() => {
           console.log('Patient information updated successfully in Firestore.');
         })
@@ -54,7 +70,13 @@ const PatientDetail = () => {
         });
     }
   };
-  
+
+  function capitalizeWords(str) {
+    return str
+      .split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -68,80 +90,118 @@ const PatientDetail = () => {
     return <div>Loading...</div>;
   }
 
+  // Sort fields alphabetically for display
+  const sortedFields = Object.keys(patient).sort();
+
   return (
     <div>
       <h1>{patient.name}'s Details</h1>
-      {isEditing ? (
-        <table>
-          <tbody>
-            <tr>
-              <td>Name:</td>
-              <td>
+      <table>
+        <tbody>
+          <tr>
+            <td>Name:</td>
+            <td>
+              {isEditing ? (
                 <input
                   type="text"
                   name="name"
                   value={patient.name}
                   onChange={handleInputChange}
                 />
-              </td>
-            </tr>
-            <tr>
-              <td>Age:</td>
-              <td>
+              ) : (
+                <span>{patient.name}</span>
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td>Age:</td>
+            <td>
+              {isEditing ? (
                 <input
                   type="text"
                   name="age"
                   value={patient.age}
                   onChange={handleInputChange}
                 />
-              </td>
-            </tr>
-            <tr>
-              <td>Gender:</td>
-              <td>
+              ) : (
+                <span>{patient.age}</span>
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td>Gender:</td>
+            <td>
+              {isEditing ? (
+                <div>
                 <input
-                  type="text"
+                  type="radio"
                   name="gender"
-                  value={patient.gender}
+                  value="Male"
+                  checked={patient.gender === 'Male'}
                   onChange={handleInputChange}
                 />
-              </td>
-            </tr>
-            <tr>
-              <td>Risk:</td>
-              <td>
+                <label>Male</label>
+                <input
+                  type="radio"
+                  name="gender"
+                  value="Female"
+                  checked={patient.gender === 'Female'}
+                  onChange={handleInputChange}
+                />
+                <label>Female</label>
+              </div>
+              ) : (
+                <span>{patient.gender}</span>
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td>Risk:</td>
+            <td>
+              {isEditing ? (
                 <input
                   type="text"
                   name="risk"
                   value={patient.risk}
                   onChange={handleInputChange}
                 />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      ) : (
-        <table>
-          <tbody>
-            <tr>
-              <td>Name:</td>
-              <td>{patient.name}</td>
-            </tr>
-            <tr>
-              <td>Age:</td>
-              <td>{patient.age}</td>
-            </tr>
-            <tr>
-              <td>Gender:</td>
-              <td>{patient.gender}</td>
-            </tr>
-            <tr>
-              <td>Risk:</td>
-              <td>{patient.risk}</td>
-            </tr>
-          </tbody>
-        </table>
-      )}
+              ) : (
+                <span>{patient.risk}</span>
+              )}
+            </td>
+          </tr>
+          {sortedFields
+            .filter(
+              (key) =>
+                key !== 'doctor' &&
+                key !== 'id' &&
+                !['name', 'age', 'gender', 'risk'].includes(key)
+            )
+            .map((key) => (
+              <tr key={key}>
+                <td>{capitalizeWords(key)}:</td>
+                <td>
+                  {isEditing ? (
+                    <div>
+                      <input
+                        type="range"
+                        name={key}
+                        min="1"
+                        max="8"
+                        step="1"
+                        value={patient[key]}
+                        onChange={handleInputChange}
+                      />
+                      <span>{patient[key]}</span>
+                    </div>
+                  ) : (
+                    <span>{patient[key]}</span>
+                  )}
+                </td>
+              </tr>
+            ))}
+        </tbody>
+      </table>
       <br />
       {isEditing ? (
         <button onClick={handleSaveClick}>Save</button>
