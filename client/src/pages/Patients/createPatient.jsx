@@ -27,7 +27,7 @@ const CreatePatient = () => {
     shortness_breath: 1,
     wheezing: 1,
     swallow_difficulty: 1,
-    blubbing_nails: 1,
+    clubbing_nails: 1,
     snore: 1,
   });
 
@@ -57,7 +57,7 @@ const CreatePatient = () => {
         shortness_breath: newPatient.shortness_breath,
         wheezing: newPatient.wheezing,
         swallow_difficulty: newPatient.swallow_difficulty,
-        blubbing_nails: newPatient.blubbing_nails,
+        clubbing_nails: newPatient.clubbing_nails,
         snore: newPatient.snore,
         doctor: user.displayName,
       };

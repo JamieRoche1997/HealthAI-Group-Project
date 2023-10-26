@@ -13,7 +13,6 @@ body {
   background-image: linear-gradient(79deg, #9454a0, #b287c8 48%, #f7924e);
   }
   
-  
   .Content {
   max-width: 1000px; /* issue */
   padding: 20px;
@@ -25,13 +24,11 @@ body {
   margin-bottom: 70px;
   }
   
-  
   .auth-form-container, .login-form, .register-form, .home-form-container {
   display: flex;
   flex-direction: column;
   max-width: 800px;
   }
-  
   
   @media screen and (min-width: 600px){
   .auth-form-container, .home-form-container {
@@ -42,19 +39,16 @@ body {
   }
   }
   
-  
   .home-form-container, .auth-form-container{
   text-align: center;
   align-items: center;
   }
-  
   
   label {
   text-align: left;
   padding: 0.25rem 0;
   color: white;
   }
-  
   
   input {
   width: 250px;
@@ -63,7 +57,6 @@ body {
   border: none;
   border-radius: 30px;
   }
-  
   
   button {
   border: none;
@@ -74,13 +67,11 @@ body {
   color: #9454a0;
   }
   
-  
   .link-btn {
   background: none;
   color: white;
   text-decoration: underline;
   }
-  
   
   .home-btn {
   width: 250px;
@@ -94,7 +85,6 @@ body {
   text-align: center;
   }
   
-  
   .google-btn {
   width: 250px;
   height: 50px;
@@ -107,7 +97,6 @@ body {
   color: white;
   }
   
-  
   .twitter-btn {
   width: 250px;
   height: 50px;
@@ -119,7 +108,6 @@ body {
   background: black;
   color: white;
   }
-  
   
   .facebook-btn {
   width: 250px;
@@ -321,7 +309,7 @@ body {
   border-radius: 30px;
 }
 
-.filter-modal button {
+.filter-modal .modal .modal-content button {
   color: #ffffff;
   font-size: 20px;
   font-weight: 500;
@@ -329,13 +317,13 @@ body {
   text-decoration: none;
   background-color: transparent;
 }
-.filter-modal button:hover {
+.filter-modal .modal .modal-content button:hover {
   transform: scale(1.1);
   background-color: transparent;
 }
 
 /* Style for the close button */
-.filter-modal .close-button {
+.filter-modal .modal .modal-content .close-button {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -344,7 +332,7 @@ body {
   cursor: pointer;
 }
 
-.filter-modal select {
+.filter-modal .modal .modal-content select {
   width: 40%;
   padding: 10px;
   margin-bottom: 10px;
@@ -403,3 +391,59 @@ span {
   margin-left: 6px;
   margin-bottom: 20px;
 }
+
+/* Style for the modal container */
+.modal {
+  position: fixed; /* Fixed position for the modal */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  overflow: auto; /* Enable vertical scrolling for the modal container */
+}
+
+/* Style for the modal content */
+.modal-content {
+  background: #9454a0; /* Background color of the modal content */
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  margin: auto; /* Center the modal content horizontally */
+  max-height: 60%; /* Set a maximum height for the modal content */
+  overflow-y: auto; /* Enable vertical scrolling if content overflows */
+  padding-top: 20px; /* Add top padding to create space between modal and buttons */
+}
+
+/* Style for the modal title */
+.modal-content h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* Style for the checkboxes and labels */
+.modal-content ul {
+  list-style: none;
+  padding: 0;
+}
+
+.modal-content li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+/* Style for the select/deselect all checkbox */
+.modal-content li:first-child {
+  font-weight: bold;
+}
+
+
+
