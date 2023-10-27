@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useAuthentication } from '../../Components/authObserver';
 import { db } from '../../firebase';
 import { saveAs } from 'file-saver';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+
 
 const Reports = () => {
   const { user } = useAuthentication();
@@ -71,6 +74,58 @@ const Reports = () => {
     saveAs(blob, 'patient_report.csv');
   };
 
+  const exportToPDF = () => {
+    if (selectedData.length === 0) {
+      alert('Please select data to include in the report.');
+      return;
+    }
+  
+    // Create a new jsPDF instance
+    const doc = new jsPDF({
+      orientation: 'landscape',
+    });
+  
+    // Fetch the doctor's information from the Staff database
+    if (user && user.email) {
+      const staffRef = db.collection('Staff').where('email', '==', user.email);
+  
+      staffRef.get().then((querySnapshot) => {
+        if (!querySnapshot.empty) {
+          const staffData = querySnapshot.docs[0].data();
+          // Add doctor's name, work address, and phone number to the PDF letterhead
+          doc.setFontSize(8);
+          doc.text(`Doctor: ${staffData.name}`, 10, 10);
+          doc.text(`Address: ${staffData.workaddressLine1}, ${staffData.workaddressLine2}`, 10, 18);
+          doc.text(`Phone Number: ${staffData.phoneNumber}`, 10, 26);
+  
+          // Define the position for the table below the letterhead
+          let tablePosition = 30;
+  
+          const columns = selectedFilters.map((filter) => formatFieldName(filter));
+          const data = selectedData.map((row) => selectedFilters.map((filter) => row[filter] || ''));
+  
+          // Generate the table
+          doc.autoTable({
+            head: [columns],
+            body: data,
+            bodyStyles: { fontSize: 8 }, // Adjust the font size for the table content
+            startY: tablePosition,
+          });
+  
+          // Save the PDF
+          doc.save('patient_report.pdf');
+        } else {
+          alert('Doctor information not found.');
+        }
+      }).catch((error) => {
+        console.error('Error getting doctor information:', error);
+      });
+    } else {
+      alert('User information not available.');
+    }
+  };
+   
+
   function formatFieldName(fieldName) {
     // Split the field name into words using underscores as separators
     const words = fieldName.split('_');
@@ -113,41 +168,82 @@ const Reports = () => {
   return (
     <div>
       <h1>Reports</h1>
-      <button onClick={() => setShowModal(true)}>Generate Report</button>
+      <button onClick={() => setShowModal(true)}>Filter Symptoms</button>
 
       {showModal && (
         <div className="modal">
           <div className="modal-content">
-            <h2>Select Data for Report</h2>
-            <ul>
-              <li>
-                <input
-                  type="checkbox"
-                  checked={selectAll}
-                  onChange={handleToggleSelectAll}
-                />
-                Select/Deselect All
-              </li>
-              {Object.keys(patients[0] || {})
-              .filter((field) => !['name', 'age', 'gender'].includes(field))
-              .sort()
-              .map((field) => (
-                <li key={field}>
-                  {formatFieldName(field)}
-                  <input
-                    type="checkbox"
-                    checked={selectedFilters.includes(field)}
-                    onChange={() => handleFilterChange(field)}
-                  />
-                </li>
-              ))}
-            </ul>
-            <button onClick={() => setShowModal(false)}>Close</button>
-          </div>
+          <h2>Select Data for Report</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Field</th>
+                  <th>Filter</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                <td></td>
+                  <td>Select/Deselect All</td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={selectAll}
+                      onChange={handleToggleSelectAll}
+                    />
+                  </td>
+                </tr>
+                {Object.keys(patients[0] || {})
+                  .filter((field) => !['name', 'age', 'gender'].includes(field))
+                  .sort()
+                  .map((field) => (
+                    <tr key={field}>
+                      <td></td>
+                      <td>{formatFieldName(field)}</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={selectedFilters.includes(field)}
+                          onChange={() => handleFilterChange(field)}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+            <button onClick={() => setShowModal(false)}>Close</button><br/><br/>
+            <button onClick={exportToCSV}>Export CSV</button>
+            <button onClick={exportToPDF}>Export PDF</button>
+            </div>
+
         </div>
       )}
 
-      <button onClick={exportToCSV}>Export CSV</button>
+      {selectedData.length > 0 && (
+        <div className='scrollable-table'>
+          <h2>Filtered Patient Data</h2>
+          <table>
+            <thead>
+              <tr>
+                {selectedFilters.map((filter) => (
+                  <th key={filter}>{formatFieldName(filter)}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {selectedData.map((data, index) => (
+                <tr key={index}>
+                  {selectedFilters.map((filter) => (
+                    <td key={filter}>{data[filter] || ''}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
     </div>
   );
 };

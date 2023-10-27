@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { db } from '../../firebase';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import { saveAs } from 'file-saver';
+
 
 const PatientDetail = () => {
   const { patientId } = useParams();
@@ -108,6 +112,65 @@ const PatientDetail = () => {
       ...prevPatient,
       [name]: newValue,
     }));
+  };
+  
+  const exportToCSV = () => {
+    // Create headers excluding "Name," "Age," and "Gender"
+    const headers = sortedFields
+      .filter((key) => !['name', 'age', 'gender'].includes(key))
+      .map((key) => capitalizeWords(key));
+  
+    // Prepare the CSV data using the patient object, excluding "Name," "Age," and "Gender"
+    const values = sortedFields
+      .filter((key) => !['name', 'age', 'gender'].includes(key))
+      .map((key) => patient[key] || '');
+  
+    // Combine "Name," "Age," and "Gender" with headers
+    const csvHeaders = ['Name', 'Age', 'Gender', ...headers];
+    
+    // Prepare the CSV data for "Name," "Age," and "Gender" followed by values
+    const csvValues = [patient.name, patient.age, patient.gender, ...values];
+  
+    // Combine headers and values into a single array
+    const csvData = [csvHeaders, csvValues];
+  
+    // Convert the CSV data to CSV format
+    const csvContent = csvData.map((row) => row.join(',')).join('\n');
+  
+    // Create a Blob and save it as a CSV file
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
+    saveAs(blob, `${patient.name}_patient_details.csv`);
+  };
+  
+  
+  
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+  
+    doc.setFontSize(12); // Set font size
+    doc.text(`${patient.name}'s Details`, 10, 10);
+  
+    // Create an array to hold the data in the format you want
+    const data = [
+      ['Name', patient.name],
+      ['Age', patient.age],
+      ['Gender', patient.gender],
+      ['Risk', patient.risk],
+    ];
+  
+    // Iterate over the sorted fields and add them to the data array
+    sortedFields.forEach((key) => {
+      if (!['doctor', 'id', 'name', 'age', 'gender', 'risk'].includes(key)) {
+        data.push([capitalizeWords(key), patient[key]]);
+      }
+    });
+  
+    doc.autoTable({
+      head: [['Field', 'Value']],
+      body: data,
+    });
+  
+    doc.save(`${patient.name}_patient_details.pdf`);
   };
   
 
@@ -229,10 +292,14 @@ const PatientDetail = () => {
       </table>
       <br />
       {isEditing ? (
-        <button onClick={handleSaveClick}>Save</button>
-      ) : (
-        <button onClick={handleEditClick}>Edit</button>
-      )}
+    <button onClick={handleSaveClick}>Save</button>
+  ) : (
+    <>
+      <button onClick={handleEditClick}>Edit</button>
+      <button onClick={() => exportToCSV()}>Export as CSV</button>
+      <button onClick={() => exportToPDF()}>Export as PDF</button>
+    </>
+  )}
     </div>
   );
 };

@@ -411,12 +411,12 @@ span {
   background: #9454a0; /* Background color of the modal content */
   border-radius: 10px;
   padding: 20px;
-  max-width: 400px;
+  max-width: 600px;
   width: 100%;
   text-align: center;
   position: relative;
   margin: auto; /* Center the modal content horizontally */
-  max-height: 60%; /* Set a maximum height for the modal content */
+  max-height: 70%; /* Set a maximum height for the modal content */
   overflow-y: auto; /* Enable vertical scrolling if content overflows */
   padding-top: 20px; /* Add top padding to create space between modal and buttons */
 }
@@ -437,7 +437,7 @@ span {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 12px;
+  font-size: 18px;
 }
 
 /* Style for the select/deselect all checkbox */
@@ -445,5 +445,23 @@ span {
   font-weight: bold;
 }
 
+.scrollable-table {
+  max-height: 600px; /* Adjust the maximum height as needed */
+  overflow-y: scroll; /* Enable vertical scrolling when the content exceeds the container height */
+  border: 1px solid #ccc; /* Optional: Add a border for better visibility */
+}
+
+.scrollable-table table {
+  width: 100%; /* Ensure the table takes the full width of the container */
+  border-collapse: collapse; /* Optional: Collapse cell borders for a cleaner appearance */
+}
+
+.scrollable-table table th,
+.scrollable-table table td {
+  padding: 8px; /* Adjust the padding as needed */
+  border: 1px solid #ddd; /* Optional: Add cell borders for better readability */
+  text-align: left; /* Align cell content to the left */
+  width: auto; /* Allow the browser to evenly distribute the width among all columns */
+}
 
 
