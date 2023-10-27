@@ -8,23 +8,23 @@ const PatientDetail = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   const numericFields = [
-    'Air_Pollution',
-    'Alcohol_Consumption',
-    'Dust_Exposure',
-    'Genetic_Risk',
-    'Balanced_Diet',
-    'Obesity',
-    'Smoker',
-    'Passive_Smoker',
-    'Chest_Pain',
-    'Coughing_Blood',
-    'Fatigue',
-    'Weight_Loss',
-    'Shortness_Breath',
-    'Wheezing',
-    'Swallow_Difficulty',
-    'Blubbing_Nails',
-    'Snore',
+    "air_pollution",
+    "alcohol_consumption",
+    "dust_exposure",
+    "genetic_risk",
+    "balanced_diet",
+    "obesity",
+    "smoker",
+    "passive_smoker",
+    "chest_pain",
+    "coughing_blood",
+    "fatigue",
+    "weight_loss",
+    "shortness_breath",
+    "wheezing",
+    "swallow_difficulty",
+    "clubbing_nails",
+    "snore",
   ];
 
   useEffect(() => {
@@ -51,6 +51,29 @@ const PatientDetail = () => {
 
   const handleSaveClick = () => {
     setIsEditing(false);
+  
+    if (patient) {
+      const patientRef = db.collection('Patient').doc(patientId);
+  
+      // Create a copy of the patient object and convert numeric fields to numbers
+      const updatedPatient = { ...patient };
+  
+      for (const field of numericFields) {
+        updatedPatient[field] = parseInt(updatedPatient[field]);
+      }
+  
+      // Update the patient data in Firestore with the converted values
+      patientRef
+        .update(updatedPatient)
+        .then(() => {
+          console.log('Patient information updated successfully in Firestore.');
+        })
+        .catch((error) => {
+          console.error('Error updating patient information in Firestore:', error);
+        });
+    }
+  
+  
 
     if (patient) {
       const patientRef = db.collection('Patient').doc(patientId);
@@ -80,11 +103,13 @@ const PatientDetail = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    const newValue = numericFields.includes(name) ? parseInt(value, 10) : value;
     setPatient((prevPatient) => ({
       ...prevPatient,
-      [name]: value,
+      [name]: newValue,
     }));
   };
+  
 
   if (!patient) {
     return <div>Loading...</div>;
