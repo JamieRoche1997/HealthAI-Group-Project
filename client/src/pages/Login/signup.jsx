@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../../firebase";
 import { useNavigate } from "react-router-dom";
-import { getAuth, createUserWithEmailAndPassword, AuthErrorCodes } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, AuthErrorCodes, updateProfile } from "firebase/auth";
 import { db } from "../../firebase"; // Import the Firestore instance
 
 export const SignUp = () => {
@@ -65,6 +65,10 @@ export const SignUp = () => {
 
       // The user is created successfully, you can add additional user data to Firestore or other databases here
       const user = userCredential.user;
+
+      await updateProfile(user, {
+        displayName: name,
+      });
 
       // Add user data to Firestore, including uid
       const userDocRef = db.collection("Staff").doc(user.uid);
