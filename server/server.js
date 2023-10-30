@@ -203,7 +203,7 @@ app.post('/api/retrieve-customer-portal-session', async (req, res) => {
 // socket.io and then i added cors for cross origin to localhost only
 const io = require('socket.io')(server, {
   cors: {
-   origin: "https://healthai-23.web.app/", //specific origin you want to give access to,
+   origin: "https://healthai-23.web.app", //specific origin you want to give access to,
 },
 });
 
