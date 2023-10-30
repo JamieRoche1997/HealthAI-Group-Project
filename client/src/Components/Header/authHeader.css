@@ -19,7 +19,7 @@
   .authHeader-Nav {
     display: grid;
     grid-area: nav;
-    grid-template-columns: repeat(7, auto);
+    grid-template-columns: repeat(8, auto);
     align-items: center;
     justify-items: center;
     text-align: center;

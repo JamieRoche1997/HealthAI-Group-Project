@@ -1,12 +1,13 @@
 const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
 const stripe = require('stripe')('sk_test_51NpIJeF4O3GGcqFnEmcNA5md0oDd48yBeLBOgKVyiQ4ySRuYCseF9LMRu4kagkXxr2AHIItB805ZdsQ43lCTB9cN00NjpZQaO4');
 const admin = require('firebase-admin');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const axios = require('axios');
 const app = express();
-app.use(express.json());
-app.use(cors());
+const server = http.createServer(app);
 
 // Backend Server URL - https://healthai-heroku-1a596fab2241.herokuapp.com/
 
@@ -199,6 +200,31 @@ app.post('/api/retrieve-customer-portal-session', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
+// socket.io and then i added cors for cross origin to localhost only
+const io = require('socket.io')(server, {
+  cors: {
+   origin: "https://healthai-23.web.app/", //specific origin you want to give access to,
+},
+});
+
+const chatNamespace = io.of('/chat'); // Create a namespace for /chat
+
+chatNamespace.on('connection', (socket) => {
+  console.log(`A doctor with socket id ${socket.id} has connected.`);
+
+  // When a user sends a message
+  socket.on('message', (message) => {
+    console.log(`Received message from socket id ${socket.id}: ${message.content}`);
+    
+    // Broadcast the message to all connected doctors, including the user's name
+    chatNamespace.emit('message', message);
+  });
+
+  socket.on('disconnect', () => {
+    console.log(`Doctor with socket id ${socket.id} has disconnected.`);
+  });
+});
+
+server.listen(port, () => {
   console.log("Server started on port", port);
 });

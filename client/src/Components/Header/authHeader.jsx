@@ -32,6 +32,10 @@ export default function AuthHeader() {
     navigate("/llm");
   };
 
+  const redirectToChat = () => {
+    navigate("/chat");
+  };
+
   const redirectToProfile = () => {
     navigate("/profile");
   }
@@ -58,6 +62,7 @@ export default function AuthHeader() {
     { label: "Patients", onClick: redirectToPatients },
     { label: "Predict", onClick: redirectToPredict },
     { label: "LLM", onClick: redirectToLLM },
+    { label: "Chat", onClick: redirectToChat },
   ];
 
   const buttonsCountRef = useRef(buttons.length);
@@ -85,7 +90,7 @@ export default function AuthHeader() {
       >
         <nav className="authHeader-Nav">
           <img src={logo} alt={"Logo"} width={50} height={50} />
-          {buttons.slice(0, 5).map((button, index) => (
+          {buttons.slice(0, 6).map((button, index) => (
             <button key={index} onClick={button.onClick}>
               {button.label}
             </button>

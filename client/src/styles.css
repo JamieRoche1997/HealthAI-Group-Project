@@ -465,3 +465,17 @@ span {
 }
 
 
+/* Add this CSS to your stylesheets or in a <style> tag in your HTML */
+.sender-message {
+  background-color: #218aff;
+  color: #fff;
+  align-self: flex-start;
+  text-align: right;
+}
+
+.receiver-message {
+  background-color: #ffffff;
+  color: #333;
+  align-self: flex-end;
+  text-align: left;
+}

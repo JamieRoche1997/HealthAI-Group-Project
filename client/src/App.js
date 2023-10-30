@@ -19,14 +19,15 @@ import { Login } from "./pages/Login/login.jsx";
 import { SignUp } from "./pages/Login/signup.jsx";
 import RegisterInfo from "./pages/Login/register-info";
 import AuthObserver from "./Components/authObserver";
-import PricingPage from "./pages/Payment/PricingPage"
+import PricingPage from "./pages/Payment/PricingPage";
+import Chat from "./pages/Chat/chat";
 
 function App() {
   const location = useLocation();
 
   // Define paths where you want to show the header
   const showHeaderPaths = ["/", "/about", "/contact", "/login", "/signup", "/rating"];
-  const showAuthHeaderPaths = ["/profile", "/reports", "/patients", "/patient", "/create-patient", "/dashboard", "/predict", "/llm"]
+  const showAuthHeaderPaths = ["/profile", "/reports", "/patients", "/patient", "/create-patient", "/dashboard", "/predict", "/llm", "/chat"]
 
   // Check if the current location should show the header
   const shouldShowHeader = showHeaderPaths.includes(location.pathname);
@@ -55,7 +56,8 @@ function App() {
               <Route path="/reports" element={<Reports />} />
               <Route path="/predict" element={<Predict />} />
               <Route path="/llm" element={<LLM />} />
-              <Route path="/Dashboard" element={<Dashboard />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/chat" element={<Chat />} />
             </Routes>
           )}
         </AuthObserver>
