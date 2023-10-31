@@ -200,29 +200,47 @@ app.post('/api/retrieve-customer-portal-session', async (req, res) => {
   }
 });
 
-// socket.io and then i added cors for cross origin to localhost only
+// testmode: http://localhost:3000
+// livemode: https://healthai-23.web.app
 const io = require('socket.io')(server, {
   cors: {
    origin: "https://healthai-23.web.app", //specific origin you want to give access to,
 },
 });
 
+let onlineUsers = []; // Initialize an array to track online users
+
 const chatNamespace = io.of('/chat'); // Create a namespace for /chat
 
 chatNamespace.on('connection', (socket) => {
-  console.log(`A doctor with socket id ${socket.id} has connected.`);
+  console.log(`A user with socket id ${socket.id} has connected.`);
+
+  // Add the user to the list of online users
+  socket.on('connect-user', (userName) => {
+    console.log(`${userName} is online.`);
+    onlineUsers.push({ socketId: socket.id, name: userName });
+    
+    // Emit the updated list of online users to all clients
+    chatNamespace.emit('online-users', onlineUsers);
+  });
 
   // When a user sends a message
   socket.on('message', (message) => {
     console.log(`Received message from socket id ${socket.id}: ${message.content}`);
     
-    // Broadcast the message to all connected doctors, including the user's name
+    // Broadcast the message to all connected users
     chatNamespace.emit('message', message);
   });
 
   socket.on('disconnect', () => {
-    console.log(`Doctor with socket id ${socket.id} has disconnected.`);
-  });
+    console.log(`User with socket id ${socket.id} has disconnected.`);
+    
+    // Remove the disconnected user from the list of online users
+    onlineUsers = onlineUsers.filter((user) => user.socketId !== socket.id);
+    
+    // Emit the updated list of online users to all clients
+    chatNamespace.emit('online-users', onlineUsers);
+  });  
 });
 
 server.listen(port, () => {

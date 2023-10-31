@@ -9,19 +9,27 @@ const Chat = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
+  const [onlineUsers, setOnlineUsers] = useState([]);
   const socket = useRef();
 
   useEffect(() => {
     if (user && user.uid) {
       // Query the Firestore database for the user's data based on their uid
       const query = db.collection('Staff').doc(user.uid);
-
+  
       query
         .get()
         .then((doc) => {
           if (doc.exists) {
             const userData = doc.data();
             setUserData(userData);
+  
+            // Check if user.displayName exists before emitting the event
+            if (user.displayName) {
+  
+              // Emit the 'connect-user' event with the user's name
+              socket.current.emit('connect-user', user.displayName);
+            }
           } else {
             console.log('User not found in Firestore');
           }
@@ -29,13 +37,14 @@ const Chat = () => {
         .catch((error) => {
           console.error('Error getting user data from Firestore:', error);
         });
-
+  
       setLoggedIn(true);
     }
   }, [user]);
 
   useEffect(() => {
-    // Replace 'http://your-backend-url' with your Express.js server URL
+    // livemode: https://healthai-heroku-1a596fab2241.herokuapp.com/chat
+    // testmode: http://localhost:4000/chat
     socket.current = io('https://healthai-heroku-1a596fab2241.herokuapp.com/chat');
 
     // Listen for incoming messages
@@ -43,11 +52,16 @@ const Chat = () => {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
 
+    // Listen for online user updates
+    socket.current.on('online-users', (users) => {
+      setOnlineUsers(users);
+    });
+
     // Clean up the socket connection when the component unmounts
     return () => {
       socket.current.disconnect();
     };
-  }, []);
+  }, []);  
 
   // Update the sendMessage function to send the user's name along with the message
     const sendMessage = () => {
@@ -72,6 +86,14 @@ const Chat = () => {
             <div>
               <h1>Doctor Chat</h1>
               <p>A place to ask for general advice between fellow doctors</p>
+              <div className="online-users">
+                <h2>Online Users</h2>
+                <ul className="custom-list">
+                  {onlineUsers.map((user) => (
+                    <li key={user.socketId}>Dr. {user.name}</li>
+                  ))}
+                </ul>
+              </div>
               <div className="chat-messages">
                 {messages.map((msg, index) => (
                   <div

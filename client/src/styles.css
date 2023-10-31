@@ -479,3 +479,26 @@ span {
   align-self: flex-end;
   text-align: left;
 }
+
+.custom-list {
+  list-style: none;
+  text-align: center;
+  padding: 0;
+}
+
+.custom-list li {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  position: relative;
+}
+
+.custom-list li::before {
+  content: '•';
+  color: lightgreen;
+  display: inline-block;
+  width: 10px; /* Adjust the width to control spacing between the bullet and text */
+  text-align: right; /* Align the bullet to the right */
+  margin-right: 5px; /* Adjust as needed to control the space between the bullet and text */
+}
+
