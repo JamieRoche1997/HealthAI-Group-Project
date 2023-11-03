@@ -24,6 +24,15 @@ body {
   margin-bottom: 70px;
   }
   
+/* For screens smaller than 600px wide */
+@media screen and (max-width: 600px) {
+  .Content {
+    padding: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+}
+
   .auth-form-container, .login-form, .register-form, .home-form-container {
   display: flex;
   flex-direction: column;
@@ -254,6 +263,20 @@ body {
     grid-template-columns: repeat(3, 1fr); /* Display three cards per row */
     gap: 20px; /* Add spacing between cards */
   }
+
+  @media screen and (max-width: 600px) {
+    .patient-list {
+      gap: 0px;
+    }
+  }
+
+  /* Adjust card width and margin for smaller screens */
+@media screen and (max-width: 600px) {
+  .patient-card {
+    width: 50%; 
+    padding: 0px;
+  }
+}
   
   .patient-card {
     background-color: white; /* Set the background color to white */
@@ -285,7 +308,7 @@ body {
 /* Style for the filter modal */
 .filter-modal {
   background: #9454a0;
-  border-radius: 10px;
+  border-radius: 30px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 20px;
   max-width: 400px;
@@ -351,11 +374,24 @@ table {
   max-width: 600px; /* Adjust the max-width as needed */
 }
 
+@media screen and (max-width: 600px) {
+  table {
+    width: 90%; /* Set the table width to 100% for smaller screens */
+    max-width: 90%; /* Ensure it takes the full width of the container */
+  }
+}
+
 table td {
   padding: 10px;
   text-align: left;
   border-bottom: 1px solid #ccc;
   font-weight: bold;
+}
+
+@media screen and (max-width: 600px) {
+  table td {
+    padding: 5px;
+  }
 }
 
 table tr:last-child td {
@@ -368,6 +404,16 @@ table input[type="text"] {
   margin: 5px 0;
   border: 1px solid #ccc;
   border-radius: 30px;
+}
+
+@media screen and (max-width: 600px) {
+  table input[type="text"] {
+    width: 90%;
+    padding: 5px;
+    margin: 1px 0;
+    border: 1px solid #ccc;
+    border-radius: 30px;
+  }
 }
 
 table button {

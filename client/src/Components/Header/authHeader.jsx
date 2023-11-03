@@ -6,11 +6,19 @@ import logo from "../../Images/logo.png";
 import DropdownMenu from "../Menu/dropDownMenu";
 import { getAuth, signOut } from "firebase/auth";
 import { FiUser } from "react-icons/fi";
+import MobileDropdown from "./dropdownMenu"; // Import the DropdownMenu component
+
 
 export default function AuthHeader() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isSmallScreen, setIsSmallScreen] = useState(false); // Add this state for mobile check
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
 
   const redirectToDashboard = () => {
     navigate("/dashboard");
@@ -71,7 +79,7 @@ export default function AuthHeader() {
     // Calculate the height of the dropdown based on the number of buttons
     if (dropdownRef.current) {
       const buttonHeight = 50; // Adjust this value based on your button styling
-      const dropdownHeight = buttonsCountRef.current * buttonHeight - 75;
+      const dropdownHeight = buttonsCountRef.current * buttonHeight;
       dropdownRef.current.style.height = `${dropdownHeight}px`;
     }
   }, [isUserMenuOpen]);
@@ -80,10 +88,28 @@ export default function AuthHeader() {
     setIsUserMenuOpen(!isUserMenuOpen);
   };
 
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    mediaQuery.addListener(handleMediaQueryChange);
+    handleMediaQueryChange(mediaQuery);
+
+    return () => {
+      mediaQuery.removeListener(handleMediaQueryChange);
+    };
+  }, []);
+
+  const handleMediaQueryChange = (mediaQuery) => {
+    if (mediaQuery.matches) {
+      setIsSmallScreen(true);
+    } else {
+      setIsSmallScreen(false);
+    }
+  };
+
   return (
     <header className="authHeader-Header">
       <CSSTransition
-        in={true}
+        in={!isSmallScreen}
         timeout={350}
         classNames="authHeader-NavAnimation"
         unmountOnExit
@@ -95,13 +121,13 @@ export default function AuthHeader() {
               {button.label}
             </button>
           ))}
+          {/* Render the user icon */}
           <button onClick={handleUserIconClick}>
             <FiUser size={24} /> {/* User icon */}
           </button>
         </nav>
       </CSSTransition>
 
-      {/* Render the user dropdown */}
       {isUserMenuOpen && (
         <div
           ref={dropdownRef}
@@ -115,6 +141,21 @@ export default function AuthHeader() {
             closeMenu={() => setIsUserMenuOpen(false)} // Pass closeMenu here
           />
         </div>
+      )}
+
+      {/* Render the user dropdown for mobile view */}
+      {isSmallScreen && (
+        <>
+          <div className="MobileDropdownButton" onClick={toggleDropdown}>
+            <span>Menu</span>
+          </div>
+          {isDropdownOpen && <MobileDropdown buttons={[
+                ...buttons,
+                { label: "Profile", onClick: redirectToProfile },
+                { label: "Logout", onClick: handleLogout }
+              ]}
+              closeMenu={toggleDropdown} />}
+        </>
       )}
     </header>
   );

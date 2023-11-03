@@ -3,14 +3,15 @@ import "./header.css";
 import { CSSTransition } from "react-transition-group";
 import { useNavigate } from "react-router-dom";
 import logo from "../../Images/logo.png";
-import DropdownMenu from "../Menu/dropDownMenu"; // Import the DropdownMenu component
+import MobileDropdown from "./dropdownMenu"; // Import the DropdownMenu component
 
 export default function Header() {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 700px)");
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
     mediaQuery.addListener(handleMediaQueryChange);
     handleMediaQueryChange(mediaQuery);
 
@@ -27,23 +28,26 @@ export default function Header() {
     }
   };
 
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
   const redirectToHome = () => {
-    navigate("/"); // Redirect to the "/" path
+    navigate("/");
   };
 
   const redirectToAbout = () => {
-    navigate("/about"); // Redirect to the "/about" path
+    navigate("/about");
   };
 
   const redirectToContact = () => {
-    navigate("/contact"); // Redirect to the "/contact" path
+    navigate("/contact");
   };
 
   const redirectToRating = () => {
-    navigate("/rating"); // Redirect to the "/rating" path
+    navigate("/rating");
   }
 
-  // Define button data
   const buttons = [
     { label: "HealthAI", onClick: redirectToHome },
     { label: "About Us", onClick: redirectToAbout },
@@ -69,7 +73,14 @@ export default function Header() {
         </nav>
       </CSSTransition>
 
-      {isSmallScreen && <DropdownMenu buttons={buttons} />}
+      {isSmallScreen && (
+        <>
+          <div className="MobileDropdownButton" onClick={toggleDropdown}>
+            <span>Menu</span>
+          </div>
+          {isDropdownOpen && <MobileDropdown buttons={buttons} closeMenu={toggleDropdown} />}
+        </>
+      )}
     </header>
   );
 }
