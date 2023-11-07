@@ -16,24 +16,44 @@ const CreatePatient = () => {
     insurance_name: '',
     insurance_number: '',
     risk: '',
-    air_pollution: 1,
-    alcohol_consumption: 1,
-    dust_exposure: 1,
-    genetic_risk: 1,
-    balanced_diet: 1,
-    obesity: 1,
-    smoker: 1,
-    passive_smoker: 1,
-    chest_pain: 1,
-    coughing_blood: 1,
-    fatigue: 1,
-    weight_loss: 1,
-    shortness_breath: 1,
+    air_pollution: 0,
+    alcohol_consumption: 0,
+    dust_exposure: 0,
+    genetic_risk: 0,
+    balanced_diet: 0,
+    obesity: 0,
+    smoker: 0,
+    passive_smoker: 0,
+    chest_pain: 0,
+    coughing_blood: 0,
+    fatigue: 0,
+    weight_loss: 0,
+    shortness_breath: 0,
     wheezing: 1,
-    swallow_difficulty: 1,
-    clubbing_nails: 1,
-    snore: 1,
+    swallow_difficulty: 0,
+    clubbing_nails: 0,
+    snore: 0,
+    breast_tissue: "",
+    radius_mean: 0,
+    texture_mean: 0,
+    perimeter_mean: 0,
+    area_mean: 0,
+    smoothness_mean: 0,
+    compactness_mean: 0,
+    concavity_mean: 0,
+    concave_points: 0,
   });
+
+  const fieldRanges = {
+    radius_mean: { min: 6.98, max: 28.1 },
+    texture_mean: { min: 9.71, max: 39.3 },
+    perimeter_mean: { min: 43.8, max: 189 },
+    area_mean: { min: 144, max: 2500 },
+    smoothness_mean: { min: 0.05, max: 0.16 },
+    compactness_mean: { min: 0.02, max: 0.35 },
+    concavity_mean: { min: 0, max: 0.43 },
+    concave_points: { min: 0, max: 0.2 },
+  };
 
   const saveNewPatient = () => {
     if (user) {
@@ -72,6 +92,15 @@ const CreatePatient = () => {
         swallow_difficulty: newPatient.swallow_difficulty,
         clubbing_nails: newPatient.clubbing_nails,
         snore: newPatient.snore,
+        breast_tissue: newPatient.breast_tissue,
+        radius_mean: newPatient.radius_mean,
+        texture_mean: newPatient.texture_mean,
+        perimeter_mean: newPatient.perimeter_mean,
+        area_mean: newPatient.area_mean,
+        smoothness_mean: newPatient.smoothness_mean,
+        compactness_mean: newPatient.compactness_mean,
+        concavity_mean: newPatient.concavity_mean,
+        concave_points: newPatient.concave_points,
         doctor: user.displayName,
       };
 
@@ -189,26 +218,81 @@ const CreatePatient = () => {
               />
             </td>
           </tr>
+
           {Object.keys(newPatient)
-            .filter((field) => field !== 'name' && field !== 'dob' && field !== 'gender' && field !== 'risk' && field !== 'phone'
-            && field !== 'postcode' && field !== 'insurance_name' && field !== 'insurance_number')
-            .map((field) => (
-              <tr key={field}>
-                <td>{capitalizeWords(field)}:</td>
-                <td>
-                  <input
-                    type="range"
-                    min="1"
-                    max="8"
-                    value={newPatient[field]}
-                    onChange={(e) =>
-                      setNewPatient({ ...newPatient, [field]: e.target.value })
-                    }
-                  />
-                  {newPatient[field]}
-                </td>
-              </tr>
-            ))}
+  .filter(
+    (field) =>
+      field !== 'name' &&
+      field !== 'dob' &&
+      field !== 'gender' &&
+      field !== 'risk' &&
+      field !== 'phone' &&
+      field !== 'postcode' &&
+      field !== 'insurance_name' &&
+      field !== 'insurance_number'
+  )
+  .map((field) => (
+    <tr key={field}>
+      <td>{capitalizeWords(field)}:</td>
+      <td>
+        {field === 'breast_tissue' ? (
+          <div>
+            <input
+              type="radio"
+              name="breast_tissue"
+              value="Malignant"
+              checked={newPatient.breast_tissue === 'Malignant'}
+              onChange={(e) =>
+                setNewPatient({ ...newPatient, breast_tissue: 'Malignant' })
+              }
+            />
+            <label>Malignant</label>
+            <input
+              type="radio"
+              name="breast_tissue"
+              value="Benign"
+              checked={newPatient.breast_tissue === 'Benign'}
+              onChange={(e) =>
+                setNewPatient({ ...newPatient, breast_tissue: 'Benign' })
+              }
+            />
+            <label>Benign</label>
+          </div>
+        ) : field in fieldRanges ? (
+          <div>
+            <input
+              type="range"
+              min={fieldRanges[field].min}
+              max={fieldRanges[field].max}
+              step="0.001"
+              value={newPatient[field]}
+              onChange={(e) =>
+                setNewPatient({ ...newPatient, [field]: e.target.value })
+              }
+            />
+            <span>{newPatient[field]}</span>
+          </div>
+        ) : (
+          <div>
+            <input
+              type="range"
+              min="0"
+              max="8"
+              step="1"
+              value={newPatient[field]}
+              onChange={(e) =>
+                setNewPatient({ ...newPatient, [field]: e.target.value })
+              }
+            />
+            <span>{newPatient[field]}</span>
+          </div>
+        )}
+      </td>
+    </tr>
+  ))}
+
+
+
           <tr>
             <td></td>
             <td>

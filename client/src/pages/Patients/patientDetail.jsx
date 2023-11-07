@@ -29,6 +29,14 @@ const PatientDetail = () => {
     "swallow_difficulty",
     "clubbing_nails",
     "snore",
+    "radius_mean",
+    "texture_mean",
+    "perimeter_mean",
+    "area_mean",
+    "smoothness_mean",
+    "compactness_mean",
+    "concavity_mean",
+    "concave_points",
   ];
 
   function calculateAge(dob) {
