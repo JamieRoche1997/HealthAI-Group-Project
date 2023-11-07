@@ -9,8 +9,12 @@ const CreatePatient = () => {
 
   const [newPatient, setNewPatient] = useState({
     name: '',
-    age: '',
+    dob: '',
     gender: '',
+    phone: '',
+    postcode: '',
+    insurance_name: '',
+    insurance_number: '',
     risk: '',
     air_pollution: 1,
     alcohol_consumption: 1,
@@ -36,11 +40,20 @@ const CreatePatient = () => {
       // Replace underscores with spaces in the name
       const displayName = newPatient.name.replace(/_/g, ' ');
 
+      // Convert the input date string to the desired format
+      const inputDate = newPatient.dob; // Assume it's in 'YYYY-MM-DD' format
+      const [year, month, day] = inputDate.split('-');
+      const formattedDOB = `${day}-${month}-${year}`;
+
       const patientRef = db.collection('Patient');
       const newPatientData = {
         name: displayName,
-        age: newPatient.age,
+        dob: formattedDOB,
         gender: newPatient.gender,
+        phone: newPatient.phone,
+        postcode: newPatient.postcode,
+        insurance_name: newPatient.insurance_name,
+        insurance_number: newPatient.insurance_number,
         risk: newPatient.risk,
         air_pollution: newPatient.air_pollution,
         alcohol_consumption: newPatient.alcohol_consumption,
@@ -98,13 +111,13 @@ const CreatePatient = () => {
             </td>
           </tr>
           <tr>
-            <td>Age:</td>
+            <td>Date Of Birth:</td>
             <td>
               <input
-                type="text"
-                placeholder="Age"
-                value={newPatient.age}
-                onChange={(e) => setNewPatient({ ...newPatient, age: e.target.value })}
+                type="date"
+                placeholder="DD-MM-YYY"
+                value={newPatient.dob}
+                onChange={(e) => setNewPatient({ ...newPatient, dob: e.target.value })}
               />
             </td>
           </tr>
@@ -132,8 +145,53 @@ const CreatePatient = () => {
 
             </td>
           </tr>
+          <tr>
+            <td>Phone:</td>
+            <td>
+              <input
+                type="text"
+                placeholder="Phone"
+                value={newPatient.phone}
+                onChange={(e) => setNewPatient({ ...newPatient, phone: e.target.value })}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>Postcode:</td>
+            <td>
+              <input
+                type="text"
+                placeholder="Postcode"
+                value={newPatient.postcode}
+                onChange={(e) => setNewPatient({ ...newPatient, postcode: e.target.value })}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>Insurance Name:</td>
+            <td>
+              <input
+                type="text"
+                placeholder="Insurance Name"
+                value={newPatient.insurance_name}
+                onChange={(e) => setNewPatient({ ...newPatient, insurance_name: e.target.value })}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>Insurance Number:</td>
+            <td>
+              <input
+                type="text"
+                placeholder="Insurance Number"
+                value={newPatient.insurance_number}
+                onChange={(e) => setNewPatient({ ...newPatient, insurance_number: e.target.value })}
+              />
+            </td>
+          </tr>
           {Object.keys(newPatient)
-            .filter((field) => field !== 'name' && field !== 'age' && field !== 'gender' && field !== 'risk')
+            .filter((field) => field !== 'name' && field !== 'dob' && field !== 'gender' && field !== 'risk' && field !== 'phone'
+            && field !== 'postcode' && field !== 'insurance_name' && field !== 'insurance_number')
             .map((field) => (
               <tr key={field}>
                 <td>{capitalizeWords(field)}:</td>

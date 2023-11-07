@@ -31,6 +31,36 @@ const PatientDetail = () => {
     "snore",
   ];
 
+  function calculateAge(dob) {
+    // Split the date string and parse it correctly
+    const parts = dob.split('-');
+    if (parts.length === 3) {
+      const day = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10);
+      const year = parseInt(parts[2], 10);
+  
+      if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+        const dobDate = new Date(year, month - 1, day); // Month is zero-based
+        const currentDate = new Date();
+        let age = currentDate.getFullYear() - dobDate.getFullYear();
+  
+        if (
+          currentDate.getMonth() < dobDate.getMonth() ||
+          (currentDate.getMonth() === dobDate.getMonth() &&
+            currentDate.getDate() < dobDate.getDate())
+        ) {
+          age--;
+        }
+  
+        return age;
+      }
+    }
+  
+    // Return an appropriate value or handle the error as needed
+    return 0; // Default value or NaN, depending on your use case
+  }
+  
+
   useEffect(() => {
     const patientRef = db.collection('Patient').doc(patientId);
 
@@ -39,7 +69,9 @@ const PatientDetail = () => {
       .then((doc) => {
         if (doc.exists) {
           const patientData = doc.data();
-          setPatient(patientData);
+          // Calculate the age and add it to the patient data
+          const age = calculateAge(patientData.dob);
+          setPatient({ ...patientData, age });
         } else {
           console.log('Patient not found in Firestore');
         }
@@ -117,19 +149,20 @@ const PatientDetail = () => {
   const exportToCSV = () => {
     // Create headers excluding "Name," "Age," and "Gender"
     const headers = sortedFields
-      .filter((key) => !['name', 'age', 'gender'].includes(key))
+      .filter((key) => !['name', 'age', 'gender', 'phone', 'postcode', 'insurance_name', 'insurance_number'].includes(key))
       .map((key) => capitalizeWords(key));
   
     // Prepare the CSV data using the patient object, excluding "Name," "Age," and "Gender"
     const values = sortedFields
-      .filter((key) => !['name', 'age', 'gender'].includes(key))
+      .filter((key) => !['name', 'age', 'gender' , 'phone', 'postcode', 'insurance_name', 'insurance_number'].includes(key))
       .map((key) => patient[key] || '');
   
     // Combine "Name," "Age," and "Gender" with headers
-    const csvHeaders = ['Name', 'Age', 'Gender', ...headers];
+    const csvHeaders = ['Name', 'Age', 'Gender' , 'Phone', 'Postcode', 'Insurance Name', 'Insurance Number', ...headers];
     
     // Prepare the CSV data for "Name," "Age," and "Gender" followed by values
-    const csvValues = [patient.name, patient.age, patient.gender, ...values];
+    const csvValues = [patient.name, patient.age, patient.gender, patient.phone, patient.postcode, patient.insurance_name,
+      patient.insurance_number, ...values];
   
     // Combine headers and values into a single array
     const csvData = [csvHeaders, csvValues];
@@ -155,12 +188,15 @@ const PatientDetail = () => {
       ['Name', patient.name],
       ['Age', patient.age],
       ['Gender', patient.gender],
-      ['Risk', patient.risk],
+      ['Phone', patient.phone],
+      ['Postcode', patient.postcode],
+      ['Insurance Name', patient.insurance_name],
+      ['Insurance Number', patient.insurance_number],
     ];
   
     // Iterate over the sorted fields and add them to the data array
     sortedFields.forEach((key) => {
-      if (!['doctor', 'id', 'name', 'age', 'gender', 'risk'].includes(key)) {
+      if (!['doctor', 'id', 'name', 'age', 'gender', 'phone', 'postcode', 'insurance_name', 'insurance_number'].includes(key)) {
         data.push([capitalizeWords(key), patient[key]]);
       }
     });
@@ -244,6 +280,66 @@ const PatientDetail = () => {
             </td>
           </tr>
           <tr>
+            <td>Phone:</td>
+            <td>
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="phone"
+                  value={patient.phone}
+                  onChange={handleInputChange}
+                />
+              ) : (
+                <span>{patient.phone}</span>
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td>Postcode:</td>
+            <td>
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="postcode"
+                  value={patient.postcode}
+                  onChange={handleInputChange}
+                />
+              ) : (
+                <span>{patient.postcode}</span>
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td>Insurance Name:</td>
+            <td>
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="insurance_name"
+                  value={patient.insurance_name}
+                  onChange={handleInputChange}
+                />
+              ) : (
+                <span>{patient.insurance_name}</span>
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td>Insurance Number:</td>
+            <td>
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="insurance_number"
+                  value={patient.insurance_number}
+                  onChange={handleInputChange}
+                />
+              ) : (
+                <span>{patient.insurance_number}</span>
+              )}
+            </td>
+          </tr>
+          <tr>
             <td>Risk:</td>
             <td>
               {isEditing ? (
@@ -263,7 +359,7 @@ const PatientDetail = () => {
               (key) =>
                 key !== 'doctor' &&
                 key !== 'id' &&
-                !['name', 'age', 'gender', 'risk'].includes(key)
+                !['name', 'age', 'gender', 'phone', 'postcode', 'insurance_name', 'insurance_number', 'dob', 'risk'].includes(key)
             )
             .map((key) => (
               <tr key={key}>
@@ -292,14 +388,14 @@ const PatientDetail = () => {
       </table>
       <br />
       {isEditing ? (
-    <button onClick={handleSaveClick}>Save</button>
-  ) : (
-    <>
-      <button onClick={handleEditClick}>Edit</button>
-      <button onClick={() => exportToCSV()}>Export as CSV</button>
-      <button onClick={() => exportToPDF()}>Export as PDF</button>
-    </>
-  )}
+        <button onClick={handleSaveClick}>Save</button>
+      ) : (
+        <>
+          <button onClick={handleEditClick}>Edit</button>
+          <button onClick={() => exportToCSV()}>Export as CSV</button>
+          <button onClick={() => exportToPDF()}>Export as PDF</button>
+        </>
+      )}
     </div>
   );
 };

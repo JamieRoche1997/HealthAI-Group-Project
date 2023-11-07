@@ -16,6 +16,36 @@ const Patients = () => {
     navigate('/create-patient'); // Redirect to the createPatient page
   };
 
+  function calculateAge(dob) {
+    // Split the date string and parse it correctly
+    const parts = dob.split('-');
+    if (parts.length === 3) {
+      const day = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10);
+      const year = parseInt(parts[2], 10);
+  
+      if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+        const dobDate = new Date(year, month - 1, day); // Month is zero-based
+        const currentDate = new Date();
+        let age = currentDate.getFullYear() - dobDate.getFullYear();
+  
+        if (
+          currentDate.getMonth() < dobDate.getMonth() ||
+          (currentDate.getMonth() === dobDate.getMonth() &&
+            currentDate.getDate() < dobDate.getDate())
+        ) {
+          age--;
+        }
+  
+        return age;
+      }
+    }
+  
+    // Return an appropriate value or handle the error as needed
+    return 0; // Default value or NaN, depending on your use case
+  }
+  
+
   useEffect(() => {
     if (user && user.email) {
       const query = db.collection('Staff').where('email', '==', user.email);
@@ -41,7 +71,9 @@ const Patients = () => {
           const patientData = [];
           querySnapshot.forEach((doc) => {
             const patient = doc.data();
-            patientData.push({ ...patient, id: doc.id });
+            // Calculate the age and add it to the patient data
+            const age = calculateAge(patient.dob);
+            patientData.push({ ...patient, id: doc.id, age });
           });
           setOriginalPatients(patientData);
           setPatients(patientData);
@@ -144,7 +176,7 @@ const Patients = () => {
               <option value="greaterThan">Greater Than</option>
               <option value="between">Between</option>
               <option value="equalTo">Equal To</option>
-            </select>
+            </select><br/>
             {filterCriteria.ageFilter === 'between' && (
               <>
                 <input
@@ -185,7 +217,7 @@ const Patients = () => {
               <option value="">Select gender</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
-            </select><br/>
+            </select><br/><br/>
             <label>Risk:</label><br/>
             <select
               value={filterCriteria.risk}
@@ -197,7 +229,7 @@ const Patients = () => {
               <option value="Low">Low</option>
               <option value="Medium">Medium</option>
               <option value="High">High</option>
-            </select><br/>
+            </select><br/><br/>
             <button onClick={applyFilters}>Apply Filters</button>
             <button onClick={() => setPatients(originalPatients)}>Clear Filters</button>
             <button onClick={() => setFilterModalOpen(false)}>Close</button>
@@ -206,7 +238,7 @@ const Patients = () => {
       )}
 
       <div className="patient-list">
-        {patients
+      {patients
           .filter((patient) =>
             patient.name.toLowerCase().includes(searchTerm.toLowerCase())
           )
@@ -215,7 +247,7 @@ const Patients = () => {
             <div key={patient.id} className="patient-card">
               <a href={`/patient/${patient.id}`}>
                 <h3>{patient.name}</h3>
-                <p>Age: {patient.age}</p>
+                <p>Age: {patient.age}</p> 
                 <p>Gender: {patient.gender}</p>
                 <p>Risk: {patient.risk}</p>
               </a>

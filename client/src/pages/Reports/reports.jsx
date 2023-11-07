@@ -10,7 +10,7 @@ const Reports = () => {
   const { user } = useAuthentication();
   const [patients, setPatients] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [selectedFilters, setSelectedFilters] = useState(['name', 'age', 'gender']);
+  const [selectedFilters, setSelectedFilters] = useState(['name', 'age', 'gender', 'phone', 'postcode', 'insurance_name', 'insurance_number']);
   const [selectAll, setSelectAll] = useState(false);
   const [selectedData, setSelectedData] = useState([]);
 
@@ -41,17 +41,53 @@ const Reports = () => {
   useEffect(() => {
     const updateSelectedData = () => {
       const filteredData = patients.map((patient) => {
-        return selectedFilters.reduce((filteredPatient, filter) => {
-          filteredPatient[filter] = patient[filter];
+        const dataWithAge = selectedFilters.reduce((filteredPatient, filter) => {
+          if (filter === 'age') {
+            // Calculate and add the age
+            filteredPatient['age'] = calculateAge(patient['dob']);
+          } else {
+            filteredPatient[filter] = patient[filter];
+          }
           return filteredPatient;
         }, {});
+
+        return dataWithAge;
       });
-  
+
       setSelectedData(filteredData);
     };
-  
+
     updateSelectedData();
   }, [selectedFilters, patients]);
+
+  function calculateAge(dob) {
+    // Split the date string and parse it correctly
+    const parts = dob.split('-');
+    if (parts.length === 3) {
+      const day = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10);
+      const year = parseInt(parts[2], 10);
+  
+      if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+        const dobDate = new Date(year, month - 1, day); // Month is zero-based
+        const currentDate = new Date();
+        let age = currentDate.getFullYear() - dobDate.getFullYear();
+  
+        if (
+          currentDate.getMonth() < dobDate.getMonth() ||
+          (currentDate.getMonth() === dobDate.getMonth() &&
+            currentDate.getDate() < dobDate.getDate())
+        ) {
+          age--;
+        }
+  
+        return age;
+      }
+    }
+  
+    // Return an appropriate value or handle the error as needed
+    return 0; // Default value or NaN, depending on your use case
+  }
   
 
   // Function to export data as CSV
@@ -144,11 +180,11 @@ const Reports = () => {
     setSelectAll(!selectAll);
 
     if (!selectAll) {
-      setSelectedFilters(['name', 'age', 'gender', ...Object.keys(patients[0])
-      .filter((field) => !['name', 'age', 'gender'].includes(field))
+      setSelectedFilters(['name', 'age', 'gender', 'phone', 'postcode', 'insurance_name', 'insurance_number', ...Object.keys(patients[0])
+      .filter((field) => !['name', 'age', 'gender', 'phone', 'postcode', 'insurance_name', 'insurance_number'].includes(field))
       .sort()]);
     } else {
-      setSelectedFilters(['name', 'age', 'gender']);
+      setSelectedFilters(['name', 'age', 'gender', 'phone', 'postcode', 'insurance_name', 'insurance_number']);
     }
   };
 
@@ -168,12 +204,12 @@ const Reports = () => {
   return (
     <div>
       <h1>Reports</h1>
-      <button onClick={() => setShowModal(true)}>Filter Symptoms</button>
+      <button onClick={() => setShowModal(true)}>Filter Symptoms</button><br/><br/>
 
       {showModal && (
         <div className="modal">
           <div className="modal-content">
-          <h2>Select Data for Report</h2>
+            <h2>Select Data for Report</h2>
             <table>
               <thead>
                 <tr>
@@ -184,7 +220,7 @@ const Reports = () => {
               </thead>
               <tbody>
                 <tr>
-                <td></td>
+                  <td></td>
                   <td>Select/Deselect All</td>
                   <td>
                     <input
@@ -195,7 +231,7 @@ const Reports = () => {
                   </td>
                 </tr>
                 {Object.keys(patients[0] || {})
-                  .filter((field) => !['name', 'age', 'gender'].includes(field))
+                  .filter((field) => !['name', 'age', 'gender', 'phone', 'postcode', 'insurance_name', 'insurance_number'].includes(field))
                   .sort()
                   .map((field) => (
                     <tr key={field}>
@@ -212,16 +248,17 @@ const Reports = () => {
                   ))}
               </tbody>
             </table>
-            <button onClick={() => setShowModal(false)}>Close</button><br/><br/>
+            <button onClick={() => setShowModal(false)}>Close</button>
+            <br />
+            <br />
             <button onClick={exportToCSV}>Export CSV</button>
             <button onClick={exportToPDF}>Export PDF</button>
-            </div>
-
+          </div>
         </div>
       )}
 
       {selectedData.length > 0 && (
-        <div className='scrollable-table'>
+        <div className="scrollable-table">
           <h2>Filtered Patient Data</h2>
           <table>
             <thead>
@@ -242,11 +279,11 @@ const Reports = () => {
             </tbody>
           </table>
         </div>
-      )}
-
+      )}<br/>
+      <button onClick={exportToCSV}>Export CSV</button>
+      <button onClick={exportToPDF}>Export PDF</button>
     </div>
   );
 };
 
 export default Reports;
-

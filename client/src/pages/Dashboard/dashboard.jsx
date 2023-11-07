@@ -43,7 +43,6 @@ const Dashboard = () => {
     if (user && user.uid) {
       const query = db.collection('Staff').where('email', '==', user.email);
 
-
       query
         .get()
         .then((querySnapshot) => {
@@ -66,11 +65,9 @@ const Dashboard = () => {
           const patientData = [];
           querySnapshot.forEach((doc) => {
             const patient = doc.data();
-            // Convert the 'age' property to an integer
-            patient.age = parseInt(patient.age, 10);
-            if (!isNaN(patient.age)) { // Check if age is a valid number
-              patientData.push(patient);
-            }
+            // Calculate the age and add it to the patient data
+            patient.age = calculateAge(patient.dob);
+            patientData.push(patient);
           });
           setPatients(patientData);
 
@@ -78,8 +75,6 @@ const Dashboard = () => {
           // Calculate key metrics
           const patientCount = patientData.length;
           const totalAge = patientData.reduce((sum, patient) => sum + patient.age, 0);
-          console.log(totalAge);
-          console.log(patientCount);
           const averageAge = Math.round(totalAge / patientCount);
 
           const conditions = patientData.map((patient) => patient.condition);
@@ -112,6 +107,36 @@ const Dashboard = () => {
         });
     }
   }, [user]);
+
+  function calculateAge(dob) {
+    // Split the date string and parse it correctly
+    const parts = dob.split('-');
+    if (parts.length === 3) {
+      const day = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10);
+      const year = parseInt(parts[2], 10);
+  
+      if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+        const dobDate = new Date(year, month - 1, day); // Month is zero-based
+        const currentDate = new Date();
+        let age = currentDate.getFullYear() - dobDate.getFullYear();
+  
+        if (
+          currentDate.getMonth() < dobDate.getMonth() ||
+          (currentDate.getMonth() === dobDate.getMonth() &&
+            currentDate.getDate() < dobDate.getDate())
+        ) {
+          age--;
+        }
+  
+        return age;
+      }
+    }
+  
+    // Return an appropriate value or handle the error as needed
+    return 0; // Default value or NaN, depending on your use case
+  }
+  
 
   useEffect(() => {
     if (patients.length > 0) {
@@ -303,7 +328,6 @@ const Dashboard = () => {
   useEffect(() => {
     if (patients.length > 0) {
       const snoringData = patients.map((patient) => patient.snore);
-      console.log(snoringData);
       const snoringCount = snoringData.filter((snore) => snore === 1).length;
       const nonSnoringCount = snoringData.filter((snore) => snore !== 1).length;
 

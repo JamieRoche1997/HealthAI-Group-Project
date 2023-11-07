@@ -4,7 +4,6 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 // Initialize Firebase Authentication
 const auth = getAuth();
-console.log(auth);
 
 export const useAuthentication = () => {
   const [user, setUser] = useState(null);

@@ -53,7 +53,9 @@ const Predict = () => {
           const patientData = [];
           querySnapshot.forEach((doc) => {
             const patient = doc.data();
-            patientData.push({ ...patient, id: doc.id });
+            // Calculate the age and add it to the patient data
+            const age = calculateAge(patient.dob);
+            patientData.push({ ...patient, id: doc.id, age });
           });
           setPatients(patientData);
         })
@@ -62,6 +64,36 @@ const Predict = () => {
         });
     }
   }, [user]);
+
+  function calculateAge(dob) {
+    // Split the date string and parse it correctly
+    const parts = dob.split('-');
+    if (parts.length === 3) {
+      const day = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10);
+      const year = parseInt(parts[2], 10);
+  
+      if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+        const dobDate = new Date(year, month - 1, day); // Month is zero-based
+        const currentDate = new Date();
+        let age = currentDate.getFullYear() - dobDate.getFullYear();
+  
+        if (
+          currentDate.getMonth() < dobDate.getMonth() ||
+          (currentDate.getMonth() === dobDate.getMonth() &&
+            currentDate.getDate() < dobDate.getDate())
+        ) {
+          age--;
+        }
+  
+        return age;
+      }
+    }
+  
+    // Return an appropriate value or handle the error as needed
+    return 0; // Default value or NaN, depending on your use case
+  }
+  
 
   const retrieveCustomerPortalSession = () => {
     if (user && user.uid) {
