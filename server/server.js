@@ -46,7 +46,7 @@ app.post('/api/ask-gpt3', async (req, res) => {
           { role: 'system', content: 'You are a helpful assistant.' },
           ...conversationHistory, // Include the entire conversation history
         ],
-        model: 'ft:gpt-3.5-turbo-0613:personal::89fUliBi',
+        model: 'ft:gpt-3.5-turbo-0613:personal::8IUMDkfr',
         temperature: 0.7,
       },
       {
