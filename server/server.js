@@ -48,7 +48,7 @@ app.post('/api/ask-gpt3', async (req, res) => {
           ...conversationHistory, // Include the entire conversation history
         ],
         model: 'ft:gpt-3.5-turbo-0613:personal::8IUMDkfr',
-        temperature: 0.7,
+        temperature: 0,
       },
       {
         headers: {
