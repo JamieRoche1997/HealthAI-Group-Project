@@ -5,6 +5,8 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { saveAs } from 'file-saver';
 
+import HealthMetricsChart from '../Charts/HealthMetricsChart';
+import RespiratorySymptomsChart from '../Charts/RespiratorySymptomsChart';
 
 const PatientDetail = () => {
   const { patientId } = useParams();
@@ -404,6 +406,12 @@ const PatientDetail = () => {
           <button onClick={() => exportToPDF()}>Export as PDF</button>
         </>
       )}
+      <div>
+        {/* Render the HealthMetricsChart */}
+        <HealthMetricsChart data={patient} />
+        {/* Render the RespiratorySymptomsChart */}
+        <RespiratorySymptomsChart data={patient} />
+      </div>
     </div>
   );
 };
