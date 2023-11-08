@@ -14,6 +14,7 @@ const server = http.createServer(app);
 const port = process.env.PORT || 4000;
 
 app.use(bodyParser.json());
+app.use(cors({ origin: 'https://healthai-23.web.app' }));
 
 // Initialize Firebase Admin SDK
 const serviceAccount = require('./healthai-23-firebase-adminsdk-f0xjo-5102c0582e.json'); // Replace with your service account key path
