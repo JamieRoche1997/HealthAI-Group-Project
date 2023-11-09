@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useAuthentication } from '../../Components/authObserver';
 import { db } from '../../firebase';
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 const Predict = () => {
   const { user } = useAuthentication();
+  const navigate = useNavigate();
   const [subscriptionStatus, setSubscriptionStatus] = useState('loading');
   const [isLoadingUpgrade, setIsLoadingUpgrade] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -163,6 +165,77 @@ const Predict = () => {
     return 0;
   }
 
+  const lungPrediction = () => {
+    if (selectedPatient) {
+      const lungAttributes = {
+        air_pollution: selectedPatient.air_pollution,
+        alcohol_consumption: selectedPatient.alcohol_consumption,
+        dust_exposure: selectedPatient.dust_exposure,
+        genetic_risk: selectedPatient.genetic_risk,
+        balanced_diet: selectedPatient.balanced_diet,
+        obesity: selectedPatient.obesity,
+        smoker: selectedPatient.smoker,
+        passive_smoker: selectedPatient.passive_smoker,
+        chest_pain: selectedPatient.chest_pain,
+        coughing_blood: selectedPatient.coughing_blood,
+        fatigue: selectedPatient.fatigue,
+        weight_loss: selectedPatient.weight_loss,
+        shortness_breath: selectedPatient.shortness_breath,
+        wheezing: selectedPatient.wheezing,
+        swallow_difficulty: selectedPatient.swallow_difficulty,
+        clubbing_nails: selectedPatient.clubbing_nails,
+        snore: selectedPatient.snore,
+      };
+
+      console.log('Lung Attributes:', lungAttributes);
+    }
+
+    navigate('/lung-predict');
+  };
+
+  const heartPrediction = () => {
+    if (selectedPatient) {
+      const heartAttributes = {
+        chest_pain_type: selectedPatient.chest_pain_type,
+        resting_blood_pressure: selectedPatient.resting_blood_pressure,
+        serum_cholesterol: selectedPatient.serum_cholesterol,
+        fasting_blood_sugar: selectedPatient.fasting_blood_sugar,
+        resting_electrocardiographic_results: selectedPatient.resting_electrocardiographic_results,
+        max_heart_rate_achieved: selectedPatient.max_heart_rate_achieved,
+        exercise_induced_angina: selectedPatient.exercise_induced_angina,
+        oldpeak: selectedPatient.oldpeak,
+        slope_of_peak_exercise_ST_segment: selectedPatient.slope_of_peak_exercise_ST_segment,
+        num_major_vessels: selectedPatient.num_major_vessels,
+        thal: selectedPatient.thal,
+      };
+
+      // You can use the heartAttributes array for your prediction
+      console.log('Heart Attributes:', heartAttributes);
+    }
+
+    navigate('/heart-predict');
+  };
+
+  const breastPrediction = () => {
+    if (selectedPatient) {
+      const breastAttributes = {
+        radius_mean: selectedPatient.radius_mean,
+        texture_mean: selectedPatient.texture_mean,
+        perimeter_mean: selectedPatient.perimeter_mean,
+        area_mean: selectedPatient.area_mean,
+        smoothness_mean: selectedPatient.smoothness_mean,
+        compactness_mean: selectedPatient.compactness_mean,
+        concavity_mean: selectedPatient.concavity_mean,
+        concave_points: selectedPatient.concave_points,
+      };
+
+      // You can use the breastAttributes array for your prediction
+      console.log('Breast Attributes:', breastAttributes);
+    }
+
+    navigate('/breast-predict');
+  };
+
   let content;
 
   switch (subscriptionStatus) {
@@ -225,9 +298,9 @@ const Predict = () => {
         <div className="filter-modal-overlay">
           <div className="filter-modal">
             <h3>Prediction for {selectedPatient.name}</h3>
-            <button>Lung Cancer Prediction</button><br/>
-            <button>Heart Disease Prediction</button><br/>
-            <button>Colon Cancer Prediction</button><br/>
+            <button onClick={lungPrediction}>Lung Cancer Prediction</button><br/><br/>
+            <button onClick={heartPrediction}>Heart Disease Prediction</button><br/><br/>
+            <button onClick={breastPrediction}>Breast Cancer Prediction</button><br/><br/>
             <button onClick={closePatientPredictions}>Close</button>
           </div>
         </div>

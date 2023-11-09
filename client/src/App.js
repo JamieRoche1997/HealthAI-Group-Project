@@ -12,6 +12,9 @@ import Profile from "./pages/Profile/profile";
 import Reports from "./pages/Reports/reports";
 import Dashboard from "./pages/Dashboard/dashboard";
 import Predict from "./pages/Predict/predict";
+import LungPredict from './pages/Predict/lungPredict';
+import HeartPredict from './pages/Predict/heartPredict';
+import BreastPredict from './pages/Predict/breastPredict';
 import LLM from "./pages/LLM/llm";
 import Header from "./Components/Header/header.jsx";
 import AuthHeader from "./Components/Header/authHeader"
@@ -27,7 +30,7 @@ function App() {
 
   // Define paths where you want to show the header
   const showHeaderPaths = ["/", "/about", "/contact", "/login", "/signup", "/rating"];
-  const showAuthHeaderPaths = ["/profile", "/reports", "/patients", "/patient", "/create-patient", "/dashboard", "/predict", "/llm", "/chat"]
+  const showAuthHeaderPaths = ["/profile", "/reports", "/patients", "/patient", "/create-patient", "/dashboard", "/predict", "/lung-predict", "/heart-predict", "/breast-predict", "/llm", "/chat"]
 
   // Check if the current location should show the header
   const shouldShowHeader = showHeaderPaths.includes(location.pathname);
@@ -55,6 +58,9 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/reports" element={<Reports />} />
               <Route path="/predict" element={<Predict />} />
+              <Route path="/lung-predict" element={<LungPredict />} />
+              <Route path="/heart-predict" element={<HeartPredict />} />
+              <Route path="/breast-predict" element={<BreastPredict />} />
               <Route path="/llm" element={<LLM />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/chat" element={<Chat />} />

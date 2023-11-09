@@ -39,6 +39,17 @@ const PatientDetail = () => {
     "compactness_mean",
     "concavity_mean",
     "concave_points",
+    "chest_pain_type",
+    "resting_blood_pressure",
+    "serum_cholesterol",
+    "fasting_blood_sugar",
+    "resting_electrocardiographic_results",
+    "max_heart_rate_achieved",
+    "exercise_induced_angina",
+    "oldpeak",
+    "slope_of_peak_exercise_ST_segment",
+    "num_major_vessels",
+    "thal",
   ];
 
   function calculateAge(dob) {

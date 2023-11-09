@@ -42,9 +42,20 @@ const CreatePatient = () => {
     compactness_mean: 0,
     concavity_mean: 0,
     concave_points: 0,
+    chest_pain_type: 0,
+    resting_blood_pressure: 0,
+    serum_cholesterol: 0,
+    fasting_blood_sugar: 0,
+    resting_electrocardiographic_results: 0,
+    max_heart_rate_achieved: 0,
+    exercise_induced_angina: 0,
+    oldpeak: 0,
+    slope_of_peak_exercise_ST_segment: 0,
+    num_major_vessels: 0,
+    thal: 0,
   });
 
-  const fieldRanges = {
+  const breastRanges = {
     radius_mean: { min: 6.98, max: 28.1 },
     texture_mean: { min: 9.71, max: 39.3 },
     perimeter_mean: { min: 43.8, max: 189 },
@@ -53,6 +64,20 @@ const CreatePatient = () => {
     compactness_mean: { min: 0.02, max: 0.35 },
     concavity_mean: { min: 0, max: 0.43 },
     concave_points: { min: 0, max: 0.2 },
+  };
+
+  const heartRanges = {
+    chest_pain_type: { min: 0, max: 3 }, 
+    resting_blood_pressure: { min: 94, max: 200 },
+    serum_cholesterol: { min: 126, max: 564 },
+    fasting_blood_sugar: { min: 0, max: 1 },
+    resting_electrocardiographic_results: { min: 0, max: 2 },
+    max_heart_rate_achieved: { min: 71, max: 202 },
+    exercise_induced_angina: { min: 0, max: 1 },
+    oldpeak: { min: 0, max: 6.2 },
+    slope_of_peak_exercise_ST_segment: { min: 0, max: 2 },
+    num_major_vessels: { min: 0, max: 4 },
+    thal: { min: 1, max: 3 },
   };
 
   const saveNewPatient = () => {
@@ -101,6 +126,17 @@ const CreatePatient = () => {
         compactness_mean: newPatient.compactness_mean,
         concavity_mean: newPatient.concavity_mean,
         concave_points: newPatient.concave_points,
+        chest_pain_type: newPatient.chest_pain_type,
+        resting_blood_pressure: newPatient.resting_blood_pressure,
+        serum_cholesterol: newPatient.serum_cholesterol,
+        fasting_blood_sugar: newPatient.fasting_blood_sugar,
+        resting_electrocardiographic_results: newPatient.resting_electrocardiographic_results,
+        max_heart_rate_achieved: newPatient.max_heart_rate_achieved,
+        exercise_induced_angina: newPatient.exercise_induced_angina,
+        oldpeak: newPatient.oldpeak,
+        slope_of_peak_exercise_ST_segment: newPatient.slope_of_peak_exercise_ST_segment,
+        num_major_vessels: newPatient.num_major_vessels,
+        thal: newPatient.thal,
         doctor: user.displayName,
       };
 
@@ -258,13 +294,27 @@ const CreatePatient = () => {
             />
             <label>Benign</label>
           </div>
-        ) : field in fieldRanges ? (
+        ) : field in breastRanges ? (
           <div>
             <input
               type="range"
-              min={fieldRanges[field].min}
-              max={fieldRanges[field].max}
+              min={breastRanges[field].min}
+              max={breastRanges[field].max}
               step="0.001"
+              value={newPatient[field]}
+              onChange={(e) =>
+                setNewPatient({ ...newPatient, [field]: e.target.value })
+              }
+            />
+            <span>{newPatient[field]}</span>
+          </div>
+        ) : field in heartRanges ? (
+          <div>
+            <input
+              type="range"
+              min={heartRanges[field].min}
+              max={heartRanges[field].max}
+              step="1"
               value={newPatient[field]}
               onChange={(e) =>
                 setNewPatient({ ...newPatient, [field]: e.target.value })
