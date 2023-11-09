@@ -1,7 +1,12 @@
+//
+// Add an option to export the chat transcript to email, etc.
+//
+
 import React, { useEffect, useState, useRef } from 'react';
 import { useAuthentication } from '../../Components/authObserver';
 import { db } from '../../firebase';
 import io from 'socket.io-client';
+import emailjs from 'emailjs-com';
 
 const Chat = () => {
   const { user } = useAuthentication();
@@ -10,6 +15,7 @@ const Chat = () => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState([]);
+  const [emailSent, setEmailSent] = useState(null);
   const socket = useRef();
 
   useEffect(() => {
@@ -78,6 +84,37 @@ const Chat = () => {
         setMessage('');
         }
     };
+
+    const [transcript, setTranscript] = useState('');
+
+    // Function to export the chat transcript via email
+    const exportChatTranscript = () => {
+      // Combine messages into a single string
+      const transcriptText = messages.map((msg) => `${msg.name}: ${msg.content}`).join('\n');
+      
+      // Set the transcript in the state
+      setTranscript(transcriptText);
+
+      // IMPLEMENT SENDING TRANSCRIPT
+      if (user.email) {
+        const templateParams = {
+          to_email: user.email,
+          subject: 'Chat Transcript',
+          message: transcriptText,
+          to_name: user.displayName
+        };
+  
+        emailjs.send('service_q4tsv7f', 'template_7042eci', templateParams, 'jIhZ9sBAIsRr6dNnZ')
+          .then((response) => {
+            console.log('Email sent successfully:', response);
+            setEmailSent(true);
+          })
+          .catch((error) => {
+            console.error('Error sending email:', error);
+            setEmailSent(false);
+          });
+      }
+    };
   
 
     return (
@@ -122,6 +159,31 @@ const Chat = () => {
           ) : (
             <p>Please log in to access your profile.</p>
           )}
+
+          <div className="export-button-container">
+                  <button onClick={exportChatTranscript} className="export-button">
+                    Export Transcript via Email
+                  </button>
+                </div>
+
+                {/* Display the email sent status */}
+                {emailSent !== null && (
+                  <div className="email-status">
+                    {emailSent ? (
+                      <p>Email sent successfully!</p>
+                    ) : (
+                      <p>Error sending email. Please try again later.</p>
+                    )}
+                  </div>
+                )}
+
+                {/* Display the transcript for testing purposes */}
+                {transcript && (
+                  <div className="transcript-container">
+                    <h3>Chat Transcript</h3>
+                    <pre>{transcript}</pre>
+                  </div>
+                )}
         </div>
       );
       
