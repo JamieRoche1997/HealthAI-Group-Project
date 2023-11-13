@@ -3,9 +3,7 @@
 services:
 - name: flask-app
   env: python
-  build_command: |
-    cd /opt/render/project/src/Predict
-    pip install -r requirements.txt
-  start_command: gunicorn -w 4 -b 0.0.0.0:$PORT your_app_name:app
+  build_command: pip install -r /opt/render/project/src/Predict/requirements.txt
+  start_command: gunicorn -w 4 -b 0.0.0.0:$PORT app:app
   health_check_path: /health
   plan: starter
