@@ -1,14 +1,12 @@
 import json
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request  # Import the 'request' object
 import tensorflow as tf
 import numpy as np
-import traceback
 
 app = Flask(__name__)
 
 # Load the pre-trained model
-model = tf.saved_model.load('saved_model')
-
+model = tf.keras.models.load_model('saved_model')
 
 def predict(input_data):
     try:
@@ -35,7 +33,6 @@ def predict(input_data):
     except Exception as e:
         return {"error": str(e)}
 
-
 @app.route('/predict', methods=['POST'])
 def lambda_handler():
     try:
@@ -54,13 +51,11 @@ def lambda_handler():
         }
 
     except Exception as e:
-        print("Error occurred:", str(e))
-        traceback.print_exc()
         return {
             'statusCode': 500,
             'body': json.dumps({"error": str(e)})
         }
 
-
+# If running locally, start the Flask app
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
