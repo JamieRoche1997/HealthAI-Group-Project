@@ -190,7 +190,7 @@ const Predict = () => {
       console.log('Lung Attributes:', lungAttributes);
     
       // Send lungAttributes to the server
-      axios.post('https://healthiai-predict.onrender.com/api/predict/lung', { data: lungAttributes })
+      axios.post('https://healthiai-predict.onrender.com/predict_lung', { data: lungAttributes })
       .then(response => {
         // Handle the response if needed
         console.log(response.data);

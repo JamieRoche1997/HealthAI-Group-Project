@@ -258,12 +258,12 @@ const predictHeart = async (data) => {
 };
 
 // Endpoint to handle lung prediction
-app.post('/api/predict/lung', async (req, res) => {
+app.post('/predict_lung', async (req, res) => {
   try {
     const lungData = req.body.data;
 
     // Make API call to Flask app
-    const flaskResponse = await axios.post('http://flask-app-url/predict_lung', { data: lungData });
+    const flaskResponse = await axios.post('https://healthiai-predict.onrender.com/predict_lung', { data: lungData });
 
     // Send the Flask app response back to the React app
     res.json(flaskResponse.data);
