@@ -3,6 +3,7 @@ import { useAuthentication } from '../../Components/authObserver';
 import { db } from '../../firebase';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { predictHeart, predictLung, predictBreast } from './server';
 
 const Predict = () => {
   const { user } = useAuthentication();
@@ -165,7 +166,7 @@ const Predict = () => {
     return 0;
   }
 
-  const lungPrediction = () => {
+  const lungPrediction = async () => {
     if (selectedPatient) {
       const lungAttributes = {
         air_pollution: selectedPatient.air_pollution,
@@ -188,10 +189,17 @@ const Predict = () => {
       };
 
       console.log('Lung Attributes:', lungAttributes);
-    }
+    
+    try {
+        const prediction = await predictLung({ data: lungAttributes });
+        console.log('Lung Prediction:', prediction);
+        } catch (error) {
+        console.error('Error predicting lung:', error.message);
+        }
+      }
 
-    navigate('/lung-predict');
-  };
+      // navigate('/lung-predict'); // Uncomment this line if you want to navigate after prediction
+    };
 
   const heartPrediction = () => {
     if (selectedPatient) {

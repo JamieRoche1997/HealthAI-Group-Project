@@ -244,6 +244,45 @@ chatNamespace.on('connection', (socket) => {
   });  
 });
 
+// Define a function to make API calls to Flask app for heart prediction
+const predictHeart = async (data) => {
+  try {
+    const response = await axios.post('https://healthiai-predict.onrender.com/predict_heart', {
+      data: data,
+    });
+    return response.data.prediction;
+  } catch (error) {
+    console.error('Error predicting heart:', error);
+    throw new Error('Error predicting heart');
+  }
+};
+
+// Define a function to make API calls to Flask app for lung prediction
+const predictLung = async (data) => {
+  try {
+    const response = await axios.post('https://healthiai-predict.onrender.com/predict_lung', {
+      data: data,
+    });
+    return response.data.prediction;
+  } catch (error) {
+    console.error('Error predicting lung:', error);
+    throw new Error('Error predicting lung');
+  }
+};
+
+// Define a function to make API calls to Flask app for breast prediction
+const predictBreast = async (data) => {
+  try {
+    const response = await axios.post('https://healthiai-predict.onrender.com/predict_breast', {
+      data: data,
+    });
+    return response.data.prediction;
+  } catch (error) {
+    console.error('Error predicting breast:', error);
+    throw new Error('Error predicting breast');
+  }
+};
+
 server.listen(port, () => {
   console.log("Server started on port", port);
 });
