@@ -111,7 +111,7 @@ google-auth-oauthlib @ file:///home/conda/feedstock_root/build_artifacts/google-
 google-pasta==0.2.0
 greenlet==3.0.1
 grpcio @ file:///Users/runner/miniforge3/conda-bld/grpc-split_1690942386526/work
-gunicorn==20.1.0
+gunicorn==19.7.1
 h5py @ file:///private/var/folders/k1/30mswbxs7r1g6zwn8y4fyt500000gp/T/abs_9a3s_y3izc/croot/h5py_1691589712568/work
 HeapDict @ file:///Users/ktietz/demo/mc3/conda-bld/heapdict_1630598515714/work
 holoviews @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_79iqn2cg6o/croot/holoviews_1693378055338/work
