@@ -167,25 +167,27 @@ const Predict = () => {
 
   const lungPrediction = async () => {
     if (selectedPatient) {
-      const lungAttributes = {
-        air_pollution: selectedPatient.air_pollution,
-        alcohol_consumption: selectedPatient.alcohol_consumption,
-        dust_exposure: selectedPatient.dust_exposure,
-        genetic_risk: selectedPatient.genetic_risk,
-        balanced_diet: selectedPatient.balanced_diet,
-        obesity: selectedPatient.obesity,
-        smoker: selectedPatient.smoker,
-        passive_smoker: selectedPatient.passive_smoker,
-        chest_pain: selectedPatient.chest_pain,
-        coughing_blood: selectedPatient.coughing_blood,
-        fatigue: selectedPatient.fatigue,
-        weight_loss: selectedPatient.weight_loss,
-        shortness_breath: selectedPatient.shortness_breath,
-        wheezing: selectedPatient.wheezing,
-        swallow_difficulty: selectedPatient.swallow_difficulty,
-        clubbing_nails: selectedPatient.clubbing_nails,
-        snore: selectedPatient.snore,
-      };
+      const lungAttributes = [
+        selectedPatient.age,
+        selectedPatient.gender,
+        selectedPatient.air_pollution,
+        selectedPatient.alcohol_consumption,
+        selectedPatient.dust_exposure,
+        selectedPatient.genetic_risk,
+        selectedPatient.balanced_diet,
+        selectedPatient.obesity,
+        selectedPatient.smoker,
+        selectedPatient.passive_smoker,
+        selectedPatient.chest_pain,
+        selectedPatient.coughing_blood,
+        selectedPatient.fatigue,
+        selectedPatient.weight_loss,
+        selectedPatient.shortness_breath,
+        selectedPatient.wheezing,
+        selectedPatient.swallow_difficulty,
+        selectedPatient.clubbing_nails,
+        selectedPatient.snore,
+      ];
 
       console.log('Lung Attributes:', lungAttributes);
     
