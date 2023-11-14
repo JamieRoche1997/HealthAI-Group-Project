@@ -3,7 +3,6 @@ import { useAuthentication } from '../../Components/authObserver';
 import { db } from '../../firebase';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-import { predictHeart, predictLung, predictBreast } from './server';
 
 const Predict = () => {
   const { user } = useAuthentication();
@@ -190,16 +189,18 @@ const Predict = () => {
 
       console.log('Lung Attributes:', lungAttributes);
     
-    try {
-        const prediction = await predictLung({ data: lungAttributes });
-        console.log('Lung Prediction:', prediction);
-        } catch (error) {
-        console.error('Error predicting lung:', error.message);
-        }
-      }
-
-      // navigate('/lung-predict'); // Uncomment this line if you want to navigate after prediction
-    };
+      // Send lungAttributes to the server
+      axios.post('https://healthiai-predict.onrender.com/api/predict/lung', { data: lungAttributes })
+      .then(response => {
+        // Handle the response if needed
+        console.log(response.data);
+      })
+      .catch(error => {
+        // Handle errors if any
+        console.error('Error sending data to server:', error);
+      });
+  }
+  };
 
   const heartPrediction = () => {
     if (selectedPatient) {
