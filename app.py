@@ -14,7 +14,7 @@ model_breast = joblib.load('model_breast.joblib')
 # Sample feature names for breast cancer model, replace this with the correct order
 feature_names_breast = ['radius_mean', 'texture_mean', 'perimeter_mean', 'area_mean',
                         'smoothness_mean', 'compactness_mean', 'concavity_mean',
-                        'concave_points_mean']
+                        'concave points_mean']
 
 @app.route('/')
 def home():
