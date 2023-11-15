@@ -228,7 +228,7 @@ const Predict = () => {
 
       // You can use the heartAttributes array for your prediction
       console.log('Heart Attributes:', heartAttributes);
-      // Send lungAttributes to the server
+      // Send breastAttributes to the server
       axios.post('https://healthiai-predict.onrender.com/predict_heart', { data: heartAttributes })
       .then(response => {
         // Handle the response if needed
@@ -243,22 +243,30 @@ const Predict = () => {
 
   const breastPrediction = () => {
     if (selectedPatient) {
-      const breastAttributes = {
-        radius_mean: selectedPatient.radius_mean,
-        texture_mean: selectedPatient.texture_mean,
-        perimeter_mean: selectedPatient.perimeter_mean,
-        area_mean: selectedPatient.area_mean,
-        smoothness_mean: selectedPatient.smoothness_mean,
-        compactness_mean: selectedPatient.compactness_mean,
-        concavity_mean: selectedPatient.concavity_mean,
-        concave_points: selectedPatient.concave_points,
-      };
+      const breastAttributes = [
+        selectedPatient.radius_mean,
+        selectedPatient.texture_mean,
+        selectedPatient.perimeter_mean,
+        selectedPatient.area_mean,
+        selectedPatient.smoothness_mean,
+        selectedPatient.compactness_mean,
+        selectedPatient.concavity_mean,
+        selectedPatient.concave_points,
+      ];
 
       // You can use the breastAttributes array for your prediction
       console.log('Breast Attributes:', breastAttributes);
+      // Send breastAttributes to the server
+      axios.post('https://healthiai-predict.onrender.com/predict_breast', { data: breastAttributes })
+      .then(response => {
+        // Handle the response if needed
+        console.log(response.data);
+      })
+      .catch(error => {
+        // Handle errors if any
+        console.error('Error sending data to server:', error);
+      });
     }
-
-    navigate('/breast-predict');
   };
 
   let content;

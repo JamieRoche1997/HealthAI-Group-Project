@@ -276,18 +276,21 @@ app.post('/predict_lung', async (req, res) => {
   }
 });
 
-// Define a function to make API calls to Flask app for breast prediction
-const predictBreast = async (data) => {
+// Endpoint to handle breast prediction
+app.post('/predict_breast', async (req, res) => {
   try {
-    const response = await axios.post('https://healthiai-predict.onrender.com/predict_breast', {
-      data: data,
-    });
-    return response.data.prediction;
+    const lungData = req.body.data;
+
+    // Make API call to Flask app
+    const flaskResponse = await axios.post('https://healthiai-predict.onrender.com/predict_breast', { data: breastData });
+
+    // Send the Flask app response back to the React app
+    res.json(flaskResponse.data);
   } catch (error) {
-    console.error('Error predicting breast:', error);
-    throw new Error('Error predicting breast');
+    console.error('Error handling breast prediction:', error);
+    res.status(500).json({ error: 'An error occurred' });
   }
-};
+});
 
 server.listen(port, () => {
   console.log("Server started on port", port);

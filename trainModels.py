@@ -43,7 +43,7 @@ print(f"Lung Cancer Accuracy: {accuracy_lung:.2f}")
 joblib.dump(model_lung, 'model_lung.joblib')
 
 # Train RandomForestClassifier for breast cancer
-X_breast = df_breast.drop(['id', 'diagnosis', 'Unnamed: 32'], axis=1)
+X_breast = df_breast.drop(['diagnosis'], axis=1)
 y_breast = df_breast['diagnosis'].map({'M': 1, 'B': 0})
 X_train_breast, X_test_breast, y_train_breast, y_test_breast = train_test_split(X_breast, y_breast, test_size=0.2,
                                                                                 random_state=42)
