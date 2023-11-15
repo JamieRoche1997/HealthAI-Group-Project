@@ -208,25 +208,37 @@ const Predict = () => {
 
   const heartPrediction = () => {
     if (selectedPatient) {
-      const heartAttributes = {
-        chest_pain_type: selectedPatient.chest_pain_type,
-        resting_blood_pressure: selectedPatient.resting_blood_pressure,
-        serum_cholesterol: selectedPatient.serum_cholesterol,
-        fasting_blood_sugar: selectedPatient.fasting_blood_sugar,
-        resting_electrocardiographic_results: selectedPatient.resting_electrocardiographic_results,
-        max_heart_rate_achieved: selectedPatient.max_heart_rate_achieved,
-        exercise_induced_angina: selectedPatient.exercise_induced_angina,
-        oldpeak: selectedPatient.oldpeak,
-        slope_of_peak_exercise_ST_segment: selectedPatient.slope_of_peak_exercise_ST_segment,
-        num_major_vessels: selectedPatient.num_major_vessels,
-        thal: selectedPatient.thal,
-      };
+      const genderCode = selectedPatient.gender === 'Male' ? 1 : 0;
+
+      const heartAttributes = [
+        selectedPatient.age,
+        genderCode,
+        selectedPatient.chest_pain_type,
+        selectedPatient.resting_blood_pressure,
+        selectedPatient.serum_cholesterol,
+        selectedPatient.fasting_blood_sugar,
+        selectedPatient.resting_electrocardiographic_results,
+        selectedPatient.max_heart_rate_achieved,
+        selectedPatient.exercise_induced_angina,
+        selectedPatient.oldpeak,
+        selectedPatient.slope_of_peak_exercise_ST_segment,
+        selectedPatient.num_major_vessels,
+        selectedPatient.thal,
+      ];
 
       // You can use the heartAttributes array for your prediction
       console.log('Heart Attributes:', heartAttributes);
-    }
-
-    navigate('/heart-predict');
+      // Send lungAttributes to the server
+      axios.post('https://healthiai-predict.onrender.com/predict_heart', { data: heartAttributes })
+      .then(response => {
+        // Handle the response if needed
+        console.log(response.data);
+      })
+      .catch(error => {
+        // Handle errors if any
+        console.error('Error sending data to server:', error);
+      });
+  }
   };
 
   const breastPrediction = () => {

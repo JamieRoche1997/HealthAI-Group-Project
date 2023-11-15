@@ -244,18 +244,21 @@ chatNamespace.on('connection', (socket) => {
   });  
 });
 
-// Define a function to make API calls to Flask app for heart prediction
-const predictHeart = async (data) => {
+// Endpoint to handle heart prediction
+app.post('/predict_heart', async (req, res) => {
   try {
-    const response = await axios.post('https://healthiai-predict.onrender.com/predict_heart', {
-      data: data,
-    });
-    return response.data.prediction;
+    const lungData = req.body.data;
+
+    // Make API call to Flask app
+    const flaskResponse = await axios.post('https://healthiai-predict.onrender.com/predict_heart', { data: heartData });
+
+    // Send the Flask app response back to the React app
+    res.json(flaskResponse.data);
   } catch (error) {
-    console.error('Error predicting heart:', error);
-    throw new Error('Error predicting heart');
+    console.error('Error handling heart prediction:', error);
+    res.status(500).json({ error: 'An error occurred' });
   }
-};
+});
 
 // Endpoint to handle lung prediction
 app.post('/predict_lung', async (req, res) => {
