@@ -192,82 +192,147 @@ const Predict = () => {
       ];
 
       console.log('Lung Attributes:', lungAttributes);
-    
-      // Send lungAttributes to the server
-      axios.post('https://healthiai-predict.onrender.com/predict_lung', { data: lungAttributes })
+
+    // Send lungAttributes to the server
+    axios.post('https://healthiai-predict.onrender.com/predict_lung', { data: lungAttributes })
       .then(response => {
         // Handle the response if needed
         console.log(response.data);
+
+        // Extract the prediction level from the response
+        const predictionLevel = response.data.prediction;
+
+        // Map prediction levels to the desired labels
+        const predictionLabels = {
+          'L': 'Low',
+          'M': 'Medium',
+          'H': 'High',
+        };
+
+        // Get the corresponding label based on the prediction level
+        const predictionLabel = predictionLabels[predictionLevel];
+
+        // Save the prediction label in the patient's database
+        db.collection('Patient').doc(selectedPatient.id).update({
+          lung_prediction: predictionLabel,
+        }).then(() => {
+          console.log('Prediction label saved to the database:', predictionLabel);
+          navigate(`/lung-predict?patientId=${selectedPatient.id}&predictionLevel=${predictionLabel}`);
+        }).catch(error => {
+          console.error('Error saving prediction label to the database:', error);
+        });
       })
       .catch(error => {
         // Handle errors if any
         console.error('Error sending data to server:', error);
       });
   }
-  };
+};
 
-  const heartPrediction = () => {
-    if (selectedPatient) {
-      const genderCode = selectedPatient.gender === 'Male' ? 1 : 0;
+const heartPrediction = async () => {
+  if (selectedPatient) {
+    const genderCode = selectedPatient.gender === 'Male' ? 1 : 0;
 
-      const heartAttributes = [
-        selectedPatient.age,
-        genderCode,
-        selectedPatient.chest_pain_type,
-        selectedPatient.resting_blood_pressure,
-        selectedPatient.serum_cholesterol,
-        selectedPatient.fasting_blood_sugar,
-        selectedPatient.resting_electrocardiographic_results,
-        selectedPatient.max_heart_rate_achieved,
-        selectedPatient.exercise_induced_angina,
-        selectedPatient.oldpeak,
-        selectedPatient.slope_of_peak_exercise_ST_segment,
-        selectedPatient.num_major_vessels,
-        selectedPatient.thal,
-      ];
+    const heartAttributes = [
+      selectedPatient.age,
+      genderCode,
+      selectedPatient.chest_pain_type,
+      selectedPatient.resting_blood_pressure,
+      selectedPatient.serum_cholesterol,
+      selectedPatient.fasting_blood_sugar,
+      selectedPatient.resting_electrocardiographic_results,
+      selectedPatient.max_heart_rate_achieved,
+      selectedPatient.exercise_induced_angina,
+      selectedPatient.oldpeak,
+      selectedPatient.slope_of_peak_exercise_ST_segment,
+      selectedPatient.num_major_vessels,
+      selectedPatient.thal,
+    ];
 
-      // You can use the heartAttributes array for your prediction
-      console.log('Heart Attributes:', heartAttributes);
-      // Send breastAttributes to the server
-      axios.post('https://healthiai-predict.onrender.com/predict_heart', { data: heartAttributes })
+    // Send heartAttributes to the server
+    axios.post('https://healthiai-predict.onrender.com/predict_heart', { data: heartAttributes })
       .then(response => {
         // Handle the response if needed
         console.log(response.data);
+
+        // Extract the prediction level from the response
+        const predictionLevel = response.data.prediction;
+
+        // Map prediction levels to the desired labels
+        const predictionLabels = {
+          0: 'Unlikely',
+          1: 'Likely',
+        };
+
+        // Get the corresponding label based on the prediction level
+        const predictionLabel = predictionLabels[predictionLevel];
+
+        // Save the prediction label in the patient's database
+        db.collection('Patient').doc(selectedPatient.id).update({
+          heart_prediction: predictionLabel,
+        }).then(() => {
+          console.log('Prediction label saved to the database:', predictionLabel);
+          navigate(`/heart-predict?patientId=${selectedPatient.id}&predictionLevel=${predictionLabel}`);
+        }).catch(error => {
+          console.error('Error saving prediction label to the database:', error);
+        });
       })
       .catch(error => {
         // Handle errors if any
         console.error('Error sending data to server:', error);
       });
   }
-  };
+};
 
-  const breastPrediction = () => {
-    if (selectedPatient) {
-      const breastAttributes = [
-        selectedPatient.radius_mean,
-        selectedPatient.texture_mean,
-        selectedPatient.perimeter_mean,
-        selectedPatient.area_mean,
-        selectedPatient.smoothness_mean,
-        selectedPatient.compactness_mean,
-        selectedPatient.concavity_mean,
-        selectedPatient.concave_points,
-      ];
 
-      // You can use the breastAttributes array for your prediction
-      console.log('Breast Attributes:', breastAttributes);
-      // Send breastAttributes to the server
-      axios.post('https://healthiai-predict.onrender.com/predict_breast', { data: breastAttributes })
+const breastPrediction = () => {
+  if (selectedPatient) {
+    const breastAttributes = [
+      selectedPatient.radius_mean,
+      selectedPatient.texture_mean,
+      selectedPatient.perimeter_mean,
+      selectedPatient.area_mean,
+      selectedPatient.smoothness_mean,
+      selectedPatient.compactness_mean,
+      selectedPatient.concavity_mean,
+      selectedPatient.concave_points,
+    ];
+
+    // Send breastAttributes to the server
+    axios.post('https://healthiai-predict.onrender.com/predict_breast', { data: breastAttributes })
       .then(response => {
         // Handle the response if needed
         console.log(response.data);
+
+        // Extract the prediction level from the response
+        const predictionLevel = response.data.prediction;
+
+        // Map prediction levels to the desired labels
+        const predictionLabels = {
+          0: 'Unlikely',
+          1: 'Likely',
+        };
+
+        // Get the corresponding label based on the prediction level
+        const predictionLabel = predictionLabels[predictionLevel];
+
+        // Save the prediction label in the patient's database
+        db.collection('Patient').doc(selectedPatient.id).update({
+          breast_prediction: predictionLabel,
+        }).then(() => {
+          console.log('Prediction label saved to the database:', predictionLabel);
+          navigate(`/breast-predict?patientId=${selectedPatient.id}&predictionLevel=${predictionLabel}`);
+        }).catch(error => {
+          console.error('Error saving prediction label to the database:', error);
+        });
       })
       .catch(error => {
         // Handle errors if any
         console.error('Error sending data to server:', error);
       });
-    }
-  };
+  }
+};
+
 
   let content;
 
@@ -294,7 +359,6 @@ const Predict = () => {
                     <h3>{patient.name}</h3>
                     <p>Age: {patient.age}</p>
                     <p>Gender: {patient.gender}</p>
-                    <p>Risk: {patient.risk}</p>
                   </button>
                   <br />
                 </div>

@@ -9,7 +9,7 @@ const Patients = () => {
   const [originalPatients, setOriginalPatients] = useState([]);
   const [patients, setPatients] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterCriteria, setFilterCriteria] = useState({ age: '', gender: [], risk: [] });
+  const [filterCriteria, setFilterCriteria] = useState({ age: '', gender: []});
   const [isFilterModalOpen, setFilterModalOpen] = useState(false);
 
   const addNewPatient = () => {
@@ -131,12 +131,6 @@ const Patients = () => {
       });
     }
 
-    if (filterCriteria.risk.length > 0) {
-      filteredPatients = filteredPatients.filter((patient) => {
-        return filterCriteria.risk.includes(patient.risk);
-      });
-    }
-
     setPatients(filteredPatients);
   };
 
@@ -218,18 +212,7 @@ const Patients = () => {
               <option value="Male">Male</option>
               <option value="Female">Female</option>
             </select><br/><br/>
-            <label>Risk:</label><br/>
-            <select
-              value={filterCriteria.risk}
-              onChange={(e) =>
-                setFilterCriteria({ ...filterCriteria, risk: e.target.value })
-              }
-            >
-              <option value="">Select risk</option>
-              <option value="Low">Low</option>
-              <option value="Medium">Medium</option>
-              <option value="High">High</option>
-            </select><br/><br/>
+
             <button onClick={applyFilters}>Apply Filters</button>
             <button onClick={() => setPatients(originalPatients)}>Clear Filters</button>
             <button onClick={() => setFilterModalOpen(false)}>Close</button>
@@ -249,7 +232,6 @@ const Patients = () => {
                 <h3>{patient.name}</h3>
                 <p>Age: {patient.age}</p> 
                 <p>Gender: {patient.gender}</p>
-                <p>Risk: {patient.risk}</p>
               </a>
               <br />
             </div>

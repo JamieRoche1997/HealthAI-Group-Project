@@ -170,19 +170,19 @@ const PatientDetail = () => {
   const exportToCSV = () => {
     // Create headers excluding "Name," "Age," and "Gender"
     const headers = sortedFields
-      .filter((key) => !['name', 'age', 'gender', 'phone', 'postcode', 'insurance_name', 'insurance_number'].includes(key))
+      .filter((key) => !['name', 'age', 'gender', 'phone', 'postcode', 'insurance_name', 'insurance_number', 'heart_prediction', 'lung_prediction', 'breast_prediction'].includes(key))
       .map((key) => capitalizeWords(key));
   
     // Prepare the CSV data using the patient object, excluding "Name," "Age," and "Gender"
     const values = sortedFields
-      .filter((key) => !['name', 'age', 'gender' , 'phone', 'postcode', 'insurance_name', 'insurance_number'].includes(key))
+      .filter((key) => !['name', 'age', 'gender' , 'phone', 'postcode', 'insurance_name', 'insurance_number', 'heart_prediction', 'lung_prediction', 'breast_prediction'].includes(key))
       .map((key) => patient[key] || '');
   
     // Combine "Name," "Age," and "Gender" with headers
-    const csvHeaders = ['Name', 'Age', 'Gender' , 'Phone', 'Postcode', 'Insurance Name', 'Insurance Number', ...headers];
+    const csvHeaders = ['Name', 'Age', 'Gender' , 'Phone', 'Postcode', 'Insurance Name', 'Insurance Number', 'Heart Prediction', 'Lung Prediction', 'Breast Prediction', ...headers];
     
     // Prepare the CSV data for "Name," "Age," and "Gender" followed by values
-    const csvValues = [patient.name, patient.age, patient.gender, patient.phone, patient.postcode, patient.insurance_name,
+    const csvValues = [patient.name, patient.age, patient.gender, patient.phone, patient.postcode, patient.insurance_name, patient.heart_prediction, patient.lung_prediction, patient.breast_prediction,
       patient.insurance_number, ...values];
   
     // Combine headers and values into a single array
@@ -213,11 +213,14 @@ const PatientDetail = () => {
       ['Postcode', patient.postcode],
       ['Insurance Name', patient.insurance_name],
       ['Insurance Number', patient.insurance_number],
+      ['Heart Prediction', patient.heart_prediction],
+      ['Lung Prediction', patient.lung_prediction],
+      ['Breast Prediction', patient.breast_prediction]
     ];
   
     // Iterate over the sorted fields and add them to the data array
     sortedFields.forEach((key) => {
-      if (!['doctor', 'id', 'name', 'age', 'gender', 'phone', 'postcode', 'insurance_name', 'insurance_number'].includes(key)) {
+      if (!['doctor', 'id', 'name', 'age', 'gender', 'phone', 'postcode', 'insurance_name', 'insurance_number', 'heart_prediction', 'lung_prediction', 'breast_prediction'].includes(key)) {
         data.push([capitalizeWords(key), patient[key]]);
       }
     });
@@ -361,17 +364,47 @@ const PatientDetail = () => {
             </td>
           </tr>
           <tr>
-            <td>Risk:</td>
+            <td>Heart Prediction:</td>
             <td>
               {isEditing ? (
                 <input
                   type="text"
-                  name="risk"
-                  value={patient.risk}
+                  name="heart_prediction"
+                  value={patient.heart_prediction}
                   onChange={handleInputChange}
                 />
               ) : (
-                <span>{patient.risk}</span>
+                <span>{patient.heart_prediction}</span>
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td>Lung Prediction:</td>
+            <td>
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="lung_prediction"
+                  value={patient.lung_prediction}
+                  onChange={handleInputChange}
+                />
+              ) : (
+                <span>{patient.lung_prediction}</span>
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td>Breast Prediction:</td>
+            <td>
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="breast_prediction"
+                  value={patient.breast_prediction}
+                  onChange={handleInputChange}
+                />
+              ) : (
+                <span>{patient.breast_prediction}</span>
               )}
             </td>
           </tr>
@@ -380,7 +413,7 @@ const PatientDetail = () => {
               (key) =>
                 key !== 'doctor' &&
                 key !== 'id' &&
-                !['name', 'age', 'gender', 'phone', 'postcode', 'insurance_name', 'insurance_number', 'dob', 'risk'].includes(key)
+                !['name', 'age', 'gender', 'phone', 'postcode', 'insurance_name', 'insurance_number', 'dob', 'heart_prediction', 'lung_prediction', 'breast_prediction'].includes(key)
             )
             .map((key) => (
               <tr key={key}>
