@@ -167,9 +167,11 @@ const Predict = () => {
 
   const lungPrediction = async () => {
     if (selectedPatient) {
+      const genderCode = selectedPatient.gender === 'Male' ? 1 : 0;
+
       const lungAttributes = [
         selectedPatient.age,
-        selectedPatient.gender,
+        genderCode,       
         selectedPatient.air_pollution,
         selectedPatient.alcohol_consumption,
         selectedPatient.dust_exposure,
