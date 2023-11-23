@@ -26,7 +26,7 @@ admin.initializeApp({
 const firestore = admin.firestore();
 
 
-const OPENAI_API_KEY = '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';
+const OPENAI_API_KEY = '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';
 
 
 // Previous conversation history, if any
