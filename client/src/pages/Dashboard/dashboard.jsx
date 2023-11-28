@@ -15,7 +15,8 @@ const Dashboard = () => {
   const dietDonutChartRef = useRef(null);
   const ageChartRef = useRef(null);
   const genderChartRef = useRef(null);
-
+  const breastChartRef = useRef(null);
+  const lungChartRef = useRef(null);
 
   const [summary1, setSummary1] = useState({
     patientCount: 0,
@@ -387,101 +388,146 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (patients.length > 0) {
-      // Calculate chart data
-      const lowRiskCount = patients.filter((patient) => patient.risk === 'Low').length;
-      const mediumRiskCount = patients.filter((patient) => patient.risk === 'Medium').length;
-      const highRiskCount = patients.filter((patient) => patient.risk === 'High').length;
+      // Calculate chart data based on lung, heart, and breast predictions
+      const heartLikelyCount = patients.filter((patient) => patient.heart_prediction === 'Likely').length;
+      const heartUnlikelyCount = patients.length - heartLikelyCount;
 
+      const breastLikelyCount = patients.filter((patient) => patient.breast_prediction === 'Likely').length;
+      const breastUnlikelyCount = patients.length - breastLikelyCount;
 
-      const ageData = patients.map((patient) => patient.age);
-      const genderData = patients.map((patient) => patient.gender);
-
-
-      // Create bins for age groups
-      const ageGroups = Array.from({ length: 10 }, (_, i) => `${i * 10 + 1}-${(i + 1) * 10}`);
-
-
-      const ageCounts = ageGroups.map((group) =>
-        ageData.filter((age) => {
-          const [start, end] = group.split('-').map(Number);
-          return age >= start && age <= end;
-        }).length
-      );
-
-
-      // Count the number of male and female patients
-      const maleCount = genderData.filter((gender) => gender === 'Male').length;
-      const femaleCount = genderData.filter((gender) => gender === 'Female').length;
-
+      const lungHighCount = patients.filter((patient) => patient.lung_prediction === 'High').length;
+      const lungMediumCount = patients.filter((patient) => patient.lung_prediction === 'Medium').length;
+      const lungLowCount = patients.filter((patient) => patient.lung_prediction === 'Low').length;
 
       // Update risk chart data
-      const riskChartData = {
+      const heartChartData = {
+        labels: ['Likely', 'Unlikely'],
+        datasets: [
+          {
+            label: 'Heart Prediction',
+            data: [heartLikelyCount, heartUnlikelyCount],
+            backgroundColor: ['#36A2EB', '#FF6384'],
+          },
+        ],
+      };
+
+      const breastChartData = {
+        labels: ['Likely', 'Unlikely'],
+        datasets: [
+          {
+            label: 'Breast Prediction',
+            data: [breastLikelyCount, breastUnlikelyCount],
+            backgroundColor: ['#36A2EB', '#FF6384'],
+          },
+        ],
+      };
+
+      const lungChartData = {
         labels: ['Low Risk', 'Medium Risk', 'High Risk'],
         datasets: [
           {
-            label: 'Risk Assessment',
-            data: [lowRiskCount, mediumRiskCount, highRiskCount],
+            label: 'Lung Prediction',
+            data: [lungLowCount, lungMediumCount, lungHighCount],
             backgroundColor: ['#36A2EB', '#FFCE56', '#FF6384'],
           },
         ],
       };
 
-
-      // Create or update the risk chart
-      if (canvasRef.current && riskChartData) {
-        const riskCtx = canvasRef.current.getContext('2d');
-        new Chart(riskCtx, {
+      // Create or update the heart chart
+      if (canvasRef.current && heartChartData) {
+        const heartCtx = canvasRef.current.getContext('2d');
+        new Chart(heartCtx, {
           type: 'bar',
-          data: riskChartData,
+          data: heartChartData,
         });
       }
 
+      // Create or update the breast chart
+      if (breastChartRef.current && breastChartData) {
+        const breastCtx = breastChartRef.current.getContext('2d');
+        new Chart(breastCtx, {
+          type: 'bar',
+          data: breastChartData,
+        });
+      }
 
-      // Create data for the age chart
-      if (ageChartRef.current) {
+      // Create or update the lung chart
+      if (lungChartRef.current && lungChartData) {
+        const lungCtx = lungChartRef.current.getContext('2d');
+        new Chart(lungCtx, {
+          type: 'bar',
+          data: lungChartData,
+        });
+      }
+    }
+  }, [patients]);
+
+  useEffect(() => {
+    if (patients.length > 0) {
+      // Categorize ages into blocks of 10
+      const ageBlocks = Array.from({ length: 10 }, (_, i) => ({
+        label: `${i * 10 + 1}-${(i + 1) * 10}`,
+        count: 0,
+      }));
+  
+      // Count the occurrences of ages in each block
+      patients.forEach((patient) => {
+        const age = patient.age;
+        const blockIndex = Math.floor((age - 1) / 10);
+        ageBlocks[blockIndex].count++;
+      });
+  
+      // Prepare data for the chart
+      const ageChartData = {
+        labels: ageBlocks.map((block) => block.label),
+        datasets: [
+          {
+            label: 'Age Distribution',
+            data: ageBlocks.map((block) => block.count),
+            backgroundColor: 'rgba(75, 192, 192)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1,
+          },
+        ],
+      };
+  
+      // Render the chart
+      if (ageChartRef.current && ageChartData) {
         const ageCtx = ageChartRef.current.getContext('2d');
-        const ageChartData = {
-          labels: ageGroups,
-          datasets: [
-            {
-              label: 'Age Distribution',
-              data: ageCounts,
-              backgroundColor: [
-                '#F39D63',
-                '#E5A56C',
-                '#D7AE75',
-                '#C9B77E',
-                '#BBC087',
-                '#ADB990',
-                '#9FC299',
-                '#91CAC2',
-                '#83D2CB',
-                '#BA6FC7',
-              ],
-            },
-          ],
-        };
         new Chart(ageCtx, {
           type: 'bar',
           data: ageChartData,
         });
       }
+    }
+  }, [patients]);
+  
 
-
-      // Update gender chart data
+  useEffect(() => {
+    if (patients.length > 0) {
+      // Count the occurrences of each gender
+      const genderCounts = patients.reduce((counts, patient) => {
+        const gender = patient.gender
+        counts[gender] = (counts[gender] || 0) + 1;
+        return counts;
+      }, {});
+  
+      // Prepare data for the chart
       const genderChartData = {
-        labels: ['Male', 'Female'],
+        labels: Object.keys(genderCounts),
         datasets: [
           {
             label: 'Gender Distribution',
-            data: [maleCount, femaleCount],
-            backgroundColor: ['#36A2EB', '#FF6384'],
+            data: Object.values(genderCounts),
+            backgroundColor: 'rgba(255, 99, 132)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1,
           },
-        ]
-      }
-
-
-      if (genderChartRef.current) {
+        ],
+      };
+  
+      // Render the chart
+      if (genderChartRef.current && genderChartData) {
         const genderCtx = genderChartRef.current.getContext('2d');
         new Chart(genderCtx, {
           type: 'bar',
@@ -490,7 +536,7 @@ const Dashboard = () => {
       }
     }
   }, [patients]);
-
+  
 
   return (
     <div>
@@ -563,8 +609,18 @@ const Dashboard = () => {
 
 
       <div>
-        <h2>Risk Assessment</h2>
-        <canvas ref={canvasRef} id="riskChart"></canvas>
+        <h2>Risk Assessment - Heart Prediction</h2>
+        <canvas ref={canvasRef} id="heartChart"></canvas>
+      </div>
+
+      <div>
+        <h2>Risk Assessment - Breast Prediction</h2>
+        <canvas ref={breastChartRef} id="breastChart"></canvas>
+      </div>
+
+      <div>
+        <h2>Risk Assessment - Lung Prediction</h2>
+        <canvas ref={lungChartRef} id="lungChart"></canvas>
       </div>
 
 

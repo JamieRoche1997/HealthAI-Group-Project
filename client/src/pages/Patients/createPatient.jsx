@@ -15,7 +15,6 @@ const CreatePatient = () => {
     postcode: '',
     insurance_name: '',
     insurance_number: '',
-    risk: '',
     air_pollution: 0,
     alcohol_consumption: 0,
     dust_exposure: 0,
@@ -99,7 +98,6 @@ const CreatePatient = () => {
         postcode: newPatient.postcode,
         insurance_name: newPatient.insurance_name,
         insurance_number: newPatient.insurance_number,
-        risk: newPatient.risk,
         air_pollution: newPatient.air_pollution,
         alcohol_consumption: newPatient.alcohol_consumption,
         dust_exposure: newPatient.dust_exposure,
@@ -261,7 +259,6 @@ const CreatePatient = () => {
       field !== 'name' &&
       field !== 'dob' &&
       field !== 'gender' &&
-      field !== 'risk' &&
       field !== 'phone' &&
       field !== 'postcode' &&
       field !== 'insurance_name' &&
