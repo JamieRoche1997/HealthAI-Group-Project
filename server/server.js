@@ -35,6 +35,9 @@ const conversationHistory = [];
 app.post('/api/ask-gpt3', async (req, res) => {
   const { input } = req.body;
 
+  // Log received user input
+  console.log('Received user input:', input);
+
   // Add user message to the conversation
   conversationHistory.push({ role: 'user', content: input });
 
@@ -58,11 +61,11 @@ app.post('/api/ask-gpt3', async (req, res) => {
       }
     );
 
-    // Extract the content from the response and send it to the client
+    // Extract the content from the response and log it
     const assistantResponse = response.data.choices[0].message.content;
-
     console.log('OpenAI Response:', assistantResponse);
 
+    // Send the assistant's response back to the client
     res.json({ answer: assistantResponse });
 
   } catch (error) {
@@ -70,6 +73,7 @@ app.post('/api/ask-gpt3', async (req, res) => {
     res.status(500).json({ error: 'An error occurred' });
   }
 });
+
 
 
 app.post('/webhooks/stripe', async (req, res) => {
@@ -247,10 +251,16 @@ chatNamespace.on('connection', (socket) => {
 // Endpoint to handle heart prediction
 app.post('/predict_heart', async (req, res) => {
   try {
-    const lungData = req.body.data;
+    const heartData = req.body.data;
+    
+    // Log received data
+    console.log('Received data for heart prediction:', heartData);
 
     // Make API call to Flask app
     const flaskResponse = await axios.post('https://healthiai-predict.onrender.com/predict_heart', { data: heartData });
+
+    // Log Flask app response
+    console.log('Received response from Flask app for heart prediction:', flaskResponse.data);
 
     // Send the Flask app response back to the React app
     res.json(flaskResponse.data);
@@ -264,9 +274,15 @@ app.post('/predict_heart', async (req, res) => {
 app.post('/predict_lung', async (req, res) => {
   try {
     const lungData = req.body.data;
+    
+    // Log received data
+    console.log('Received data for lung prediction:', lungData);
 
     // Make API call to Flask app
     const flaskResponse = await axios.post('https://healthiai-predict.onrender.com/predict_lung', { data: lungData });
+
+    // Log Flask app response
+    console.log('Received response from Flask app for lung prediction:', flaskResponse.data);
 
     // Send the Flask app response back to the React app
     res.json(flaskResponse.data);
@@ -279,10 +295,16 @@ app.post('/predict_lung', async (req, res) => {
 // Endpoint to handle breast prediction
 app.post('/predict_breast', async (req, res) => {
   try {
-    const lungData = req.body.data;
+    const breastData = req.body.data;
+    
+    // Log received data
+    console.log('Received data for breast prediction:', breastData);
 
     // Make API call to Flask app
     const flaskResponse = await axios.post('https://healthiai-predict.onrender.com/predict_breast', { data: breastData });
+
+    // Log Flask app response
+    console.log('Received response from Flask app for breast prediction:', flaskResponse.data);
 
     // Send the Flask app response back to the React app
     res.json(flaskResponse.data);
