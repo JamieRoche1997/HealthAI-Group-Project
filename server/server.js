@@ -255,6 +255,8 @@ app.post('/predict_heart', async (req, res) => {
     
     // Log received data
     console.log('Received data for heart prediction:', heartData);
+    console.error('Received data for heart prediction:', heartData);
+    console.error(JSON.stringify({ event: 'Received data for heart prediction', data: heartData }));
 
     // Make API call to Flask app
     const flaskResponse = await axios.post('https://healthiai-predict.onrender.com/predict_heart', { data: heartData });
