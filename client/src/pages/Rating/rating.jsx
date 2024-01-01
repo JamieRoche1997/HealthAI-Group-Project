@@ -141,37 +141,26 @@ const Rating = () => {
         <br />
         <h2>Reviews:</h2>
         <ul>
-          {reviews
-            .sort((a, b) => b.timestamp.toMillis() - a.timestamp.toMillis())
-            .map((review, index) => (
-              <li key={index}>
-                <div>
-                  <strong>{review.name}</strong>:
+          {reviews.map((review, index) => (
+            <li key={index}>
+              <div>
+                <strong>{review.name}</strong>:
                 <br />
-                  <span className="highlighted-stars">
-                    {Array.from({ length: review.rating }, (_, i) => (
-                      <i key={i} className="fas fa-star"></i>
-                    ))}
-                  </span>
-                  <br />
-                  {new Date(review.timestamp.toDate()).toLocaleString("en-US", {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                    hour: "numeric",
-                    minute: "numeric",
-                  })}
-                </div>
-                <div>
-                  {review.subject} - <br />
-                  <i>"{review.review}"</i>
-                </div>
-                <br />
-              </li>
-            ))}
+                <span className="highlighted-stars">
+                  {Array.from({ length: review.rating }, (_, i) => (
+                    <i key={i} className="fas fa-star"></i>
+                  ))}
+                </span>
+              </div>
+              <div>
+                {review.subject} - <br />
+                <i>"{review.review}"</i>
+              </div>
+              <br />
+            </li>
+          ))}
         </ul>
       </div>
-
     </div>
   );
 };
